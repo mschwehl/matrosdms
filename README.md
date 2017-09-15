@@ -51,3 +51,5 @@ Thats why this DMS is not build as Online/Cloud/Webservice.
 * I want to open them in 20 years without this software
 
 ## This DMS respects this requirements
+
+## Status: currently moving the code to github, take a look the next days
