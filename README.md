@@ -7,15 +7,15 @@ in the real world you deal with entities like car, family members, dealers and c
 
 # Why not rebuild this network in your DMS ? 
 
-Every business-paper has two partners, the issuer and the reciever, an an entity that is subject of the paper. The paper itself have a type like invoice, contract and so on
+Every business-paper has two partners, the issuer and the reciever, and an entity that is subject of the paper. The paper itself have a type like invoice, contract and so on
 
 example: Your Car
 
-Reciever:    Mister Smith
-Issuer:      CarSeller PETE
-Object:      BMW XDrive
+* Reciever:    Mister Smith
+* Issuer:      CarSeller PETE
+* Object:      BMW XDrive
 
-Type of Paper:   contract
+ Type of Paper:   contract
 
 So you take the tags (you, Mr. Smith) and CarSeller PETE, the BMW and save this constellation to a new context (a virual folder).
 In this context you can save your documents.
