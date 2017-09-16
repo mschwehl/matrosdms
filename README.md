@@ -62,4 +62,12 @@ using Eclipse E4 / Tycho / Eclipse Oxygen
 ## Add Document view
 ![add a documen](/docs/en/images/add_document.jpg?raw=true "add Document")
 
+# Licence
+
+* not descition yet, for commercial use contact me. 
+
+* no warrenty
+
+__contribution is welcome__
+
 ## Status: currently moving the code to github, take a look the next days
