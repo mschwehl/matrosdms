@@ -70,4 +70,4 @@ using Eclipse E4 / Tycho / Eclipse Oxygen
 
 __contribution is welcome__
 
-## Status: currently moving the code to github, take a look the next days
+## Status: currently moving the code to github, take a look at the betaversion :-)
