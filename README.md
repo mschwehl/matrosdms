@@ -15,7 +15,8 @@ example: Your Car
 * Issuer:      CarSeller PETE
 * Object:      BMW XDrive
 
- Type of Paper:   contract
+Type of Paper:   first contract, later bills and so on. you have a timeline with your object 'BMW XDrive' and want to see
+all papers for it.
 
 So you take the tags (you, Mr. Smith) and CarSeller PETE, the BMW and save this constellation to a new context (a virual folder).
 In this context you can save your documents.
