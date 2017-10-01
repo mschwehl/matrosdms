@@ -67,7 +67,10 @@ using Eclipse E4 / Tycho / Eclipse Oxygen
 ![the tagging perspective](/docs/en/images/inbox.jpg?raw=true "Inbox")
 
 ## Add Document view
-![add a documen](/docs/en/images/add_document.jpg?raw=true "add Document")
+![add a document](/docs/en/images/add_document.jpg?raw=true "add Document")
+
+## Search document view
+![search view](/docs/en/images/search.png?raw=true "Search View")
 
 # Licence
 
