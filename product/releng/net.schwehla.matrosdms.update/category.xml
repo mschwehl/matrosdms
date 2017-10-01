@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<site>
+   <feature url="features/net.schwehla.matrosdms.feature_1.2.0.qualifier.jar" id="net.schwehla.matrosdms.feature" version="1.2.0.qualifier">
+      <category name="tychoexample"/>
+   </feature>
+   <category-def name="tychoexample" label="Tycho example"/>
+</site>

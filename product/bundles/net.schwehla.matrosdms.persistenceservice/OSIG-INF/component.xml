@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<scr:component xmlns:scr="http://www.osgi.org/xmlns/scr/v1.1.0"
+        name="net.schwehla.matrosdms.persistenceservice" >
+
+   <implementation class="net.schwehla.matrosdms.persistenceservice.internal.ServiceContextFunction"/>
+
+ <service>
+   <provide interface="org.eclipse.e4.core.contexts.IContextFunction"/>
+ </service>
+
+ <property name="service.context.key" type="String"
+   value="net.schwehla.matrosdms.persistenceservice.IMatrosServiceService"/>
+
+</scr:component>

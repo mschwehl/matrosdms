@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?eclipse version="3.4"?>
+<plugin>
+
+   <extension
+         id="product"
+         point="org.eclipse.core.runtime.products">
+      <product
+            name="net.schwehla.matrosdms.rcp"
+            application="org.eclipse.e4.ui.workbench.swt.E4Application">
+         <property
+               name="applicationCSS"
+               value="platform:/plugin/net.schwehla.matrosdms.rcp/css/default.css">
+         </property>
+         <property
+               name="MatrosDMS"
+               value="net.schwehla.matrosdms.rcp">
+         </property>
+         <property
+               name="lifeCycleURI"
+               value="bundleclass://net.schwehla.matrosdms.rcp/net.schwehla.matrosdms.bootstrap.LifeCycleManager">
+         </property>
+         <property
+               name="appName"
+               value="net.schwehla.matrosdms.rcp">
+         </property>
+      </product>
+   </extension>
+
+</plugin>

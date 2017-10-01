@@ -1,0 +1,12 @@
+Manifest-Version: 1.0
+Bundle-ManifestVersion: 2
+Bundle-Name: I18n
+Bundle-SymbolicName: net.schwehla.matrosdms.i18n;singleton:=true
+Bundle-Version: 1.2.0.qualifier
+Bundle-RequiredExecutionEnvironment: JavaSE-1.8
+Require-Bundle: javax.persistence;bundle-version="2.1.0",
+ org.eclipse.e4.core.services
+Bundle-ActivationPolicy: lazy
+Export-Package: net.schwehla.matrosdms.i18n
+Bundle-Vendor: matros
+

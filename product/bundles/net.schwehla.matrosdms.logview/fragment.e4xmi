@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="ASCII"?>
+<fragment:ModelFragments xmi:version="2.0" xmlns:xmi="http://www.omg.org/XMI" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:commands="http://www.eclipse.org/ui/2010/UIModel/application/commands" xmlns:fragment="http://www.eclipse.org/ui/2010/UIModel/fragment" xmi:id="_akIvcPrCEeWOAtVYJ_uodg">
+  <fragments xsi:type="fragment:StringModelFragment" xmi:id="_b1nlcPrCEeWOAtVYJ_uodg" featurename="commands" parentElementId="net.schwehla.matrosdms.rcp.application">
+    <elements xsi:type="commands:Command" xmi:id="_3yW4YK8EEeayFIzGQmD31g" elementId="net.schwehla.matrosdms.logview.command.clearlog" commandName="ClearLogview"/>
+  </fragments>
+</fragment:ModelFragments>
