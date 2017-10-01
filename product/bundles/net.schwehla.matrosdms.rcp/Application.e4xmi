@@ -1,0 +1,225 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<application:Application xmi:version="2.0" xmlns:xmi="http://www.omg.org/XMI" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:advanced="http://www.eclipse.org/ui/2010/UIModel/application/ui/advanced" xmlns:application="http://www.eclipse.org/ui/2010/UIModel/application" xmlns:basic="http://www.eclipse.org/ui/2010/UIModel/application/ui/basic" xmlns:menu="http://www.eclipse.org/ui/2010/UIModel/application/ui/menu" xmi:id="_6wlLcMgZEeSyMNYR5xypkQ" elementId="net.schwehla.matrosdms.rcp.application" bindingContexts="_6wlLecgZEeSyMNYR5xypkQ">
+  <children xsi:type="basic:TrimmedWindow" xmi:id="_6wlLccgZEeSyMNYR5xypkQ" elementId="net.schwehla.matrosdms.rcp.window.main" selectedElement="_ytopwGFyEea2JI4bD_v8kQ" label="MatrosDMS">
+    <children xsi:type="basic:PartSashContainer" xmi:id="_ytopwGFyEea2JI4bD_v8kQ" elementId="net.schwehla.matrosdms.rcp.partsashcontainer.mainwindowcontainer" horizontal="true">
+      <children xsi:type="advanced:PerspectiveStack" xmi:id="_6wlLkMgZEeSyMNYR5xypkQ" elementId="net.schwehla.matrosdms.rcp.perspectivestack" selectedElement="_6wlLkcgZEeSyMNYR5xypkQ">
+        <children xsi:type="advanced:Perspective" xmi:id="_6wlLkcgZEeSyMNYR5xypkQ" elementId="net.schwehla.matrosdms.rcp.perspective.processinbox" selectedElement="_6wlLksgZEeSyMNYR5xypkQ" label="Inbox">
+          <children xsi:type="basic:PartSashContainer" xmi:id="_6wlLksgZEeSyMNYR5xypkQ" elementId="net.schwehla.matrosdms.rcp.partsashcontainer.inbox" selectedElement="_Y0Lw8GGdEea2JI4bD_v8kQ">
+            <children xsi:type="basic:PartSashContainer" xmi:id="_Y0Lw8GGdEea2JI4bD_v8kQ" elementId="net.schwehla.matrosdms.rcp.partsashcontainer.0" containerData="8000" horizontal="true">
+              <children xsi:type="basic:PartSashContainer" xmi:id="_-z4bUGGdEea2JI4bD_v8kQ" elementId="net.schwehla.matrosdms.rcp.partsashcontainer.1" containerData="3000">
+                <children xsi:type="basic:PartStack" xmi:id="_AmtD0GGeEea2JI4bD_v8kQ" elementId="net.schwehla.matrosdms.rcp.partstack.1">
+                  <children xsi:type="basic:Part" xmi:id="_wM04wGfnEea3s89FY0GokA" elementId="net.schwehla.matrosdms.rcp.part.uno" contributionURI="bundleclass://net.schwehla.matrosdms.rcp/net.schwehla.matrosdms.rcp.parts.InboxPart" label="Inbox"/>
+                  <children xsi:type="basic:Part" xmi:id="_B418YGr6EeaNy_hweKWqXA" elementId="net.schwehla.matrosdms.rcp.part.events" contributionURI="bundleclass://net.schwehla.matrosdms.rcp/net.schwehla.matrosdms.rcp.parts.EventPart" label="Events">
+                    <toolbar xmi:id="_BJFWoAjrEeeb6r6AItl3Rg" elementId="net.schwehla.matrosdms.rcp.toolbar.event"/>
+                  </children>
+                </children>
+                <children xsi:type="basic:PartStack" xmi:id="_HCh3wGGeEea2JI4bD_v8kQ" elementId="net.schwehla.matrosdms.rcp.partstack.4">
+                  <children xsi:type="basic:Part" xmi:id="_wnh3wGfnEea3s89FY0GokA" elementId="net.schwehla.matrosdms.rcp.part.contextinfoitemlist" contributionURI="bundleclass://net.schwehla.matrosdms.rcp/net.schwehla.matrosdms.rcp.parts.ContextInfoItemListPart" label="ContextInfoItemListPart">
+                    <menus xsi:type="menu:PopupMenu" xmi:id="_PI3a4PXJEeaX2e7d_6n62g" elementId="net.schwehla.matrosdms.rcp.popupmenu.infoitempopup" label="Item" mnemonics="i">
+                      <children xsi:type="menu:HandledMenuItem" xmi:id="_B6ZuIPXMEeaX2e7d_6n62g" elementId="net.schwehla.matrosdms.rcp.handledmenuitem.archivare" label="Archivare" mnemonics="A" command="_h98qgPXJEeaX2e7d_6n62g"/>
+                    </menus>
+                  </children>
+                </children>
+              </children>
+              <children xsi:type="basic:PartSashContainer" xmi:id="_n1-acHOLEeagg9vCtN7wyg" elementId="net.schwehla.matrosdms.rcp.partsashcontainer.4" containerData="4000">
+                <children xsi:type="basic:PartStack" xmi:id="_ipl_sHOMEeagg9vCtN7wyg" elementId="net.schwehla.matrosdms.rcp.partstack.contexlist" containerData="7000" selectedElement="_6wlLlMgZEeSyMNYR5xypkQ">
+                  <tags>datei</tags>
+                  <children xsi:type="basic:Part" xmi:id="_6wlLlMgZEeSyMNYR5xypkQ" elementId="net.schwehla.matrosdms.rcp.part.sample" contributionURI="bundleclass://net.schwehla.matrosdms.rcp/net.schwehla.matrosdms.rcp.parts.ContextListPart" label="ContextList">
+                    <menus xsi:type="menu:PopupMenu" xmi:id="_pS1M8PFhEeaMbeJKhoLwiw" elementId="net.schwehla.matrosdms.rcp.popupmenu.contextlistpopup" label="popup" mnemonics="A">
+                      <children xsi:type="menu:HandledMenuItem" xmi:id="_wF-IwA5tEee9IP72GzVSBw" elementId="net.schwehla.matrosdms.rcp.handledmenuitem.editContext" label="Edit Context" command="_jphroA5sEee9IP72GzVSBw"/>
+                      <children xsi:type="menu:MenuSeparator" xmi:id="_OsuvUA5xEeeT7NIMmPIDnw" elementId="net.schwehla.matrosdms.rcp.menuseparator.3"/>
+                      <children xsi:type="menu:HandledMenuItem" xmi:id="_4fj1wPIlEeaoJJxWdAWWrw" elementId="net.schwehla.matrosdms.rcp.handledmenuitem.archivate" label="Archivate" mnemonics="a" command="_Z-xpcPIkEeaoJJxWdAWWrw"/>
+                    </menus>
+                  </children>
+                </children>
+              </children>
+              <children xsi:type="basic:PartSashContainer" xmi:id="__Zfp0GGdEea2JI4bD_v8kQ" elementId="net.schwehla.matrosdms.rcp.partsashcontainer.3" containerData="3000">
+                <children xsi:type="basic:PartStack" xmi:id="_kqIhkLOqEeabeqWLCOT2pw" elementId="net.schwehla.matrosdms.rcp.partstack.dropfield" containerData="2000">
+                  <children xsi:type="basic:Part" xmi:id="_x5Ji4GGgEea2JI4bD_v8kQ" elementId="net.schwehla.matrosdms.rcp.part.dropfiled" containerData="3000" contributionURI="bundleclass://net.schwehla.matrosdms.rcp/net.schwehla.matrosdms.rcp.parts.DropfieldPart" label="dropfiled">
+                    <toolbar xmi:id="_iaP8UHOxEeaQkoKcZok5ug" elementId="net.schwehla.matrosdms.rcp.toolbar.0">
+                      <children xsi:type="menu:DirectToolItem" xmi:id="_HM21UHReEea7sO64fX3uFg" elementId="net.schwehla.matrosdms.rcp.directtoolitem.save" label="Save" contributionURI="bundleclass://net.schwehla.matrosdms.rcp/net.schwehla.matrosdms.rcp.command.CreateInfoContextCommand"/>
+                    </toolbar>
+                  </children>
+                </children>
+                <children xsi:type="basic:PartStack" xmi:id="_BEYeUGGeEea2JI4bD_v8kQ" elementId="net.schwehla.matrosdms.rcp.partstack.taggraph" containerData="4000">
+                  <children xsi:type="basic:Part" xmi:id="_xxr9wGfnEea3s89FY0GokA" elementId="net.schwehla.matrosdms.rcp.part.taggraph" contributionURI="bundleclass://net.schwehla.matrosdms.rcp/net.schwehla.matrosdms.rcp.parts.TagGraphPart" label="Taggraph">
+                    <menus xmi:id="_RfJVkHkhEea3g4aPz9AP9w" elementId="net.schwehla.matrosdms.rcp.menu.taggrahpviewmenu">
+                      <tags>ViewMenu</tags>
+                    </menus>
+                  </children>
+                </children>
+                <children xsi:type="basic:PartStack" xmi:id="_He640GGeEea2JI4bD_v8kQ" elementId="net.schwehla.matrosdms.rcp.partstack.attributes" containerData="4000">
+                  <children xsi:type="basic:Part" xmi:id="_yLUlwGfnEea3s89FY0GokA" elementId="net.schwehla.matrosdms.rcp.part.module" accessibilityPhrase="A" contributionURI="bundleclass://net.schwehla.matrosdms.rcp/net.schwehla.matrosdms.rcp.parts.AttributeTreePart" label="Attribute" tooltip="Attributes">
+                    <toolbar xmi:id="_vCa7wOGkEeaSOewUjwalIw" elementId="net.schwehla.matrosdms.rcp.toolbar.attributes" accessibilityPhrase="A">
+                      <children xsi:type="menu:HandledToolItem" xmi:id="__jEqoOGkEeaSOewUjwalIw" elementId="net.schwehla.matrosdms.rcp.handledtoolitem.addAttribute" label="Add Attribute" command="_IoNDIOGlEeaSOewUjwalIw"/>
+                    </toolbar>
+                  </children>
+                  <children xsi:type="basic:Part" xmi:id="_jNDGMDD2EeeyhPzox7YnvQ" elementId="net.schwehla.matrosdms.rcp.part.originalstore" contributionURI="bundleclass://net.schwehla.matrosdms.rcp/net.schwehla.matrosdms.rcp.parts.OrginalstorePart" label="Originalstore">
+                    <toolbar xmi:id="_0a0ZwDD2EeeyhPzox7YnvQ" elementId="net.schwehla.matrosdms.rcp.toolbar.3">
+                      <children xsi:type="menu:HandledToolItem" xmi:id="_Pqz40DD6EeeyhPzox7YnvQ" elementId="net.schwehla.matrosdms.rcp.handledtoolitem.addoriginalstore" label="Add Originalstore" command="_6JQRUDD4EeeyhPzox7YnvQ"/>
+                    </toolbar>
+                  </children>
+                </children>
+              </children>
+            </children>
+            <children xsi:type="basic:PartStack" xmi:id="_q3j3oGFtEea2JI4bD_v8kQ" elementId="net.schwehla.matrosdms.rcp.partstack.bottompartstack" containerData="2000">
+              <tags>NoAutoCollapse</tags>
+              <children xsi:type="basic:Part" xmi:id="__3Bq4PX8Eear-_X9ocRLzg" elementId="net.schwehla.matrosdms.rcp.part.properties" accessibilityPhrase="P" contributionURI="bundleclass://net.schwehla.matrosdms.rcp/net.schwehla.matrosdms.rcp.parts.PropertiesPart" label="Properties" closeable="true"/>
+              <children xsi:type="basic:Part" xmi:id="_VoR8EK8BEeayFIzGQmD31g" elementId="net.schwehla.matrosdms.rcp.part.logview" contributionURI="bundleclass://net.schwehla.matrosdms.logview/net.schwehla.matrosdms.logview.parts.LogViewPart" label="Logview" closeable="true">
+                <toolbar xmi:id="_4vqqoK8DEeayFIzGQmD31g" elementId="net.schwehla.matrosdms.rcp.toolbar.logviewtoolbar"/>
+              </children>
+              <children xsi:type="basic:Part" xmi:id="_UbrFoPeoEeaNVaRVx_asjg" elementId="net.schwehla.matrosdms.rcp.part.itemstack" accessibilityPhrase="I" contributionURI="bundleclass://net.schwehla.matrosdms.rcp/net.schwehla.matrosdms.rcp.parts.ItemStackPart" label="Itemstack">
+                <toolbar xmi:id="_dd8XYPeoEeaNVaRVx_asjg" elementId="net.schwehla.matrosdms.rcp.toolbar.1"/>
+              </children>
+            </children>
+          </children>
+        </children>
+        <children xsi:type="advanced:Perspective" xmi:id="_wTDU8HcvEeamhvn_1OLEKQ" elementId="net.schwehla.matrosdms.rcp.perspective.search" label="Search Elements">
+          <children xsi:type="basic:PartSashContainer" xmi:id="_oJiqQDL3EeeyhPzox7YnvQ" elementId="net.schwehla.matrosdms.rcp.partsashcontainer.search">
+            <children xsi:type="basic:PartStack" xmi:id="_q4yewDL3EeeyhPzox7YnvQ" elementId="net.schwehla.matrosdms.rcp.partstack.searchfield" containerData="2000" selectedElement="_v40qIDL3EeeyhPzox7YnvQ">
+              <children xsi:type="basic:Part" xmi:id="_v40qIDL3EeeyhPzox7YnvQ" elementId="net.schwehla.matrosdms.rcp.part.searchelementpart" contributionURI="bundleclass://net.schwehla.matrosdms.rcp/net.schwehla.matrosdms.rcp.parts.SearchElementPart" label="Search Items"/>
+            </children>
+            <children xsi:type="basic:PartStack" xmi:id="_rYqRoDL3EeeyhPzox7YnvQ" elementId="net.schwehla.matrosdms.rcp.partstack.searchresult" containerData="8000" selectedElement="_w7gPIDL3EeeyhPzox7YnvQ">
+              <children xsi:type="basic:Part" xmi:id="_w7gPIDL3EeeyhPzox7YnvQ" elementId="net.schwehla.matrosdms.rcp.part.searchresultpart" contributionURI="bundleclass://net.schwehla.matrosdms.rcp/net.schwehla.matrosdms.rcp.parts.SearchResultPart" label="Searchresult"/>
+            </children>
+          </children>
+        </children>
+        <children xsi:type="advanced:Perspective" xmi:id="_Y5i2oJ7pEea8SP_C1QbeJw" elementId="net.schwehla.matrosdms.rcp.perspective.visualize" selectedElement="_VodS8K6YEeaPeP7yMfKQog" label="Visualize">
+          <children xsi:type="basic:PartStack" xmi:id="_VodS8K6YEeaPeP7yMfKQog" elementId="net.schwehla.matrosdms.rcp.partstack.8">
+            <children xsi:type="basic:Part" xmi:id="_WviPwK6YEeaPeP7yMfKQog" elementId="net.schwehla.matrosdms.rcp.part.0" contributionURI="bundleclass://net.schwehla.matrosdms.logview/net.schwehla.matrosdms.logview.parts.LogViewPart"/>
+          </children>
+        </children>
+        <children xsi:type="advanced:Perspective" xmi:id="_2_PTYPOiEeaVGcX0dPaILg" elementId="net.schwehla.matrosdms.rcp.perspective.manage" label="Manage">
+          <children xsi:type="basic:PartSashContainer" xmi:id="_9dKZEPOiEeaVGcX0dPaILg" elementId="net.schwehla.matrosdms.rcp.partsashcontainer.managesashconatiner">
+            <children xsi:type="basic:PartSashContainer" xmi:id="_ZNVjgC5_EeeyhPzox7YnvQ" elementId="net.schwehla.matrosdms.rcp.partsashcontainer.5" horizontal="true">
+              <children xsi:type="basic:PartStack" xmi:id="_Kj-XYDA1EeeyhPzox7YnvQ" elementId="net.schwehla.matrosdms.rcp.partstack.2" containerData="5000">
+                <children xsi:type="basic:Part" xmi:id="_M0eaYDA1EeeyhPzox7YnvQ" elementId="net.schwehla.matrosdms.rcp.part.element" contributionURI="bundleclass://net.schwehla.matrosdms.rcp/net.schwehla.matrosdms.rcp.parts.masterdata.ElementPart" label="Elements">
+                  <toolbar xmi:id="_AxX_cDA2EeeyhPzox7YnvQ" elementId="net.schwehla.matrosdms.rcp.toolbar.2"/>
+                </children>
+              </children>
+              <children xsi:type="basic:PartStack" xmi:id="_MZ2T4DA1EeeyhPzox7YnvQ" elementId="net.schwehla.matrosdms.rcp.partstack.3" containerData="5000">
+                <children xsi:type="basic:Part" xmi:id="_NPHH8DA1EeeyhPzox7YnvQ" elementId="net.schwehla.matrosdms.rcp.part.impact" contributionURI="bundleclass://net.schwehla.matrosdms.rcp/net.schwehla.matrosdms.rcp.parts.masterdata.ImpactPart" label="Impact"/>
+              </children>
+            </children>
+            <children xsi:type="basic:PartStack" xmi:id="_Z2OvgC5_EeeyhPzox7YnvQ" elementId="net.schwehla.matrosdms.rcp.partstack.0" containerData="2000">
+              <children xsi:type="basic:Part" xmi:id="_cyS4AC5_EeeyhPzox7YnvQ" elementId="net.schwehla.matrosdms.rcp.part.properties" contributionURI="bundleclass://net.schwehla.matrosdms.rcp/net.schwehla.matrosdms.rcp.parts.PropertiesPart" label="Properties"/>
+              <children xsi:type="basic:Part" xmi:id="_dNOggC5_EeeyhPzox7YnvQ" elementId="net.schwehla.matrosdms.rcp.part.logview" contributionURI="bundleclass://net.schwehla.matrosdms.logview/net.schwehla.matrosdms.logview.parts.LogViewPart" label="Logview"/>
+            </children>
+          </children>
+        </children>
+      </children>
+    </children>
+    <children xsi:type="basic:PartSashContainer" xmi:id="_MgUwsK8PEeayFIzGQmD31g" elementId="net.schwehla.matrosdms.rcp.partsashcontainer.welcome" visible="false" selectedElement="_TSg2MK8PEeayFIzGQmD31g" horizontal="true">
+      <children xsi:type="basic:PartSashContainer" xmi:id="_TSg2MK8PEeayFIzGQmD31g" elementId="net.schwehla.matrosdms.rcp.partsashcontainer.2">
+        <children xsi:type="basic:PartStack" xmi:id="_YsHYIK8PEeayFIzGQmD31g" elementId="net.schwehla.matrosdms.rcp.partstack.9" containerData="7500">
+          <children xsi:type="basic:Part" xmi:id="_kaY9IK8PEeayFIzGQmD31g" elementId="net.schwehla.matrosdms.rcp.part.welcometomatros" contributionURI="bundleclass://net.schwehla.matrosdms.rcp/net.schwehla.matrosdms.rcp.parts.WelcomePart" label="Welcome to Matros"/>
+        </children>
+        <children xsi:type="basic:PartStack" xmi:id="_d0aHoK8PEeayFIzGQmD31g" elementId="net.schwehla.matrosdms.rcp.partstack.10" containerData="2500">
+          <children xsi:type="basic:Part" xmi:id="_enwQIK8PEeayFIzGQmD31g" elementId="net.schwehla.matrosdms.rcp.part.logview" contributionURI="bundleclass://net.schwehla.matrosdms.logview/net.schwehla.matrosdms.logview.parts.LogViewPart" label="Logview"/>
+        </children>
+      </children>
+    </children>
+    <mainMenu xmi:id="_6wlLicgZEeSyMNYR5xypkQ" elementId="org.eclipse.ui.main.menu.window">
+      <children xsi:type="menu:Menu" xmi:id="_6wlLisgZEeSyMNYR5xypkQ" elementId="file" label="File" mnemonics="F">
+        <children xsi:type="menu:HandledMenuItem" xmi:id="_6wlLjMgZEeSyMNYR5xypkQ" elementId="net.schwehla.matrosdms.rcp.handleditem.save" label="Save" iconURI="platform:/plugin/net.schwehla.matrosdms.rcp/icons/save_edit.png" command="_6wlLg8gZEeSyMNYR5xypkQ"/>
+        <children xsi:type="menu:MenuSeparator" xmi:id="_J45o8Oy8EeaKvqgdV8VUDQ" elementId="net.schwehla.matrosdms.rcp.menuseparator.0"/>
+        <children xsi:type="menu:HandledMenuItem" xmi:id="_1rXmYPaEEeaxBK29YmUz3g" elementId="net.schwehla.matrosdms.rcp.handledmenuitem.verifyitem" label="Verify Database..." mnemonics="v" command="_ldFZ4PaEEeaxBK29YmUz3g"/>
+        <children xsi:type="menu:HandledMenuItem" xmi:id="_e77bAOy1EeaKvqgdV8VUDQ" elementId="net.schwehla.matrosdms.rcp.handledmenuitem.export" label="Export..." mnemonics="e" command="_Q0MEQOy1EeaKvqgdV8VUDQ"/>
+        <children xsi:type="menu:MenuSeparator" xmi:id="_Mi1foOy8EeaKvqgdV8VUDQ" elementId="net.schwehla.matrosdms.rcp.menuseparator.1"/>
+        <children xsi:type="menu:HandledMenuItem" xmi:id="_6wlLjcgZEeSyMNYR5xypkQ" elementId="net.schwehla.matrosdms.rcp.handleditem.quit" label="Quit" command="_6wlLfMgZEeSyMNYR5xypkQ"/>
+      </children>
+      <children xsi:type="menu:Menu" xmi:id="_c04NQOGkEeaSOewUjwalIw" elementId="net.schwehla.matrosdms.rcp.menu.navigate" label="Navigate" mnemonics="N"/>
+      <children xsi:type="menu:Menu" xmi:id="_lBFZsOGkEeaSOewUjwalIw" elementId="net.schwehla.matrosdms.rcp.menu.window" label="Window" mnemonics="W">
+        <children xsi:type="menu:HandledMenuItem" xmi:id="_ltAZ0OuPEeazh4UULF1NBQ" elementId="net.schwehla.matrosdms.rcp.handledmenuitem.preferences" label="Preferences" mnemonics="P" command="_jfTr0OuSEeaJdOc0MPml-Q"/>
+        <children xsi:type="menu:MenuSeparator" xmi:id="_L9tI0PX9Eear-_X9ocRLzg" elementId="net.schwehla.matrosdms.rcp.menuseparator.2"/>
+        <children xsi:type="menu:Menu" xmi:id="_NPGfQPX9Eear-_X9ocRLzg" elementId="net.schwehla.matrosdms.rcp.menu.openview" label="v">
+          <children xsi:type="menu:HandledMenuItem" xmi:id="_Po6PQPX9Eear-_X9ocRLzg" elementId="net.schwehla.matrosdms.rcp.handledmenuitem.openproperties" label="Properties" mnemonics="P"/>
+        </children>
+      </children>
+      <children xsi:type="menu:Menu" xmi:id="_6wlLjsgZEeSyMNYR5xypkQ" elementId="help" label="Help" mnemonics="H">
+        <children xsi:type="menu:HandledMenuItem" xmi:id="_6wlLj8gZEeSyMNYR5xypkQ" elementId="net.schwehla.matrosdms.rcp.handleditem.about" label="About" command="_6wlLhsgZEeSyMNYR5xypkQ"/>
+      </children>
+    </mainMenu>
+    <trimBars xmi:id="_6wlLlcgZEeSyMNYR5xypkQ" elementId="net.schwehla.matrosdms.rcp.trimbar.top">
+      <children xsi:type="menu:ToolBar" xmi:id="_6wlLlsgZEeSyMNYR5xypkQ" elementId="org.eclipse.ui.main.toolbar">
+        <tags>Draggable</tags>
+      </children>
+      <children xsi:type="menu:ToolControl" xmi:id="_GxAQYOYYEeapqfHS7Y-KyQ" elementId="Spacer" contributionURI="bundleclass://net.schwehla.matrosdms.rcp/net.schwehla.matrosdms.rcp.toolcontrol.TaggraphToolControlSpacer">
+        <tags>stretch</tags>
+        <tags>SHOW_RESTORE_MENU</tags>
+      </children>
+      <children xsi:type="menu:ToolControl" xmi:id="_K70uYHhkEeav4YvTkXGUrg" elementId="net.schwehla.matrosdms.rcp.toolcontrol.perspectiveswitcher" contributionURI="bundleclass://net.schwehla.matrosdms.rcp/net.schwehla.matrosdms.rcp.toolcontrol.PerspectiveSwitcherToolControl">
+        <tags>Draggable</tags>
+      </children>
+    </trimBars>
+    <trimBars xmi:id="_1JPewKRIEearyviN4wa3CA" elementId="net.schwehla.matrosdms.rcp.trimbar.statusline" side="Bottom">
+      <children xsi:type="menu:ToolControl" xmi:id="_Zo1ZkKRPEearyviN4wa3CA" elementId="net.schwehla.matrosdms.rcp.toolcontrol.statusline" contributionURI="bundleclass://net.schwehla.matrosdms.rcp/net.schwehla.matrosdms.rcp.toolcontrol.StatuslineToolControlStatus">
+        <tags>Draggable</tags>
+      </children>
+      <children xsi:type="menu:ToolControl" xmi:id="_XruUAKRMEearyviN4wa3CA" elementId="net.schwehla.matrosdms.rcp.toolcontrol.statuslinestretch" contributionURI="bundleclass://net.schwehla.matrosdms.rcp/net.schwehla.matrosdms.rcp.toolcontrol.StatuslineToolControlSpacer">
+        <tags>stretch</tags>
+      </children>
+      <children xsi:type="menu:ToolControl" xmi:id="_-T-c8LvWEeakONFG-moQWw" elementId="User" contributionURI="bundleclass://net.schwehla.matrosdms.rcp/net.schwehla.matrosdms.rcp.toolcontrol.UserToolControl">
+        <tags>move_after:PerspectiveSpacer</tags>
+      </children>
+    </trimBars>
+  </children>
+  <handlers xmi:id="_6wlLfcgZEeSyMNYR5xypkQ" elementId="net.schwehla.matrosdms.rcp.handler.quitCommand" contributionURI="bundleclass://net.schwehla.matrosdms.rcp/net.schwehla.matrosdms.rcp.handlers.QuitHandler" command="_6wlLfMgZEeSyMNYR5xypkQ"/>
+  <handlers xmi:id="_6wlLgcgZEeSyMNYR5xypkQ" elementId="net.schwehla.matrosdms.rcp.handler.openCommand" contributionURI="bundleclass://net.schwehla.matrosdms.rcp/net.schwehla.matrosdms.rcp.handlers.OpenHandler" command="_6wlLgMgZEeSyMNYR5xypkQ"/>
+  <handlers xmi:id="_6wlLhMgZEeSyMNYR5xypkQ" elementId="net.schwehla.matrosdms.rcp.handler.saveCommand" contributionURI="bundleclass://net.schwehla.matrosdms.rcp/net.schwehla.matrosdms.rcp.handlers.SaveHandler" command="_6wlLg8gZEeSyMNYR5xypkQ"/>
+  <handlers xmi:id="_6wlLh8gZEeSyMNYR5xypkQ" elementId="net.schwehla.matrosdms.rcp.handler.aboutCommand" contributionURI="bundleclass://net.schwehla.matrosdms.rcp/net.schwehla.matrosdms.rcp.handlers.AboutHandler" command="_6wlLhsgZEeSyMNYR5xypkQ"/>
+  <handlers xmi:id="_58QZYGzzEeaeVoUSglvwIg" elementId="net.schwehla.matrosdms.rcp.handler.createInfoContext" contributionURI="bundleclass://net.schwehla.matrosdms.rcp/net.schwehla.matrosdms.rcp.command.CreateInfoContextCommand" command="_-AzvYL-yEeamqcNwq4q69g"/>
+  <handlers xmi:id="_MuuQIL_FEeamqcNwq4q69g" elementId="net.schwehla.matrosdms.rcp.handler.createCategoryCommand" contributionURI="bundleclass://net.schwehla.matrosdms.rcp/net.schwehla.matrosdms.rcp.command.CreateCategoryCommand" command="_W3DyEL_FEeamqcNwq4q69g"/>
+  <handlers xmi:id="_Xf4pEOGlEeaSOewUjwalIw" elementId="net.schwehla.matrosdms.rcp.handler.addAttribute" contributionURI="bundleclass://net.schwehla.matrosdms.rcp/net.schwehla.matrosdms.rcp.command.AddAttributeCommand" command="_IoNDIOGlEeaSOewUjwalIw"/>
+  <handlers xmi:id="_K2yd8OuSEeaJdOc0MPml-Q" elementId="net.schwehla.matrosdms.rcp.handler.openpreferences" contributionURI="bundleclass://net.schwehla.matrosdms.rcp/net.schwehla.matrosdms.rcp.handlers.OpenPreferenceDialogHandler" command="_jfTr0OuSEeaJdOc0MPml-Q"/>
+  <handlers xmi:id="_VmxpgOy1EeaKvqgdV8VUDQ" elementId="net.schwehla.matrosdms.rcp.handler.exporthandler" contributionURI="bundleclass://net.schwehla.matrosdms.rcp/net.schwehla.matrosdms.rcp.handlers.ExportHandler" command="_Q0MEQOy1EeaKvqgdV8VUDQ"/>
+  <handlers xmi:id="_vZSwwPCkEeaQeotzDz-M5w" elementId="net.schwehla.matrosdms.rcp.handler.switchperspective" contributionURI="bundleclass://net.schwehla.matrosdms.rcp/net.schwehla.matrosdms.rcp.handlers.SwitchingPerspectiveHandler" command="_pDE1kPCkEeaQeotzDz-M5w"/>
+  <handlers xmi:id="_ui3YkPIkEeaoJJxWdAWWrw" elementId="net.schwehla.matrosdms.rcp.handler.archivecontext" contributionURI="bundleclass://net.schwehla.matrosdms.rcp/net.schwehla.matrosdms.rcp.handlers.ArchiveHandler" command="_Z-xpcPIkEeaoJJxWdAWWrw"/>
+  <handlers xmi:id="_BDqlUPXKEeaX2e7d_6n62g" elementId="net.schwehla.matrosdms.rcp.handler.archiveitem" contributionURI="bundleclass://net.schwehla.matrosdms.rcp/net.schwehla.matrosdms.rcp.handlers.ArchiveInfoItemHandler" command="_h98qgPXJEeaX2e7d_6n62g"/>
+  <handlers xmi:id="_pGLAcPaEEeaxBK29YmUz3g" elementId="net.schwehla.matrosdms.rcp.handler.verifyhandler" contributionURI="bundleclass://net.schwehla.matrosdms.rcp/net.schwehla.matrosdms.rcp.handlers.VerifyHandler" command="_ldFZ4PaEEeaxBK29YmUz3g"/>
+  <handlers xmi:id="_oSuEUA5sEee9IP72GzVSBw" elementId="net.schwehla.matrosdms.rcp.handler.0" contributionURI="bundleclass://net.schwehla.matrosdms.rcp/net.schwehla.matrosdms.rcp.handlers.EditContextHandler" command="_jphroA5sEee9IP72GzVSBw"/>
+  <handlers xmi:id="_AnvXsDD5EeeyhPzox7YnvQ" elementId="net.schwehla.matrosdms.rcp.handler.1" contributionURI="bundleclass://net.schwehla.matrosdms.rcp/net.schwehla.matrosdms.rcp.command.AddOriginalstoreCommand" command="_6JQRUDD4EeeyhPzox7YnvQ"/>
+  <bindingTables xmi:id="_6wlLfsgZEeSyMNYR5xypkQ" elementId="net.schwehla.matrosdms.rcp.bindingtable" bindingContext="_6wlLecgZEeSyMNYR5xypkQ">
+    <bindings xmi:id="_6wlLf8gZEeSyMNYR5xypkQ" elementId="net.schwehla.matrosdms.rcp.keybinding.m1q" keySequence="M1+Q" command="_6wlLfMgZEeSyMNYR5xypkQ"/>
+    <bindings xmi:id="_6wlLgsgZEeSyMNYR5xypkQ" elementId="net.schwehla.matrosdms.rcp.keybinding.m1o" keySequence="M1+O" command="_6wlLgMgZEeSyMNYR5xypkQ"/>
+    <bindings xmi:id="_6wlLhcgZEeSyMNYR5xypkQ" elementId="net.schwehla.matrosdms.rcp.keybinding.m1s" keySequence="M1+S" command="_6wlLg8gZEeSyMNYR5xypkQ"/>
+    <bindings xmi:id="_6wlLiMgZEeSyMNYR5xypkQ" elementId="net.schwehla.matrosdms.rcp.keybinding.m1a" keySequence="M1+A" command="_6wlLhsgZEeSyMNYR5xypkQ"/>
+  </bindingTables>
+  <rootContext xmi:id="_6wlLecgZEeSyMNYR5xypkQ" elementId="org.eclipse.ui.contexts.dialogAndWindow" name="In Dialog and Windows">
+    <children xmi:id="_6wlLesgZEeSyMNYR5xypkQ" elementId="org.eclipse.ui.contexts.window" name="In Windows"/>
+    <children xmi:id="_6wlLe8gZEeSyMNYR5xypkQ" elementId="org.eclipse.ui.contexts.dialog" name="In Dialogs"/>
+  </rootContext>
+  <descriptors xmi:id="_nnHL0GFzEea2JI4bD_v8kQ" elementId="net.schwehla.matrosdms.rcp.partdescriptor.ItemPart" label="ItemPart" iconURI="platform:/plugin/net.schwehla.matrosdms.rcp/icons/save_edit.png" allowMultiple="true" category="datei" closeable="true" dirtyable="true" contributionURI="bundleclass://net.schwehla.matrosdms.rcp/net.schwehla.matrosdms.rcp.parts.ItemPart">
+    <tags>removeOnHide</tags>
+    <tags>itempart</tags>
+    <properties/>
+  </descriptors>
+  <descriptors xmi:id="_4aIMwA5sEee9IP72GzVSBw" elementId="net.schwehla.matrosdms.rcp.partdescriptor.contextpart" label="ContextPart" iconURI="platform:/plugin/net.schwehla.matrosdms.rcp/icons/save_edit.png" allowMultiple="true" category="datei" closeable="true" dirtyable="true" contributionURI="bundleclass://net.schwehla.matrosdms.rcp/net.schwehla.matrosdms.rcp.parts.ContextPart"/>
+  <commands xmi:id="_6wlLfMgZEeSyMNYR5xypkQ" elementId="org.eclipse.ui.file.exit" commandName="quitCommand"/>
+  <commands xmi:id="_6wlLgMgZEeSyMNYR5xypkQ" elementId="org.eclipse.ui.file.open" commandName="openCommand"/>
+  <commands xmi:id="_6wlLg8gZEeSyMNYR5xypkQ" elementId="org.eclipse.ui.file.save" commandName="saveCommand"/>
+  <commands xmi:id="_6wlLhsgZEeSyMNYR5xypkQ" elementId="org.eclipse.ui.help.aboutAction" commandName="aboutCommand"/>
+  <commands xmi:id="_-AzvYL-yEeamqcNwq4q69g" elementId="net.schwehla.matrosdms.rcp.command.createContent" commandName="createContentCommand" category="_FRfHsL-zEeamqcNwq4q69g"/>
+  <commands xmi:id="_W3DyEL_FEeamqcNwq4q69g" elementId="net.schwehla.matrosdms.rcp.command.createCategoryCommand" commandName="createCategoryCommand" category="_FRfHsL-zEeamqcNwq4q69g"/>
+  <commands xmi:id="_IoNDIOGlEeaSOewUjwalIw" elementId="net.schwehla.matrosdms.rcp.command.addAttributeCommand" commandName="Add Attribute" description="Attribute" category="_Q5wCkOGlEeaSOewUjwalIw"/>
+  <commands xmi:id="_Q0MEQOy1EeaKvqgdV8VUDQ" elementId="net.schwehla.matrosdms.rcp.command.export" commandName="exportCommand" description="Export"/>
+  <commands xmi:id="_jfTr0OuSEeaJdOc0MPml-Q" elementId="net.schwehla.matrosdms.rcp.command.openpreferencescommand" commandName="open preferences"/>
+  <commands xmi:id="_pDE1kPCkEeaQeotzDz-M5w" elementId="net.schwehla.matrosdms.rcp.command.switchperspectiveCommand" commandName="Switch Perspective">
+    <parameters xmi:id="_fBtMYPCmEeaQeotzDz-M5w" elementId="net.schwehla.matrosdms.rcp.commandparameter.id" name="perspectiveId"/>
+  </commands>
+  <commands xmi:id="_Z-xpcPIkEeaoJJxWdAWWrw" elementId="net.schwehla.matrosdms.rcp.command.archivecontext" commandName="Archive Context"/>
+  <commands xmi:id="_h98qgPXJEeaX2e7d_6n62g" elementId="net.schwehla.matrosdms.rcp.command.archiveitem" commandName="Archive Item"/>
+  <commands xmi:id="_ldFZ4PaEEeaxBK29YmUz3g" elementId="net.schwehla.matrosdms.rcp.command.verify" commandName="Verify"/>
+  <commands xmi:id="_jphroA5sEee9IP72GzVSBw" elementId="net.schwehla.matrosdms.rcp.command.editContext" commandName="Edit Context" description="Edit Context" category="_FRfHsL-zEeamqcNwq4q69g"/>
+  <commands xmi:id="_6JQRUDD4EeeyhPzox7YnvQ" elementId="net.schwehla.matrosdms.rcp.command.Add Originalstore" commandName="Add Originalstore" description="Add Originalstore"/>
+  <addons xmi:id="_6wlLcsgZEeSyMNYR5xypkQ" elementId="org.eclipse.e4.core.commands.service" contributionURI="bundleclass://org.eclipse.e4.core.commands/org.eclipse.e4.core.commands.CommandServiceAddon"/>
+  <addons xmi:id="_6wlLc8gZEeSyMNYR5xypkQ" elementId="org.eclipse.e4.ui.contexts.service" contributionURI="bundleclass://org.eclipse.e4.ui.services/org.eclipse.e4.ui.services.ContextServiceAddon"/>
+  <addons xmi:id="_6wlLdMgZEeSyMNYR5xypkQ" elementId="org.eclipse.e4.ui.bindings.service" contributionURI="bundleclass://org.eclipse.e4.ui.bindings/org.eclipse.e4.ui.bindings.BindingServiceAddon"/>
+  <addons xmi:id="_6wlLdcgZEeSyMNYR5xypkQ" elementId="org.eclipse.e4.ui.workbench.commands.model" contributionURI="bundleclass://org.eclipse.e4.ui.workbench/org.eclipse.e4.ui.internal.workbench.addons.CommandProcessingAddon"/>
+  <addons xmi:id="_6wlLdsgZEeSyMNYR5xypkQ" elementId="org.eclipse.e4.ui.workbench.handler.model" contributionURI="bundleclass://org.eclipse.e4.ui.workbench/org.eclipse.e4.ui.internal.workbench.addons.HandlerProcessingAddon"/>
+  <addons xmi:id="_6wlLd8gZEeSyMNYR5xypkQ" elementId="org.eclipse.e4.ui.workbench.contexts.model" contributionURI="bundleclass://org.eclipse.e4.ui.workbench/org.eclipse.e4.ui.internal.workbench.addons.ContextProcessingAddon"/>
+  <addons xmi:id="_6wlLeMgZEeSyMNYR5xypkQ" elementId="org.eclipse.e4.ui.workbench.bindings.model" contributionURI="bundleclass://org.eclipse.e4.ui.workbench.swt/org.eclipse.e4.ui.workbench.swt.util.BindingProcessingAddon"/>
+  <addons xmi:id="_tgx3sK8AEeayFIzGQmD31g" elementId="net.schwehla.matrosdms.rcp.addon.LogEntryCache" contributionURI="bundleclass://net.schwehla.matrosdms.logview/net.schwehla.matrosdms.logview.util.LogEntryCache"/>
+  <categories xmi:id="_FRfHsL-zEeamqcNwq4q69g" elementId="net.schwehla.matrosdms.rcp.category.context" name="context"/>
+  <categories xmi:id="_Q5wCkOGlEeaSOewUjwalIw" elementId="net.schwehla.matrosdms.rcp.category.attribute" name="attribute"/>
+</application:Application>

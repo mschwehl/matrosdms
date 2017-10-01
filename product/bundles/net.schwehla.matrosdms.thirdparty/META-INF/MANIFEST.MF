@@ -1,0 +1,17 @@
+Manifest-Version: 1.0
+Bundle-ManifestVersion: 2
+Bundle-Name: thirdparty
+Bundle-SymbolicName: net.schwehla.matrosdms.thirdparty;singleton:=true
+Bundle-Version: 1.2.0.qualifier
+Bundle-RequiredExecutionEnvironment: JavaSE-1.8
+Bundle-ActivationPolicy: lazy
+Bundle-ClassPath: .,
+ lib/commons-beanutils-1.9.3.jar,
+ lib/commons-logging-1.2.jar,
+ lib/guava-21.0.jar,
+ lib/commons-jexl3-3.1.jar
+Export-Package: org.apache.commons.beanutils,
+ org.apache.commons.jexl3,
+ org.apache.commons.logging
+Bundle-Vendor: matros
+

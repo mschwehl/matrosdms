@@ -1,0 +1,57 @@
+<?xml version="1.0" encoding="UTF-8" ?> 
+<persistence  
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" 
+ 	xsi:schemaLocation="http://java.sun.com/xml/ns/persistence http://java.sun.com/xml/ns/persistence/persistence_2_0.xsd" 
+ 	xmlns="http://java.sun.com/xml/ns/persistence" 
+ 	version="2.0"> 
+ 	 
+ 	<persistence-unit name="H2JPA" transaction-type="RESOURCE_LOCAL"> 
+ 		<provider>org.eclipse.persistence.jpa.PersistenceProvider</provider> 
+ 		
+ 		<class>net.schwehla.matrosdms.persistenceservice.entity.internal.DBContext</class> 
+ 		<class>net.schwehla.matrosdms.persistenceservice.entity.internal.DBItemMetadata</class> 
+ 		<class>net.schwehla.matrosdms.persistenceservice.entity.internal.DBItem</class> 
+ 		<class>net.schwehla.matrosdms.persistenceservice.entity.internal.DBKategorie</class> 
+	    <class>net.schwehla.matrosdms.persistenceservice.entity.internal.VW_CONTEXT</class>
+	    <class>net.schwehla.matrosdms.persistenceservice.entity.internal.VW_SEARCH</class>
+	    <class>net.schwehla.matrosdms.persistenceservice.entity.internal.DBOriginalstore</class> 
+	    <class>net.schwehla.matrosdms.persistenceservice.entity.internal.DBEvent</class> 
+	    
+	    <class>net.schwehla.matrosdms.persistenceservice.entity.internal.attribute.AbstractDBInfoAttribute</class> 
+	   	<class>net.schwehla.matrosdms.persistenceservice.entity.internal.attribute.DBAttributeType</class> 
+
+	    <class>net.schwehla.matrosdms.persistenceservice.entity.internal.attribute.DBBooleanAttribute</class> 
+	    <class>net.schwehla.matrosdms.persistenceservice.entity.internal.attribute.DBDateAttribute</class> 
+	    <class>net.schwehla.matrosdms.persistenceservice.entity.internal.attribute.DBLinkAttribute</class> 
+	    <class>net.schwehla.matrosdms.persistenceservice.entity.internal.attribute.DBNumberAttribute</class> 	     
+ 		<class>net.schwehla.matrosdms.persistenceservice.entity.internal.attribute.DBTextAttribute</class> 
+ 				
+ 		<class>net.schwehla.matrosdms.persistenceservice.entity.internal.management.DBUser</class> 
+ 		<class>net.schwehla.matrosdms.persistenceservice.entity.internal.management.DBPermission</class> 
+ 		<class>net.schwehla.matrosdms.persistenceservice.entity.internal.management.DBConfig</class> 
+ 		 				 		
+ 		<properties> 
+ 			<property name="javax.persistence.jdbc.driver" value="org.h2.Driver" /> 
+ 			<!-- lokal um zu prüfen was die DB macht -->
+ 			<!--  property name="javax.persistence.jdbc.url" value="jdbc:h2:C:/data/matrosdms;MODE=Oracle;TRACE_LEVEL_SYSTEM_OUT=2;AUTO_SERVER=TRUE" / --> 
+ 			<!-- property name="javax.persistence.jdbc.url" value="jdbc:h2:C:/data/matrosdms;MODE=Oracle;TRACE_LEVEL_SYSTEM_OUT=2" /--> 
+ 			
+ 			
+ 			<property name="javax.persistence.jdbc.user" value="sa" /> 
+ 			<property name="javax.persistence.jdbc.password" value="" /> 
+ 
+ 			<!--  this is the job from Tester.java -->
+  
+ 			<!-- property name="eclipselink.create-ddl-jdbc-file-name" value="matroscreateDDL_ddlGeneration.jdbc"/>
+			<property name="eclipselink.drop-ddl-jdbc-file-name" value="matrosdropDDL_ddlGeneration.jdbc"/>
+ 			<property name="eclipselink.ddl-generation.output-mode" value="sql-script"/>
+
+ 			<property name="eclipselink.ddl-generation" value="drop-and-create-tables"/-->
+ 	
+             <!-- property name="eclipselink.logging.level" value="FINE" /--> 
+             
+ 		</properties> 
+ 	</persistence-unit> 
+</persistence> 
+
+

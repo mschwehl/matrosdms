@@ -1,0 +1,16 @@
+Manifest-Version: 1.0
+Bundle-ManifestVersion: 2
+Bundle-Name: resourcepool
+Bundle-SymbolicName: net.schwehla.matrosdms.resourcepool;singleton:=true
+Bundle-Version: 1.2.0.qualifier
+Service-Component: OSIG-INF/component.xml
+Require-Bundle: org.eclipse.e4.tools.services;bundle-version="4.5.0",
+ org.eclipse.swt;bundle-version="3.105.2",
+ org.eclipse.equinox.registry,
+ org.eclipse.osgi,
+ org.eclipse.jface
+Bundle-RequiredExecutionEnvironment: JavaSE-1.8
+Import-Package: javax.inject;version="1.0.0"
+Bundle-ActivationPolicy: lazy
+Export-Package: net.schwehla.matrosdms.resourcepool
+Bundle-Vendor: matros

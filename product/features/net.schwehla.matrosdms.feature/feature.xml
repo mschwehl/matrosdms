@@ -1,0 +1,97 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<feature
+      id="net.schwehla.matrosdms.feature"
+      label="Feature"
+      version="1.2.0.qualifier"
+      provider-name="Martin">
+
+   <description url="http://www.example.com/description">
+      Matros Document-Mangement-System Feature
+   </description>
+
+   <copyright url="http://www.example.com/copyright">
+      [Enter Copyright Description here.]
+   </copyright>
+
+   <license url="http://www.example.com/license">
+      All rights reserved
+   </license>
+
+   <plugin
+         id="net.schwehla.matrosdms.rcp"
+         download-size="0"
+         install-size="0"
+         version="0.0.0"
+         unpack="false"/>
+
+   <plugin
+         id="net.schwehla.matrosdms.p2.ui"
+         download-size="0"
+         install-size="0"
+         version="0.0.0"
+         unpack="false"/>
+
+   <plugin
+         id="net.schwehla.matrosdms.domain"
+         download-size="0"
+         install-size="0"
+         version="0.0.0"
+         unpack="false"/>
+
+   <plugin
+         id="net.schwehla.matrosdms.persistenceservice"
+         download-size="0"
+         install-size="0"
+         version="0.0.0"
+         unpack="false"/>
+
+   <plugin
+         id="net.schwehla.matrosdms.logview"
+         download-size="0"
+         install-size="0"
+         version="0.0.0"
+         unpack="false"/>
+
+   <plugin
+         id="net.schwehla.matrosdms.bootstrap"
+         download-size="0"
+         install-size="0"
+         version="0.0.0"
+         unpack="false"/>
+
+   <plugin
+         id="net.schwehla.matrosdms.i18n"
+         download-size="0"
+         install-size="0"
+         version="0.0.0"
+         unpack="false"/>
+
+   <plugin
+         id="net.schwehla.matrosdms.notification"
+         download-size="0"
+         install-size="0"
+         version="0.0.0"
+         unpack="false"/>
+
+   <plugin
+         id="net.schwehla.matrosdms.resourcepool"
+         download-size="0"
+         install-size="0"
+         version="0.0.0"
+         unpack="false"/>
+
+   <plugin
+         id="net.schwehla.matrosdms.lucene"
+         download-size="0"
+         install-size="0"
+         version="0.0.0"
+         unpack="false"/>
+
+   <plugin
+         id="net.schwehla.matrosdms.thirdparty"
+         download-size="0"
+         install-size="0"
+         version="0.0.0"
+         unpack="false"/>
+
+</feature>
