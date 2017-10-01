@@ -79,4 +79,4 @@ using Eclipse E4 / Tycho / Eclipse Oxygen
 
 __contribution is welcome__
 
-## Status: currently moving the code to github, take a look at the betaversion :-)
+## Status: Code moved to github, starting implementing missing features
