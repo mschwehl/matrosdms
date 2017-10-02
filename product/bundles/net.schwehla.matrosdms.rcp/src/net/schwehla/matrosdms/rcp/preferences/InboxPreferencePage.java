@@ -74,6 +74,8 @@ public class InboxPreferencePage extends PreferencePage {
      	
      	 getPreferenceStore().setValue(MyGlobalConstants.Preferences.INBOX_PATH, inboxPath);
      	
+     	 getPreferenceStore().setValue(MyGlobalConstants.Preferences.PROCESSED_PATH, masterData.getProcessedFolder());
+     	 
 		
 	}
 	
@@ -108,15 +110,13 @@ public class InboxPreferencePage extends PreferencePage {
 		compositeTree.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true, 1, 1));
 		
 				
-				TreeViewer treeViewer = new TreeViewer(compositeTree, SWT.BORDER);
-				Tree tree = treeViewer.getTree();
-				tree.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true, 1, 1));
-				
-						treeViewer.setContentProvider(new MyTreeContentProvider());
-						treeViewer.setLabelProvider(new MyTreeLabelProvider());
-						
-	
+		TreeViewer treeViewer = new TreeViewer(compositeTree, SWT.BORDER);
+		Tree tree = treeViewer.getTree();
+		tree.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true, 1, 1));
 		
+		treeViewer.setContentProvider(new MyTreeContentProvider());
+		treeViewer.setLabelProvider(new MyTreeLabelProvider());
+				
 						
 		Composite compositeButtons = new Composite(compositeTreeAndButtons, SWT.NONE);
 		compositeButtons.setLayout(new GridLayout(1, false));

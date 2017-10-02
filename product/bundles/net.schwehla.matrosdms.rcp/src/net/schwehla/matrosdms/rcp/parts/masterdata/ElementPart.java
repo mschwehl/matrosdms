@@ -28,6 +28,7 @@ import net.schwehla.matrosdms.domain.util.Identifier;
 import net.schwehla.matrosdms.persistenceservice.IMatrosServiceService;
 import net.schwehla.matrosdms.rcp.swt.squarebutton.SquareButton;
 import net.schwehla.matrosdms.rcp.swt.squarebutton.SquareButtonGroup;
+import org.eclipse.swt.widgets.Label;
 
 public class ElementPart {
 	
@@ -58,10 +59,6 @@ public class ElementPart {
 
 
 	Composite compositeRoot;
-
-
-	
-	CLabel lblNewLabel ;
 	
 	
 	InfoContext _localDropfieldContext;
@@ -80,40 +77,9 @@ public class ElementPart {
 		compositeRoot.setLayoutData(new GridData(SWT.FILL, SWT.FILL, false, true, 1, 1));
 		
 		
-		GridLayout gl_composite = new GridLayout(2, false);
+		GridLayout gl_composite = new GridLayout(1, false);
 		gl_composite.horizontalSpacing = 0;
 		compositeRoot.setLayout(gl_composite);
-		
-		Composite composite = new Composite(compositeRoot, SWT.NONE);
-		composite.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, false, 2, 1));
-		composite.setLayout(new GridLayout(2, false));
-		
-		lblNewLabel = new CLabel(composite, SWT.NONE);
-		lblNewLabel.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1));
-		
-		lblNewLabel.setText("Properties");
-		
-		ToolBar toolBar = new ToolBar(composite, SWT.FLAT | SWT.RIGHT);
-		
-		ToolItem tltmLock = new ToolItem(toolBar, SWT.CHECK);
-		tltmLock.setText("Unlock");
-		
-		ToolItem tltmUpdateElement = new ToolItem(toolBar, SWT.NONE);
-		tltmUpdateElement.addSelectionListener(new SelectionAdapter() {
-			@Override
-			public void widgetSelected(SelectionEvent e) {
-				
-				
-				
-			}
-		});
-		tltmUpdateElement.setText("Update");
-		
-		 // Set the background gradient
-		lblNewLabel.setBackground(new Color[] { Display.getDefault().getSystemColor(SWT.COLOR_WHITE),
-				 Display.getDefault().getSystemColor(SWT.COLOR_GRAY),
-				 Display.getDefault().getSystemColor(SWT.COLOR_WHITE),
-				 Display.getDefault().getSystemColor(SWT.COLOR_WHITE) }, new int[] { 33, 67, 100 });
 
 		Composite compositeButtons = new Composite(compositeRoot, SWT.NONE);
 	

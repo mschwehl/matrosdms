@@ -1,7 +1,10 @@
  
 package net.schwehla.matrosdms.rcp.parts;
 
+import java.io.File;
 import java.lang.reflect.Constructor;
+import java.nio.file.Files;
+import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
@@ -21,9 +24,11 @@ import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
 import org.eclipse.core.runtime.jobs.Job;
+import org.eclipse.core.runtime.preferences.IEclipsePreferences;
 import org.eclipse.e4.core.contexts.Active;
 import org.eclipse.e4.core.contexts.IEclipseContext;
 import org.eclipse.e4.core.di.annotations.Optional;
+import org.eclipse.e4.core.di.extensions.Preference;
 import org.eclipse.e4.core.services.events.IEventBroker;
 import org.eclipse.e4.core.services.log.Logger;
 import org.eclipse.e4.core.services.nls.Translation;
@@ -177,6 +182,11 @@ public class ItemPart {
 	TypedComboBox<InfoOrginalstore> box;
 	
 	TypedComboBox<Stage> boxInfoItemState;
+	
+	@Inject
+	@Preference(nodePath = MyGlobalConstants.Preferences.NODE_COM_MATROSDMS) 
+	IEclipsePreferences preferences ;
+	
 	
 	@Inject
 	public ItemPart() {
@@ -405,8 +415,57 @@ public class ItemPart {
 		 						NotificationNote note = new NotificationNote();
 		 						note.setHeading("Dokument gespeichert");
 		 				
+	
+		 						
+		 						// try move file to the processedfolder
+		 						
+		 						
+		 						try {
+									String inboxProcessed =  preferences.get(MyGlobalConstants.Preferences.PROCESSED_PATH, "" );
+									inboxProcessed = inboxProcessed.replaceAll(";","");
+									
+									
+									if(! new File(inboxProcessed).exists()) {
+										throw new IllegalStateException("no processed folder specified, please go to the preferences");
+									}
+									
+									if(!_wrapper.getInboxFile().exists()) {
+										throw new IllegalStateException("Source file not exists anymore");
+									}
+									
+									
+									Path moveSourcePath = _wrapper.getInboxFile().toPath() ;
+									Path moveTargetPath = new File(inboxProcessed + File.separator + _wrapper.getInfoItem().getIdentifier()
+											.getUuid() + "_" + moveSourcePath.getFileName() ).toPath();
+									
+									Files.move( moveSourcePath, moveTargetPath );
+									
+									
+									if( new File(inboxProcessed).exists()) {
+										throw new IllegalStateException("cannot move file " +  moveSourcePath.getFileName());
+									}
+									
+									note.setHeading( note.getHeading() + " and document moved");
+									
+								} catch (Exception e1) {
+									
+									logger.info( "File not moved from inbox (maybe open ?)  \n" + e1.getMessage());
+					
+/*									
+			 						MessageBox dialog =
+			 						        new MessageBox(shell, SWT.ICON_ERROR | SWT.OK| SWT.CANCEL);
+			 						dialog.setText("My info");
+			 						dialog.setMessage("File not moved to inbox (maybe open ?)  \n" + e1.getMessage());
+									dialog.open();
+*/
+									
+									note.setHeading( note.getHeading() + " but document NOT moved");
+									
+									
+								}
+		 						
 		 						notificationService.openPopup(note);
-
+		 						
 		 						// update potential store numbers
 		 						eventBroker.send(MyEventConstants.TOPIC__REFRESH_ITEM_ADD,  _wrapper.getInfoItem());
 		 						
