@@ -1,5 +1,7 @@
 package net.schwehla.matrosdms.rcp.preferences;
 
+import java.io.File;
+
 import javax.inject.Inject;
 
 import org.eclipse.e4.core.di.annotations.Creatable;
@@ -17,12 +19,12 @@ import net.schwehla.matrosdms.i18n.MatrosMessage;
 import net.schwehla.matrosdms.rcp.MyGlobalConstants;
 
 @Creatable
-public class ExportPreferencePage extends PreferencePage {
+public class ProcessedFolderPreferencePage extends PreferencePage {
 	
-    public ExportPreferencePage()
+    public ProcessedFolderPreferencePage()
     {
         super();
-        setTitle("Export");
+        setTitle("Processed Folder");
     }
     
 	@Inject
@@ -31,7 +33,7 @@ public class ExportPreferencePage extends PreferencePage {
 	
 	
 	private Text txtPath;
-	private Text txtPattern;
+
 
 	
 	@Override
@@ -39,18 +41,23 @@ public class ExportPreferencePage extends PreferencePage {
 
 		performApply() ;
 		
-		return true;
+		
+    	 String path = txtPath.getText();
+
+    	 File f = new File ("" + path);
+    	 
+    	 return f.exists();
+    	
 	}
+	
+	
 	
 	@Override
 	protected void performApply() {
 		
         
      	 String path = txtPath.getText();
-     	 getPreferenceStore().setValue(MyGlobalConstants.Preferences.EXPORT_PATH, path);
-
-     	 String pattern = txtPattern.getText();
-     	 getPreferenceStore().setValue(MyGlobalConstants.Preferences.EXPORT_PATTERN, pattern);
+     	 getPreferenceStore().setValue(MyGlobalConstants.Preferences.PROCESSED_PATH, path);
 
 		
 	}
@@ -79,13 +86,7 @@ public class ExportPreferencePage extends PreferencePage {
 		txtPath = new Text(compositeTreeAndButtons, SWT.BORDER);
 		txtPath.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1));
 		
-		Label lblPattern = new Label(compositeTreeAndButtons, SWT.NONE);
-		lblPattern.setLayoutData(new GridData(SWT.LEFT, SWT.TOP, false, false, 1, 1));
-		lblPattern.setText("Skript");
-		
-		txtPattern = new Text(compositeTreeAndButtons, SWT.BORDER | SWT.WRAP | SWT.MULTI);
-		txtPattern.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true, 1, 1));
-
+	
 		init();
 
 
@@ -95,18 +96,17 @@ public class ExportPreferencePage extends PreferencePage {
 
 	private void init() {
 	
-		 String path = getPreferenceStore().getString(MyGlobalConstants.Preferences.EXPORT_PATH);
-		 String pattern = getPreferenceStore().getString(MyGlobalConstants.Preferences.EXPORT_PATTERN);		
-	    
+		 String path = getPreferenceStore().getString(MyGlobalConstants.Preferences.PROCESSED_PATH);
+		    
 		 txtPath.setText(path != null ? path : "");
-		 txtPattern.setText(pattern != null ? pattern: "");
+	
 		
 		
 	}
 
 	   @Override
 	    public String toString() {
-	    	return "2_export";
+	    	return "3_processedFolder";
 	    }
 		
 	

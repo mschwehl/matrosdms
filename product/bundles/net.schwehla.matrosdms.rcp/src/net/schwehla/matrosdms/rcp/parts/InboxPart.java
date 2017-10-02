@@ -270,9 +270,9 @@ public class InboxPart {
 
 				public void mouseDoubleClick(MouseEvent e) {
 
-					File doc = (File) viewer.getTree().getSelection()[0].getData();
 		
 		        	try {
+						File doc = (File) viewer.getTree().getSelection()[0].getData();
 	                	desktopHelper.openUrl(doc.getCanonicalPath());
 	            	}catch(Exception ex) {
 	            		logger.error(ex);
