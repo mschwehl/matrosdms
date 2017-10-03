@@ -1393,7 +1393,7 @@ public class SquareButton extends Canvas {
     abstract void clicked();
   }
 
-  public static interface ButtonClickHandler {
+  public  interface ButtonClickHandler {
     void clicked();
   }
 
