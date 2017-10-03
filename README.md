@@ -79,4 +79,9 @@ using Eclipse E4 / Tycho / Eclipse Oxygen
 
 __contribution is welcome__
 
+# Discussion and Tickets
+
+
+https://sourceforge.net/projects/matrosdms/
+
 ## Status: Code moved to github, starting implementing missing features
