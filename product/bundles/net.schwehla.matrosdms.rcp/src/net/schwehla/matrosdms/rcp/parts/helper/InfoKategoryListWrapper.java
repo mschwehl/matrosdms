@@ -1,6 +1,8 @@
 package net.schwehla.matrosdms.rcp.parts.helper;
 
 import java.util.Objects;
+import java.util.function.Consumer;
+import java.util.function.Function;
 
 import javax.inject.Inject;
 
@@ -36,6 +38,8 @@ import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Display;
+import org.eclipse.swt.widgets.Event;
+import org.eclipse.swt.widgets.Listener;
 import org.eclipse.swt.widgets.Menu;
 import org.eclipse.swt.widgets.TreeItem;
 
@@ -58,6 +62,8 @@ import net.schwehla.matrosdms.rcp.swt.labelprovider.TaggraphLabelProvider;
 @Creatable
 public class InfoKategoryListWrapper {
 	
+
+
 	@Inject
 	public InfoKategoryListWrapper() {
 		
@@ -85,6 +91,8 @@ public class InfoKategoryListWrapper {
 	
 	InfoKategory root ;
 	
+	boolean editMode = false;
+	
 	
 	// Checkbox if context-aware
 	boolean _filterToContext = false;
@@ -92,13 +100,20 @@ public class InfoKategoryListWrapper {
 	private TreeViewer _treeviewer;
 	FilteredTree filteredTree;
 	
+	boolean showRoot;
 	
 	Composite treeComposite ;
 	
 	
-	public InfoKategoryListWrapper init(Composite parent, Identifier type) throws MatrosServiceException {
+	public TreeViewer getTreeViewer() {
+		return _treeviewer;
+	}
 
 	
+	
+	public InfoKategoryListWrapper init(Composite parent, Identifier type, boolean showRoot) throws MatrosServiceException {
+
+		this.showRoot = showRoot;
 		
 		init(parent);
 		root = service.getInfoKategoryByIdentifier(type);
@@ -117,7 +132,16 @@ public class InfoKategoryListWrapper {
 
 		
 		if (_treeviewer != null ) {
-			_treeviewer.setInput(root);
+			
+			if (showRoot) {
+				InfoKategory pseudoRoot = new InfoKategory(Identifier.createNEW(),"PSEUDOROOT");
+				pseudoRoot.connectWithChild(root);
+				_treeviewer.setInput(pseudoRoot);
+				
+			} else {
+				_treeviewer.setInput(root);
+			}
+			
 	 		_treeviewer.refresh();
 		}
 		
@@ -159,7 +183,7 @@ public class InfoKategoryListWrapper {
 
 				TreeItem[] selection = _treeviewer.getTree().getSelection();
 
-				if (selection != null && selection.length == 1) {
+				if (! editMode && selection != null && selection.length == 1) {
 					TreeItem i = selection[0];
 					InfoKategory k = (InfoKategory) i.getData();
 					eventBroker.send(MyEventConstants.TOPIC_TAGGRAPH_DOUBLEKLICK_ADD_ELEMENT, k);
@@ -391,5 +415,11 @@ public class InfoKategoryListWrapper {
 	}
 	
 
-	
+	public boolean isEditMode() {
+		return editMode;
+	}
+
+	public void setEditMode(boolean editMode) {
+		this.editMode = editMode;
+	}
 }
