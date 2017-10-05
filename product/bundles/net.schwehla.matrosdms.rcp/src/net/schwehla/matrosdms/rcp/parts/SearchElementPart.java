@@ -172,7 +172,7 @@ public class SearchElementPart {
 
 		 try {
 	
-			 art.init(compositeTopShell, identifier );
+			 art.init(compositeTopShell, identifier,false );
 			 art.setExpanded(true);
 		} catch (MatrosServiceException e1) {
 			logger.error(e1);

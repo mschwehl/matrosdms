@@ -6,11 +6,20 @@ import java.util.List;
 
 import javax.annotation.PostConstruct;
 import javax.inject.Inject;
+import javax.inject.Named;
 
+import org.eclipse.core.databinding.observable.sideeffect.ISideEffect;
+import org.eclipse.core.databinding.observable.value.IObservableValue;
+import org.eclipse.e4.core.di.annotations.Optional;
 import org.eclipse.e4.core.services.log.Logger;
+import org.eclipse.e4.ui.di.UISynchronize;
+import org.eclipse.e4.ui.services.IServiceConstants;
 import org.eclipse.e4.ui.workbench.modeling.ESelectionService;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.custom.StackLayout;
+import org.eclipse.swt.dnd.DND;
+import org.eclipse.swt.dnd.DropTargetEvent;
+import org.eclipse.swt.dnd.Transfer;
 import org.eclipse.swt.internal.image.GIFFileFormat;
 import org.eclipse.swt.layout.FillLayout;
 import org.eclipse.swt.layout.GridData;
@@ -22,13 +31,30 @@ import org.eclipse.swt.widgets.ToolItem;
 
 import net.schwehla.matrosdms.domain.core.InfoBaseElement;
 import net.schwehla.matrosdms.domain.core.InfoContext;
+import net.schwehla.matrosdms.domain.core.InfoItem;
+import net.schwehla.matrosdms.domain.core.tagcloud.InfoKategory;
 import net.schwehla.matrosdms.domain.util.Identifier;
+import net.schwehla.matrosdms.notification.INotificationService;
 import net.schwehla.matrosdms.persistenceservice.IMatrosServiceService;
 import net.schwehla.matrosdms.rcp.MyGlobalConstants;
+import net.schwehla.matrosdms.rcp.dnd.DomainClassTransfer;
+import net.schwehla.matrosdms.rcp.dnd.MyDropListener;
 import net.schwehla.matrosdms.rcp.parts.helper.InfoKategoryListWrapper;
+import net.schwehla.matrosdms.rcp.swt.labelprovider.TaggraphLabelProvider;
 import net.schwehla.matrosdms.rcp.swt.squarebutton.SquareButton;
 import net.schwehla.matrosdms.rcp.swt.squarebutton.SquareButtonGroup;
 import org.eclipse.wb.swt.SWTResourceManager;
+import org.eclipse.swt.widgets.Label;
+import org.eclipse.swt.widgets.Shell;
+import org.eclipse.swt.widgets.Button;
+import org.eclipse.jface.databinding.viewers.IViewerObservableValue;
+import org.eclipse.jface.databinding.viewers.ViewerProperties;
+import org.eclipse.jface.viewers.ArrayContentProvider;
+import org.eclipse.jface.viewers.ColumnLabelProvider;
+import org.eclipse.jface.viewers.DelegatingStyledCellLabelProvider;
+import org.eclipse.jface.viewers.IBaseLabelProvider;
+import org.eclipse.jface.viewers.ILabelProviderListener;
+import org.eclipse.jface.viewers.ListViewer;
 
 public class ElementPart {
 
@@ -51,6 +77,11 @@ public class ElementPart {
 
 	}
 
+	
+	
+	Transfer[] transferTypes = { DomainClassTransfer.getTransfer(InfoKategory.class)};
+	
+	
 	
 	@Inject IMatrosServiceService matrosService;
 	
@@ -100,6 +131,12 @@ public class ElementPart {
 	InfoContext _localDropfieldContext;
 	private Table table;
 	private Text txtOk;
+	private Composite compositeTree;
+	private Text text;
+	private Text txtParent;
+	
+	
+
 
 	@PostConstruct
 	public void postConstruct(Composite parent) {
@@ -152,14 +189,113 @@ public class ElementPart {
 		{
 			compositeWer = new Composite(compositeContentArea, SWT.NONE);
 			
+	
+			sl_compositeContentArea.topControl = compositeWer;
+			compositeWer.setLayout(new GridLayout(1, false));
+			{
+				compositeTree = new Composite(compositeWer, SWT.NONE);
+				compositeTree.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true, 1, 1));
+				compositeTree.setLayout(new GridLayout(1, false));
+			}
+			
+			Composite compositeAction = new Composite(compositeWer, SWT.NONE);
+			compositeAction.setLayout(new GridLayout(2, false));
+			compositeAction.setLayoutData(new GridData(SWT.FILL, SWT.BOTTOM, true, false, 1, 1));
+			
+			txtParent = new Text(compositeAction, SWT.BORDER);
+			txtParent.setEditable(false);
+			txtParent.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1));
+			
+			Button btnUpdate = new Button(compositeAction, SWT.NONE);
+			btnUpdate.setLayoutData(new GridData(SWT.RIGHT, SWT.TOP, false, false, 1, 1));
+			btnUpdate.setText("Update Parent");
+			
+			ListViewer listViewer = new ListViewer(compositeAction, SWT.BORDER | SWT.V_SCROLL);
+			
+			
+			listViewer.setContentProvider(new ArrayContentProvider());
+			listViewer.setInput(new ArrayList());
+			listViewer.addDropSupport (  DND.DROP_MOVE | DND.DROP_LINK | DND.DROP_COPY, transferTypes, 
+					new MyDropListener(listViewer, transferTypes) {
+ 				
+				@Override
+				public void drop(DropTargetEvent event) {
+					
+					if (event.data instanceof List) {
+						
+			    		InfoKategory p = (InfoKategory) ((List)event.data).get(0) ;
+			    		
+			    		List l = (List) listViewer.getInput();
+			    		l.clear();
+			    		l.add(p);
+			    		listViewer.refresh(true);
+			    		
+			    	}
+					
+					
+				}
+				
+				
+			});
+	
+			listViewer.setLabelProvider(
+					new ColumnLabelProvider() {
+					    @Override
+					    public String getText(Object element) {
+					    	
+					    	if (element instanceof InfoKategory) {
+					    		InfoKategory p = (InfoKategory) element;
+						        return p.getName();
+					    	}
+					    	
+					    	return element.toString();
+					        
+					    }
+					}
+					);
+			new Label(compositeAction, SWT.NONE);
+
+			
 			try {
-				wer.init(compositeWer,MyGlobalConstants.ROOT_WER);
+				wer.init(compositeTree,MyGlobalConstants.ROOT_WER,true);
+				wer.setEditMode(true);
 			} catch (Exception e) {
 				logger.error(e);
 			}
 			
-			sl_compositeContentArea.topControl = compositeWer;
-			compositeWer.setLayout(new GridLayout(1, false));
+	
+			// binding
+			
+			IViewerObservableValue  viewerSelectionObservable = ViewerProperties.singleSelection()
+					.observe(wer.getTreeViewer());
+			
+
+		
+
+			ISideEffect enableOkButtonSideEffect = ISideEffect.create(viewerSelectionObservable::getValue, 
+					e -> { 
+						
+						if (e != null) {
+							
+							if (e instanceof InfoKategory) {
+					    		InfoKategory p = (InfoKategory) e;
+					    		txtParent.setText(p.getName());
+					    	}
+							
+							
+						} else {
+							
+							txtParent.setText("");
+						}
+						
+						txtParent.redraw();
+						
+						});
+			
+			compositeTree.addDisposeListener( e->viewerSelectionObservable.dispose() );
+			compositeTree.addDisposeListener( e->enableOkButtonSideEffect.dispose() );		
+			
+			
 		}
 		
 
@@ -167,7 +303,8 @@ public class ElementPart {
 			compositeWas = new Composite(compositeContentArea, SWT.NONE);
 
 			try {
-				was.init(compositeWas,MyGlobalConstants.ROOT_WAS);
+				was.init(compositeWas,MyGlobalConstants.ROOT_WAS,true);
+				was.setEditMode(true);
 				compositeWas.setLayout(new GridLayout(1, false));
 			} catch (Exception e) {
 				logger.error(e);
@@ -179,7 +316,8 @@ public class ElementPart {
 			compositeWo = new Composite(compositeContentArea, SWT.NONE);
 
 			try {
-				was.init(compositeWo,MyGlobalConstants.ROOT_WO);
+				wo.init(compositeWo,MyGlobalConstants.ROOT_WO,true);
+				wo.setEditMode(true);
 				compositeWo.setLayout(new GridLayout(1, false));
 			} catch (Exception e) {
 				logger.error(e);
@@ -191,7 +329,8 @@ public class ElementPart {
 			compositeArt = new Composite(compositeContentArea, SWT.NONE);
 
 			try {
-				was.init(compositeArt,MyGlobalConstants.ROOT_ART);
+				art.init(compositeArt,MyGlobalConstants.ROOT_ART,true);
+				art.setEditMode(true);
 				compositeArt.setLayout(new GridLayout(1, false));
 			} catch (Exception e) {
 				logger.error(e);
@@ -286,5 +425,4 @@ public class ElementPart {
 
 
 	}
-	
 }

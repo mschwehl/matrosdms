@@ -169,10 +169,10 @@ public class TagGraphPart {
 		wrapperMap = new HashMap<>();
 		
 		try {
-			wrapperMap.put(MyGlobalConstants.ROOT_WER , wer.init(compositeContentArea,MyGlobalConstants.ROOT_WER) );
-			wrapperMap.put(MyGlobalConstants.ROOT_WAS , was.init(compositeContentArea,MyGlobalConstants.ROOT_WAS) );
-			wrapperMap.put(MyGlobalConstants.ROOT_WO , wo.init(compositeContentArea,MyGlobalConstants.ROOT_WO) );
-			wrapperMap.put(MyGlobalConstants.ROOT_ART , art.init(compositeContentArea,MyGlobalConstants.ROOT_ART) );
+			wrapperMap.put(MyGlobalConstants.ROOT_WER , wer.init(compositeContentArea,MyGlobalConstants.ROOT_WER,false) );
+			wrapperMap.put(MyGlobalConstants.ROOT_WAS , was.init(compositeContentArea,MyGlobalConstants.ROOT_WAS,false) );
+			wrapperMap.put(MyGlobalConstants.ROOT_WO , wo.init(compositeContentArea,MyGlobalConstants.ROOT_WO,false) );
+			wrapperMap.put(MyGlobalConstants.ROOT_ART , art.init(compositeContentArea,MyGlobalConstants.ROOT_ART,false) );
 			
 
 
