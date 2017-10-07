@@ -8,10 +8,12 @@ import java.io.ObjectOutputStream;
 import java.io.OutputStream;
 import java.io.Serializable;
 
+import net.schwehla.matrosdms.rcp.MatrosServiceException;
+
 public class ObjectCloner<T extends Serializable> {
 
 	@SuppressWarnings("unchecked")
-	public T cloneThroughSerialize(T t) throws Exception {
+	public T cloneThroughSerialize(T t) throws MatrosServiceException {
 		
 		try (ByteArrayOutputStream bos = new ByteArrayOutputStream() ) {
 			serializeToOutputStream(t, bos);
@@ -20,6 +22,8 @@ public class ObjectCloner<T extends Serializable> {
 			try (ObjectInputStream ois = new ObjectInputStream(new ByteArrayInputStream(bytes))) {
 				return (T) ois.readObject();
 			}
+		} catch(Exception e) {
+			throw new MatrosServiceException(e,"Cannot serialize");
 		}
 		
 			

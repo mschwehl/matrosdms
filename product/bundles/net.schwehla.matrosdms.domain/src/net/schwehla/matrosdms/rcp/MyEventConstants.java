@@ -69,5 +69,7 @@ public class MyEventConstants {
 
 	public static final String TOPIC__REFRESH_ORIGINALSTORE_ADD = "REFRESH/ORIGINALSTORE/ADD";
 
+	public static final String TOPIC_REFRESH_INFOKATEGORY_MODIFIED = "REFRESH/INFOKATEGORY/MODIFIED";
+
 	
 }
