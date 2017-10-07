@@ -22,7 +22,6 @@ import org.eclipse.swt.widgets.Text;
 import net.schwehla.matrosdms.domain.search.SearchItemInput;
 import net.schwehla.matrosdms.domain.util.Identifier;
 import net.schwehla.matrosdms.persistenceservice.IMatrosServiceService;
-import net.schwehla.matrosdms.rcp.MatrosServiceException;
 import net.schwehla.matrosdms.rcp.MyGlobalConstants;
 import net.schwehla.matrosdms.rcp.binding.MatrosBinder;
 import net.schwehla.matrosdms.rcp.controller.SerachResultListController;
@@ -174,7 +173,7 @@ public class SearchElementPart {
 	
 			 art.init(compositeTopShell, identifier,false );
 			 art.setExpanded(true);
-		} catch (MatrosServiceException e1) {
+		} catch (Exception e1) {
 			logger.error(e1);
 		}
 		
