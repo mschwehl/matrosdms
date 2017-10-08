@@ -1,16 +1,17 @@
 package net.schwehla.matrosdms.rcp.parts.helper;
 
+import java.util.ArrayList;
 import java.util.Objects;
-import java.util.function.Consumer;
-import java.util.function.Function;
 
 import javax.inject.Inject;
 
 import org.eclipse.e4.core.contexts.ContextInjectionFactory;
 import org.eclipse.e4.core.contexts.IEclipseContext;
 import org.eclipse.e4.core.di.annotations.Creatable;
+import org.eclipse.e4.core.di.annotations.Optional;
 import org.eclipse.e4.core.services.events.IEventBroker;
 import org.eclipse.e4.core.services.log.Logger;
+import org.eclipse.e4.ui.di.UIEventTopic;
 import org.eclipse.e4.ui.model.application.MApplication;
 import org.eclipse.e4.ui.workbench.modeling.ESelectionService;
 import org.eclipse.jface.action.Action;
@@ -38,13 +39,12 @@ import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Display;
-import org.eclipse.swt.widgets.Event;
-import org.eclipse.swt.widgets.Listener;
 import org.eclipse.swt.widgets.Menu;
 import org.eclipse.swt.widgets.TreeItem;
 
 import net.schwehla.matrosdms.domain.core.tagcloud.InfoKategory;
 import net.schwehla.matrosdms.domain.util.Identifier;
+import net.schwehla.matrosdms.domain.util.ObjectCloner;
 import net.schwehla.matrosdms.persistenceservice.IMatrosServiceService;
 import net.schwehla.matrosdms.rcp.MatrosServiceException;
 import net.schwehla.matrosdms.rcp.MyEventConstants;
@@ -90,6 +90,7 @@ public class InfoKategoryListWrapper {
 	
 	
 	InfoKategory root ;
+	Identifier  givenRoot ;
 	
 	boolean editMode = false;
 	
@@ -110,13 +111,39 @@ public class InfoKategoryListWrapper {
 	}
 
 	
+	@Inject
+	@Optional
+	/**
+	 * OK, double-clicked on one Element, eg. Car
+	 * @param modelType
+	 */
+	private void subscribeTopicTOPIC_TAGGRAPH_DOUBLEKLICK_ADD_ELEMENT(@UIEventTopic(MyEventConstants.TOPIC_REFRESH_INFOKATEGORY_MODIFIED) InfoKategory type) {
+
+		if (type != null 
+				&& _treeviewer != null && ! _treeviewer.getTree().isDisposed()) {
+			
+			
+			try {
+				root = new ObjectCloner<InfoKategory>().cloneThroughSerialize(service.getInfoKategoryByIdentifier(type.getIdentifier()));
+				setRootAndRefresh(type);
+			} catch (MatrosServiceException e) {
+				logger.error(e);
+			}
+		
+		}
+	    
+	}
+	
 	
 	public InfoKategoryListWrapper init(Composite parent, Identifier type, boolean showRoot) throws MatrosServiceException {
 
+		givenRoot = type;		
 		this.showRoot = showRoot;
 		
 		init(parent);
-		root = service.getInfoKategoryByIdentifier(type);
+		root = new ObjectCloner<InfoKategory>().cloneThroughSerialize(service.getInfoKategoryByIdentifier(type));
+
+		
 		setRootAndRefresh(root);
 		
 		return this;
@@ -136,6 +163,9 @@ public class InfoKategoryListWrapper {
 			if (showRoot) {
 				InfoKategory pseudoRoot = new InfoKategory(Identifier.createNEW(),"PSEUDOROOT");
 				pseudoRoot.connectWithChild(root);
+				
+				// DIRTY-HACK: should work without this line
+				root.setParents(new ArrayList<>());
 				_treeviewer.setInput(pseudoRoot);
 				
 			} else {
@@ -281,7 +311,9 @@ public class InfoKategoryListWrapper {
 
 			        				try {
 			        					
-			        					InfoKategory x =service.getInfoKategoryByIdentifier(root.getIdentifier()); 
+			        					
+			        					
+			        					InfoKategory x = new ObjectCloner<InfoKategory>().cloneThroughSerialize(service.getInfoKategoryByIdentifier(root.getIdentifier()));
 			        					root = x;
 			        					setRootAndRefresh(root);
 			        					
@@ -377,7 +409,7 @@ public class InfoKategoryListWrapper {
 
 			try {
 				
-				InfoKategory x =service.getInfoKategoryByIdentifier(root.getIdentifier()); 
+				InfoKategory x = new ObjectCloner<InfoKategory>().cloneThroughSerialize(service.getInfoKategoryByIdentifier(root.getIdentifier()));
 				root = x;
 				setRootAndRefresh(root);
 				
@@ -421,5 +453,12 @@ public class InfoKategoryListWrapper {
 
 	public void setEditMode(boolean editMode) {
 		this.editMode = editMode;
+	}
+
+
+
+	public Identifier getRootIdentifier() {
+		return givenRoot;
+	
 	}
 }

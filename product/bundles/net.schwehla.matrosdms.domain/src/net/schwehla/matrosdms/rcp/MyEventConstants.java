@@ -18,6 +18,7 @@ public class MyEventConstants {
 	public static final String TOPIC__DRAG_ATTRIBUTE_START  	= "DRAG/ATTRIBUTE/START";
 	
 	public static final String TOPIC__DRAG_INBOX_FINISHED    = "DRAG/INBOX/FINISHED";
+
 	
 	
 	public static final String TOPIC__DRAG_INBOX_START      = "DRAG/INBOX/START";
@@ -41,6 +42,7 @@ public class MyEventConstants {
 	
 	public static final String TOPIC__REFRESH_ORIGINALSTORE_NUMBER_STOLEN   = "REFRESH/ORIGINALSTORE_NUMBER_STOLEN";
 
+	public static final String TOPIC_REFRESH_INBOX_FILE_MOVED = "REFRESH/INBOX/FILE_MOVED";
 	
 	public static final String TOPIC_CONTEXT_CREATED 	    = "TOPIC_CONTEXT_CREATED";
 
@@ -70,6 +72,8 @@ public class MyEventConstants {
 	public static final String TOPIC__REFRESH_ORIGINALSTORE_ADD = "REFRESH/ORIGINALSTORE/ADD";
 
 	public static final String TOPIC_REFRESH_INFOKATEGORY_MODIFIED = "REFRESH/INFOKATEGORY/MODIFIED";
+
+
 
 	
 }

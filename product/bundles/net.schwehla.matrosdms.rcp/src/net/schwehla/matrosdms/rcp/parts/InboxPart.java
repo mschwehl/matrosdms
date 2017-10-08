@@ -21,6 +21,7 @@ import org.eclipse.e4.core.services.log.Logger;
 import org.eclipse.e4.core.services.nls.Translation;
 import org.eclipse.e4.core.services.statusreporter.StatusReporter;
 import org.eclipse.e4.ui.di.Focus;
+import org.eclipse.e4.ui.di.UIEventTopic;
 import org.eclipse.jface.resource.ImageDescriptor;
 import org.eclipse.jface.resource.JFaceResources;
 import org.eclipse.jface.resource.LocalResourceManager;
@@ -54,8 +55,11 @@ import org.eclipse.swt.widgets.TreeItem;
 import org.osgi.framework.Bundle;
 import org.osgi.framework.FrameworkUtil;
 
+import net.schwehla.matrosdms.domain.core.tagcloud.InfoKategory;
+import net.schwehla.matrosdms.domain.util.ObjectCloner;
 import net.schwehla.matrosdms.i18n.MatrosMessage;
 import net.schwehla.matrosdms.lucene.ILuceneService;
+import net.schwehla.matrosdms.rcp.MatrosServiceException;
 import net.schwehla.matrosdms.rcp.MyEventConstants;
 import net.schwehla.matrosdms.rcp.MyGlobalConstants;
 import net.schwehla.matrosdms.rcp.parts.helper.DesktopHelper;
@@ -70,6 +74,9 @@ import net.schwehla.matrosdms.resourcepool.IMatrosResource;
  * @author Martin
  *
  */
+
+// XXX 
+// TODO: https://stackoverflow.com/questions/31706058/get-large-directory-content-faster-java-io-file-alternatives
 
 public class InboxPart {
 	
@@ -125,6 +132,19 @@ public class InboxPart {
 			
 	}
 		
+	
+	@Inject
+	@Optional
+	/**
+	 * OK, double-clicked on one Element, eg. Car
+	 * @param modelType
+	 */
+	private void subscribeTopicTOPIC_TAGGRAPH_DOUBLEKLICK_ADD_ELEMENT(@UIEventTopic(MyEventConstants.TOPIC_REFRESH_INBOX_FILE_MOVED) File file) {
+		
+		// todo
+		viewer.refresh(true);
+	}
+	
 
 	private TreeViewer viewer;
 
@@ -498,7 +518,7 @@ public class InboxPart {
 				}
 				return styledString;
 			}
-			return null;
+			return null;	
 		}
 
 		@Override

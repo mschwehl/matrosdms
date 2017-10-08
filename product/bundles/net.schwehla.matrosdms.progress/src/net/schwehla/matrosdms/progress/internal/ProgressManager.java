@@ -289,8 +289,14 @@ public class ProgressManager extends ProgressProvider {
 		@Override
 		public void done() {
 			JobInfo info = getJobInfo(job);
-			info.clearTaskInfo();
-			info.clearChildren();
+			
+			if (info != null) {
+				
+				info.clearTaskInfo();
+				info.clearChildren();
+			}
+			
+
 			runnableMonitors.remove(job);
 			if (listener != null) {
 				listener.done();

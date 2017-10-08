@@ -110,7 +110,11 @@ public class JobInfo extends JobTreeElement {
     }
 
     void clearTaskInfo() {
-		finishedJobs.remove(taskInfo);
+    	
+    	if (finishedJobs != null) {
+    		finishedJobs.remove(taskInfo);
+    	}
+    	
         taskInfo = null;
     }
 

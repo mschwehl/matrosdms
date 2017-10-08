@@ -2,13 +2,10 @@ package net.schwehla.matrosdms.lucene.internal;
 
 
 import java.io.File;
-import java.io.FileInputStream;
-import java.io.IOException;
-import java.nio.ByteBuffer;
-import java.nio.channels.FileChannel;
-import java.nio.channels.FileChannel.MapMode;
+import java.io.InputStream;
+import java.nio.file.Files;
+import java.nio.file.StandardOpenOption;
 import java.security.MessageDigest;
-import java.security.NoSuchAlgorithmException;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.TimeUnit;
@@ -37,6 +34,13 @@ public class LuceneServiceProxy implements ILuceneService {
     @Inject
     Logger logger;
     
+    
+	@Override
+	public void bootstrap() {
+
+		// TODO: do something usefull
+		
+	}
 	/*
 	@Override
 	public void demo() throws Exception {
@@ -191,7 +195,7 @@ public class LuceneServiceProxy implements ILuceneService {
 	         
 	         // Wait until all threads are finish
 	  
-				executor.awaitTermination(1, TimeUnit.SECONDS);
+				executor.awaitTermination(30, TimeUnit.SECONDS);
 			} catch (InterruptedException e) {
 				e.printStackTrace();
 				throw new MatrosServiceException(e.getMessage());
@@ -209,6 +213,7 @@ public class LuceneServiceProxy implements ILuceneService {
 	         
 	 		
 	         return mimeParser.getMetadata();
+			
 			
 	         
 		}
@@ -244,11 +249,12 @@ public class LuceneServiceProxy implements ILuceneService {
 		@Override
 		public void run() {
 		
-			
-
 			tika.setMaxStringLength(-1);
 			
-			try (TikaInputStream  tikaInputStream2 = TikaInputStream.get(new FileInputStream(file.getAbsolutePath()));) {
+			try (InputStream is = Files.newInputStream(file.toPath(), StandardOpenOption.READ); 
+					TikaInputStream  tikaInputStream2 = TikaInputStream.get(is); ) {
+				   
+				
 				
 				Metadata metadata = new Metadata();
 				metadata.set(Metadata.RESOURCE_NAME_KEY, file.getName());
@@ -261,24 +267,35 @@ public class LuceneServiceProxy implements ILuceneService {
 				mm.setFilename(new File(file.getAbsolutePath()).getName());
 				mm.setFilesize( new Long(file.length()));
 				// Parser method parameters
-				Parser parser = new AutoDetectParser();
-				
-				// no end limit
-				BodyContentHandler handler = new BodyContentHandler(-1);
+
+// Text extraction
+
+				try {
+					Parser parser = new AutoDetectParser();
+					  
+					// no end limit
+					BodyContentHandler handler = new BodyContentHandler(-1);
 
 
-				ParseContext context = new ParseContext();
-				parser.parse(tikaInputStream2, handler, metadata, context);
-				
-				mm.setTextLayer(handler.toString());
-				
+					ParseContext context = new ParseContext();
+					parser.parse(tikaInputStream2, handler, metadata, context);
+					
+					mm.setTextLayer(handler.toString());
+					
+					
+				} catch(Exception e) {
+					logger.error("cannot access text layer" , e);
+				}
+/*				
+  				
+	*/
 				
 			} catch (Exception e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
+				logger.error("General error at parsing" , e);
 				throw new RuntimeException(e.getMessage());
 			} 
 			
+				
 		}
 		
 	}
@@ -308,79 +325,52 @@ public class LuceneServiceProxy implements ILuceneService {
 		@Override
 		public void run() {
 
-
+			// non-blocking version 
 			
 			try {
 				StringBuffer hexString = new StringBuffer();
 				
-
 				
-			//	FileInputStream inputStream = null;
-
-				try ( FileInputStream  inputStream = new FileInputStream(file);
-					    FileChannel channel = inputStream.getChannel(); ) {
+				
+				try (InputStream is = Files.newInputStream(file.toPath(), StandardOpenOption.READ)) {
+				   
 				    MessageDigest md = MessageDigest.getInstance("SHA-256");
-				 
-
-				    long length = file.length();
-				    if(length > Integer.MAX_VALUE) {
-				        // you could make this work with some care,
-				        // but this code does not bother.
-				        throw new IOException("File "+file.getAbsolutePath()+" is too large.");
-				    }
-
-				    ByteBuffer buffer = channel.map(MapMode.READ_ONLY, 0, length);
-
-				    int bufsize = 1024 * 8;          
-				    byte[] temp = new byte[bufsize];
-				    int bytesRead = 0;
-
-				    while (bytesRead < length) {
-				        int numBytes = (int)length - bytesRead >= bufsize ? 
-				                                     bufsize : 
-				                                     (int)length - bytesRead;
-				        buffer.get(temp, 0, numBytes);
-				        md.update(temp, 0, numBytes);
-				        bytesRead += numBytes;
-				    }
-
-				    byte[] mdbytes = md.digest();
 				    
-					for (int i = 0; i < mdbytes.length; i++) {
-					    if ((0xff & mdbytes[i]) < 0x10) {
-					        hexString.append("0"
-					                + Integer.toHexString((0xFF & mdbytes[i])));
-					    } else {
-					        hexString.append(Integer.toHexString(0xFF & mdbytes[i]));
-					    }
-					}
-					
-					result = hexString.toString();
-
-				} catch (NoSuchAlgorithmException e) {
-				    throw new IllegalArgumentException("Unsupported Hash Algorithm.", e);
-				}
-				finally {	
-				        hexString = null;
-				}
+				     byte[] buffer = new byte[8192];
+			            int numOfBytesRead;
+			            while( (numOfBytesRead = is.read(buffer)) > 0){
+			                md.update(buffer, 0, numOfBytesRead);
+			            }
+			            
+			            byte[] mdbytes = md.digest();
+					    
+						for (int i = 0; i < mdbytes.length; i++) {
+						    if ((0xff & mdbytes[i]) < 0x10) {
+						        hexString.append("0"
+						                + Integer.toHexString((0xFF & mdbytes[i])));
+						    } else {
+						        hexString.append(Integer.toHexString(0xFF & mdbytes[i]));
+						    }
+						}
+						
+						result = hexString.toString();
+						
+				}finally {	
+			        hexString = null;
+			}
 			} catch (Exception e) {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
 				throw new RuntimeException(e.getMessage());
 			}
-		
 			
 		}
-		
+				
+
 	}
 
 
-	@Override
-	public void bootstrap() {
 
-		// TODO: do something usefull
-		
-	}
 	
 
 

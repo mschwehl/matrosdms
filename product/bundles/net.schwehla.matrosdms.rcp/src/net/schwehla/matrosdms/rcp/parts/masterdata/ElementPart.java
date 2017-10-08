@@ -6,55 +6,46 @@ import java.util.List;
 
 import javax.annotation.PostConstruct;
 import javax.inject.Inject;
-import javax.inject.Named;
 
 import org.eclipse.core.databinding.observable.sideeffect.ISideEffect;
-import org.eclipse.core.databinding.observable.value.IObservableValue;
-import org.eclipse.e4.core.di.annotations.Optional;
+import org.eclipse.e4.core.services.events.IEventBroker;
 import org.eclipse.e4.core.services.log.Logger;
-import org.eclipse.e4.ui.di.UISynchronize;
-import org.eclipse.e4.ui.services.IServiceConstants;
 import org.eclipse.e4.ui.workbench.modeling.ESelectionService;
+import org.eclipse.jface.databinding.viewers.IViewerObservableValue;
+import org.eclipse.jface.databinding.viewers.ViewerProperties;
+import org.eclipse.jface.viewers.ArrayContentProvider;
+import org.eclipse.jface.viewers.ColumnLabelProvider;
+import org.eclipse.jface.viewers.IStructuredSelection;
+import org.eclipse.jface.viewers.ListViewer;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.custom.StackLayout;
 import org.eclipse.swt.dnd.DND;
 import org.eclipse.swt.dnd.DropTargetEvent;
 import org.eclipse.swt.dnd.Transfer;
-import org.eclipse.swt.internal.image.GIFFileFormat;
-import org.eclipse.swt.layout.FillLayout;
+import org.eclipse.swt.events.SelectionAdapter;
+import org.eclipse.swt.events.SelectionEvent;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
+import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Composite;
+import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Table;
 import org.eclipse.swt.widgets.Text;
 import org.eclipse.swt.widgets.ToolItem;
 
 import net.schwehla.matrosdms.domain.core.InfoBaseElement;
 import net.schwehla.matrosdms.domain.core.InfoContext;
-import net.schwehla.matrosdms.domain.core.InfoItem;
 import net.schwehla.matrosdms.domain.core.tagcloud.InfoKategory;
 import net.schwehla.matrosdms.domain.util.Identifier;
-import net.schwehla.matrosdms.notification.INotificationService;
 import net.schwehla.matrosdms.persistenceservice.IMatrosServiceService;
+import net.schwehla.matrosdms.rcp.MatrosServiceException;
+import net.schwehla.matrosdms.rcp.MyEventConstants;
 import net.schwehla.matrosdms.rcp.MyGlobalConstants;
 import net.schwehla.matrosdms.rcp.dnd.DomainClassTransfer;
 import net.schwehla.matrosdms.rcp.dnd.MyDropListener;
 import net.schwehla.matrosdms.rcp.parts.helper.InfoKategoryListWrapper;
-import net.schwehla.matrosdms.rcp.swt.labelprovider.TaggraphLabelProvider;
 import net.schwehla.matrosdms.rcp.swt.squarebutton.SquareButton;
 import net.schwehla.matrosdms.rcp.swt.squarebutton.SquareButtonGroup;
-import org.eclipse.wb.swt.SWTResourceManager;
-import org.eclipse.swt.widgets.Label;
-import org.eclipse.swt.widgets.Shell;
-import org.eclipse.swt.widgets.Button;
-import org.eclipse.jface.databinding.viewers.IViewerObservableValue;
-import org.eclipse.jface.databinding.viewers.ViewerProperties;
-import org.eclipse.jface.viewers.ArrayContentProvider;
-import org.eclipse.jface.viewers.ColumnLabelProvider;
-import org.eclipse.jface.viewers.DelegatingStyledCellLabelProvider;
-import org.eclipse.jface.viewers.IBaseLabelProvider;
-import org.eclipse.jface.viewers.ILabelProviderListener;
-import org.eclipse.jface.viewers.ListViewer;
 
 public class ElementPart {
 
@@ -89,7 +80,6 @@ public class ElementPart {
 	ESelectionService selectionService;
 	
 	
-	
 	@Inject
 	InfoKategoryListWrapper wer;
 	
@@ -102,6 +92,15 @@ public class ElementPart {
 	@Inject
 	InfoKategoryListWrapper art;
 
+	
+	
+	@Inject
+	private IMatrosServiceService service;
+
+	@Inject
+	private IEventBroker eventBroker;
+	
+	
 	
 	
 	@Inject Logger logger;
@@ -205,10 +204,7 @@ public class ElementPart {
 			txtParent = new Text(compositeAction, SWT.BORDER);
 			txtParent.setEditable(false);
 			txtParent.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1));
-			
-			Button btnUpdate = new Button(compositeAction, SWT.NONE);
-			btnUpdate.setLayoutData(new GridData(SWT.RIGHT, SWT.TOP, false, false, 1, 1));
-			btnUpdate.setText("Update Parent");
+			new Label(compositeAction, SWT.NONE);
 			
 			ListViewer listViewer = new ListViewer(compositeAction, SWT.BORDER | SWT.V_SCROLL);
 			
@@ -253,7 +249,31 @@ public class ElementPart {
 					    }
 					}
 					);
-			new Label(compositeAction, SWT.NONE);
+			
+			Button btnUpdate = new Button(compositeAction, SWT.NONE);
+			btnUpdate.addSelectionListener(new SelectionAdapter() {
+				@Override
+				public void widgetSelected(SelectionEvent e) {
+					
+					InfoKategory elemenent = (InfoKategory) ((List)listViewer.getInput()).get(0);
+					InfoKategory parent = (InfoKategory) ((IStructuredSelection)
+							wer.getTreeViewer().getSelection()).getFirstElement();
+					
+					try {
+						service.updateInfoKategory(elemenent,parent.getIdentifier());
+						
+						InfoKategory toSend = service.getInfoKategoryByIdentifier(wer.getRootIdentifier());
+						eventBroker.send(MyEventConstants.TOPIC_REFRESH_INFOKATEGORY_MODIFIED, toSend);
+						
+					} catch (MatrosServiceException e1) {
+						logger.error(e1);
+					}
+					
+					
+				}
+			});
+			btnUpdate.setLayoutData(new GridData(SWT.RIGHT, SWT.TOP, false, false, 1, 1));
+			btnUpdate.setText("Update Parent");
 
 			
 			try {

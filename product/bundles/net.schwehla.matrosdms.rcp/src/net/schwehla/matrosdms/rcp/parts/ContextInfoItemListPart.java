@@ -298,6 +298,7 @@ public class ContextInfoItemListPart {
 	private void loadAsyncInfoDetailList(InfoContext infoContext) {
 		
 		Objects.requireNonNull(infoContext);
+
 		
 		// cancel if currently running
 		// XXX check if this works !? internet says no
@@ -305,6 +306,7 @@ public class ContextInfoItemListPart {
 		if (job != null) {
 			job.cancel();
 		}
+		
 
 		// http://www.vogella.com/tutorials/EclipseJobs/article.html#handle-job-cancellation
 		
