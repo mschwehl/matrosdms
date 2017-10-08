@@ -1,5 +1,6 @@
 package net.schwehla.matrosdms.rcp.dialog;
 
+import org.eclipse.e4.core.di.annotations.Creatable;
 import org.eclipse.jface.dialogs.Dialog;
 import org.eclipse.jface.dialogs.IDialogConstants;
 import org.eclipse.swt.widgets.Composite;
@@ -7,6 +8,7 @@ import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Shell;
 
 
+@Creatable
 public class AnalyzeItemResultDialog extends Dialog {
 
 	/**

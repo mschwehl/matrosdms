@@ -26,6 +26,8 @@ import org.eclipse.core.runtime.Status;
 import org.eclipse.core.runtime.jobs.Job;
 import org.eclipse.core.runtime.preferences.IEclipsePreferences;
 import org.eclipse.e4.core.contexts.Active;
+import org.eclipse.e4.core.contexts.ContextInjectionFactory;
+import org.eclipse.e4.core.contexts.EclipseContextFactory;
 import org.eclipse.e4.core.contexts.IEclipseContext;
 import org.eclipse.e4.core.di.annotations.Optional;
 import org.eclipse.e4.core.di.extensions.Preference;
@@ -50,6 +52,7 @@ import org.eclipse.jface.databinding.swt.WidgetProperties;
 import org.eclipse.jface.databinding.swt.WidgetSideEffects;
 import org.eclipse.jface.databinding.viewers.IViewerObservableValue;
 import org.eclipse.jface.databinding.viewers.ViewerProperties;
+import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.util.LocalSelectionTransfer;
 import org.eclipse.jface.viewers.ArrayContentProvider;
 import org.eclipse.jface.viewers.CellEditor;
@@ -67,6 +70,7 @@ import org.eclipse.jface.viewers.TableViewerColumn;
 import org.eclipse.jface.viewers.TableViewerEditor;
 import org.eclipse.jface.viewers.TextCellEditor;
 import org.eclipse.jface.window.Window;
+import org.eclipse.jface.wizard.IWizard;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.dnd.DND;
 import org.eclipse.swt.dnd.DropTarget;
@@ -117,6 +121,7 @@ import net.schwehla.matrosdms.rcp.celleditor.AttributeValidToDialogEditor;
 import net.schwehla.matrosdms.rcp.celleditor.MatrosDateCellEditor;
 import net.schwehla.matrosdms.rcp.celleditor.MatrosNumberCellEditor;
 import net.schwehla.matrosdms.rcp.celleditor.MultilineTextCellEditor;
+import net.schwehla.matrosdms.rcp.dialog.ItemMetadataDialog;
 import net.schwehla.matrosdms.rcp.parts.helper.AutoResizeTableLayout;
 import net.schwehla.matrosdms.rcp.parts.helper.DesktopHelper;
 import net.schwehla.matrosdms.rcp.parts.helper.ItemPartElementWrapper;
@@ -183,6 +188,11 @@ public class ItemPart {
 	
 	TypedComboBox<Stage> boxInfoItemState;
 	
+	
+	Link link_showMetadata;
+	Link link_moveInbox;
+	
+	
 	@Inject
 	@Preference(nodePath = MyGlobalConstants.Preferences.NODE_COM_MATROSDMS) 
 	IEclipsePreferences preferences ;
@@ -218,12 +228,11 @@ public class ItemPart {
 
 	
 
-	  private Group 				_swtGroupDocuments;
+	  private Group 				_swtGroupActions;
 	  private Group 				_swtGroupAttributes;
 	  private TableViewer 			_swtTableViewerAttributes;
 	  private MPart _part;
 	  
-		private Composite itempart_swtGroupActions_open;	
 		
 		
 		@Inject Shell activeShell;
@@ -300,7 +309,6 @@ public class ItemPart {
 		parent.setLayout(new FillLayout(SWT.HORIZONTAL));
 
 		Composite compositeContent = new Composite(parent, SWT.NONE);
-		compositeContent.setLayout(new FillLayout(SWT.HORIZONTAL));
 		
 		
 		GridLayout gl_composite = new GridLayout(1, false);
@@ -421,29 +429,36 @@ public class ItemPart {
 		 						
 		 						
 		 						try {
-									String inboxProcessed =  preferences.get(MyGlobalConstants.Preferences.PROCESSED_PATH, "" );
-									inboxProcessed = inboxProcessed.replaceAll(";","");
 									
-									
-									if(! new File(inboxProcessed).exists()) {
-										throw new IllegalStateException("no processed folder specified, please go to the preferences");
-									}
-									
-									if(!_wrapper.getInboxFile().exists()) {
-										throw new IllegalStateException("Source file not exists anymore");
-									}
-									
-									
-									Path moveSourcePath = _wrapper.getInboxFile().toPath() ;
-									Path moveTargetPath = new File(inboxProcessed + File.separator + _wrapper.getInfoItem().getIdentifier()
-											.getUuid() + "_" + moveSourcePath.getFileName() ).toPath();
-									
-									Files.move( moveSourcePath, moveTargetPath );
-									
-									
-									if( new File(inboxProcessed).exists()) {
-										throw new IllegalStateException("cannot move file " +  moveSourcePath.getFileName());
-									}
+
+		 							String inboxProcessed =  preferences.get(MyGlobalConstants.Preferences.PROCESSED_PATH, "" );
+		 							inboxProcessed = inboxProcessed.replaceAll(";","");
+		 							
+		 							
+		 							if(! new File(inboxProcessed).exists()) {
+		 								throw new IllegalStateException("no processed folder specified, please go to the preferences");
+		 							}
+		 							
+		 							if(!_wrapper.getInboxFile().exists()) {
+		 								throw new IllegalStateException("Source file not exists anymore");
+		 							}
+		 							
+		 							
+		 							Path moveSourcePath = _wrapper.getInboxFile().toPath() ;
+		 							Path moveTargetPath = new File(inboxProcessed + File.separator + _wrapper.getInfoItem().getIdentifier()
+		 									.getUuid() + "_" + moveSourcePath.getFileName() ).toPath();
+		 							
+		 							Files.move( moveSourcePath, moveTargetPath );
+		 							
+		 							
+		 							if(! moveTargetPath.toFile().exists()) {
+		 								throw new IllegalStateException("targetfile not created " +  moveTargetPath.getFileName());
+		 							}
+		 							
+		 							if( moveSourcePath.toFile().exists()) {
+		 								throw new IllegalStateException("sourcefile not moved " +  moveSourcePath.getFileName());
+		 							}
+		 							
 									
 									note.setHeading( note.getHeading() + " and document moved");
 									
@@ -463,6 +478,10 @@ public class ItemPart {
 									
 									
 								}
+		 					 finally {
+		 						// synch viewer
+		 						eventBroker.send(MyEventConstants.TOPIC_REFRESH_INBOX_FILE_MOVED, _wrapper.getInboxFile());
+		 					}
 		 						
 		 						notificationService.openPopup(note);
 		 						
@@ -1058,23 +1077,23 @@ public class ItemPart {
 
 	private void createGroupDocuments(Composite compositeContent) {
 		
-		_swtGroupDocuments = 
+		_swtGroupActions = 
 	    		
-	    		new Group(compositeContent, SWT.NONE);
-		_swtGroupDocuments.setText(messages.itempart_swtGroupActions);
-		_swtGroupDocuments.setLayout(new FillLayout(SWT.HORIZONTAL));
+	    new Group(compositeContent, SWT.NONE);
+		_swtGroupActions.setText(messages.itempart_swtGroupActions);
+		_swtGroupActions.setLayout(new FillLayout(SWT.HORIZONTAL));
 		
 		
-		GridData groupDocumentsLayout = new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1);
+		GridData groupDocumentsLayout = new GridData(SWT.FILL, SWT.LEFT, true, false, 1, 1);
 		groupDocumentsLayout.minimumHeight  = 50;
 		
-		_swtGroupDocuments.setLayoutData(groupDocumentsLayout);
+		_swtGroupActions.setLayoutData(groupDocumentsLayout);
 		
 		
 		// add some actions
 		
 		if (_wrapper.getType() == Type.NEW) {
-			Link link_analyze = new Link(_swtGroupDocuments, SWT.NONE);
+			Link link_analyze = new Link(_swtGroupActions, SWT.NONE);
 			
 			link_analyze.setText("<a>Analyze</a>");
 					
@@ -1096,7 +1115,7 @@ public class ItemPart {
 		}
 		
 		
-		Link link_open = new Link(_swtGroupDocuments, SWT.NONE);
+		Link link_open = new Link(_swtGroupActions, SWT.NONE);
 		
 		link_open.setText("<a>Open</a>");
 		
@@ -1135,8 +1154,60 @@ public class ItemPart {
         });
 
 		
+		//
 		
 		
+		link_showMetadata = new Link(_swtGroupActions, SWT.NONE);
+		
+		link_showMetadata.setText("<a>Metadata</a>");
+		link_showMetadata.setData(new ShowMetadataJobber());
+		
+		link_showMetadata.addSelectionListener(new SelectionAdapter()
+        {
+            @Override
+            public void widgetSelected(SelectionEvent e)
+            {
+            	try {
+            	 
+            		((Jobber) link_showMetadata.getData()).execute();
+            		
+            	}catch(Exception ex) {
+            		logger.error(ex);
+            	}
+           
+            		
+    		  
+            }
+        });
+		
+		link_showMetadata.setVisible(false);
+		
+		link_moveInbox = new Link(_swtGroupActions, SWT.NONE);
+		
+		link_moveInbox.setText("<a>Move Inbox</a>");
+		link_moveInbox.setData(new MoveInbox());
+		
+		link_moveInbox.addSelectionListener(new SelectionAdapter()
+        {
+            @Override
+            public void widgetSelected(SelectionEvent e)
+            {
+            	try {
+            	 
+            		((Jobber) link_moveInbox.getData()).execute();
+            		
+            	}catch(Exception ex) {
+            		logger.error(ex);
+            	}
+           
+            		
+    		  
+            }
+        });
+		
+		
+		link_moveInbox.setVisible(false);
+
 
 	}
 
@@ -1163,7 +1234,6 @@ public class ItemPart {
 				    	 	 try {
 								 
 				    	 		mmd = indexService.parseMetadata(_wrapper.getInboxFile());
-				    	 		
 								logger.debug("Hash berechnet" + mmd.getSha256() ) ;
 								
 								
@@ -1239,6 +1309,9 @@ public class ItemPart {
 								 		btnNewButton.setEnabled(true);
 						    	  }
 						    	  
+						    	  
+						    	  link_showMetadata.setVisible(true);
+						    	  link_moveInbox.setVisible(true);
 						   
 						      }
 						    });
@@ -1570,7 +1643,7 @@ public class ItemPart {
 		}
 	}
 	
-	
+	// Should also work with functional interfaces !?
 	
 	abstract class Jobber {
 		
@@ -1598,19 +1671,98 @@ public class ItemPart {
 	class OpenExistingJobber extends Jobber {
 
 		@Override
-		void execute() throws Exception  {
-				
-				String local = desktopHelper.getLocallink(_wrapper.getInfoItem());
-	
-            	desktopHelper.openUrl(local);
+		void execute() throws Exception {
 
-			
-		
-		
+			String local = desktopHelper.getLocallink(_wrapper.getInfoItem());
+
+			desktopHelper.openUrl(local);
+
+		}
+
 	}
-		
+	
+	
+	class ShowMetadataJobber extends Jobber {
+
+		@Override
+		void execute() throws Exception {
+
+			if (_wrapper.getInfoItem().getMetadata() != null) {
+				
+		        IEclipseContext tempContext = EclipseContextFactory.create();
+		        tempContext.set(Shell.class, shell);
+		        tempContext.set(MatrosMetadata.class, _wrapper.getInfoItem().getMetadata());
+				
+				ItemMetadataDialog dialog = ContextInjectionFactory.make(ItemMetadataDialog.class, context, tempContext);
+				dialog.open();
+				
+				
+			} else {
+	            MessageDialog.openInformation(Display.getDefault().getActiveShell(),"Metadata" , "No Metadata available");
+			}
+		}
+
 	}
- 	
- 	
+	
+	
+	
+	class MoveInbox extends Jobber {
+
+		@Override
+		void execute() throws Exception {
+
+			if (_wrapper.getInboxFile() != null) {
+				
+				
+				try {
+					String inboxProcessed =  preferences.get(MyGlobalConstants.Preferences.PROCESSED_PATH, "" );
+					inboxProcessed = inboxProcessed.replaceAll(";","");
+					
+					
+					if(! new File(inboxProcessed).exists()) {
+						throw new IllegalStateException("no processed folder specified, please go to the preferences");
+					}
+					
+					if(!_wrapper.getInboxFile().exists()) {
+						throw new IllegalStateException("Source file not exists anymore");
+					}
+					
+					
+					Path moveSourcePath = _wrapper.getInboxFile().toPath() ;
+					Path moveTargetPath = new File(inboxProcessed + File.separator + _wrapper.getInfoItem().getIdentifier()
+							.getUuid() + "_" + moveSourcePath.getFileName() ).toPath();
+					
+					Files.move( moveSourcePath, moveTargetPath );
+					
+					
+					if(! moveTargetPath.toFile().exists()) {
+						throw new IllegalStateException("targetfile not created " +  moveTargetPath.getFileName());
+					}
+					
+					if( moveSourcePath.toFile().exists()) {
+						throw new IllegalStateException("sourcefile not moved " +  moveSourcePath.getFileName());
+					}
+					
+	
+
+					
+				} catch (Exception e1) {
+			        MessageDialog.openError(Display.getDefault().getActiveShell(),"Move" , "cannot move inbox " + e1);
+					
+				} finally {
+					// synch viewer
+					eventBroker.send(MyEventConstants.TOPIC_REFRESH_INBOX_FILE_MOVED, _wrapper.getInboxFile());
+				}
+				
+			} else {
+	            MessageDialog.openInformation(Display.getDefault().getActiveShell(),"Move" , "cannot move inbox");
+			}
+		}
+
+	}
+	
+	
+	
+	
 
 }
