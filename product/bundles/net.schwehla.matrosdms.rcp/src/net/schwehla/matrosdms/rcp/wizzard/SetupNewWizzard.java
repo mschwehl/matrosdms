@@ -18,6 +18,7 @@ import net.schwehla.matrosdms.rcp.wizzard.model.setup.Masterdata;
 import net.schwehla.matrosdms.rcp.wizzard.setup.page.SetupPageApplicationSettings;
 import net.schwehla.matrosdms.rcp.wizzard.setup.page.SetupPageInbox;
 import net.schwehla.matrosdms.rcp.wizzard.setup.page.SetupPageInfoItemOriginalstore;
+import net.schwehla.matrosdms.rcp.wizzard.setup.page.SetupPageProcessedFilesFolder;
 import net.schwehla.matrosdms.rcp.wizzard.setup.page.SetupPageServerCloudstore;
 import net.schwehla.matrosdms.rcp.wizzard.setup.page.SetupPageServerCryptExternal;
 import net.schwehla.matrosdms.rcp.wizzard.setup.page.SetupPageServerUser;
@@ -39,6 +40,9 @@ public class SetupNewWizzard extends Wizard   {
 
 	@Inject 
 	SetupPageInbox inboxpage; 
+	
+	@Inject 
+	SetupPageProcessedFilesFolder setupPageProcessedFilesFolder;
 	
 	@Inject 
 	SetupPageSummary summarypage;
@@ -97,6 +101,9 @@ public class SetupNewWizzard extends Wizard   {
 		// INBOX
 		addPage(inboxpage);
 		
+		// PROCESSED-FILES
+		addPage(setupPageProcessedFilesFolder);
+				
 		// USER
 		addPage(userpage);
 		

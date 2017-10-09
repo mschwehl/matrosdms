@@ -128,6 +128,7 @@ public class MatrosExternalCryptor extends AbstractMatrosCryptor implements IMat
 
     //    Command command = new Command( "e", "destination2.7z" , "-aoa" , "-oc:\\temp\\unpacked.vbs" ,  "-pSECTRET"  ) {
 
+		// TODO: c:\temp is hardcoded
    
         ExternalCommand unpack = new ExternalCommand(   "e" , "-aoa" ,  finalFileName.getAbsolutePath() , "-oc:\\temp\\" + identifier.getUuid()  ,  "-p"  + password  ) {
 

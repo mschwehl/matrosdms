@@ -503,7 +503,7 @@ public class ItemPart {
 		 						dialog.open();
 		 						 
 		 						NotificationNote note = new NotificationNote();
-		 						note.setHeading("Element nicht gespeichert, bitte Logfile überprüfen");
+		 						note.setHeading("Element nicht gespeichert, bitte Logfile ï¿½berprï¿½fen");
 		 					
 		 						notificationService.openPopup(note);
 		 			
@@ -588,7 +588,7 @@ public class ItemPart {
 			 						dialog.open();
 			 						 
 			 						NotificationNote note = new NotificationNote();
-			 						note.setHeading("Element nicht gespeichert, bitte Logfile überprüfen");
+			 						note.setHeading("Element nicht gespeichert, bitte Logfile ï¿½berprï¿½fen");
 			 					
 			 						notificationService.openPopup(note);
 			 		
@@ -1077,15 +1077,13 @@ public class ItemPart {
 
 	private void createGroupDocuments(Composite compositeContent) {
 		
-		_swtGroupActions = 
-	    		
-	    new Group(compositeContent, SWT.NONE);
+		_swtGroupActions =   new Group(compositeContent, SWT.NONE);
 		_swtGroupActions.setText(messages.itempart_swtGroupActions);
-		_swtGroupActions.setLayout(new FillLayout(SWT.HORIZONTAL));
+		_swtGroupActions.setLayout(new GridLayout(1,false));
 		
 		
-		GridData groupDocumentsLayout = new GridData(SWT.FILL, SWT.LEFT, true, false, 1, 1);
-		groupDocumentsLayout.minimumHeight  = 50;
+		GridData groupDocumentsLayout = new GridData(SWT.LEFT, SWT.CENTER, true, false, 1, 1);
+	//	groupDocumentsLayout.minimumHeight  = 50;
 		
 		_swtGroupActions.setLayoutData(groupDocumentsLayout);
 		
@@ -1103,7 +1101,7 @@ public class ItemPart {
 	            public void widgetSelected(SelectionEvent e)
 	            {
 	            	
-	       // xxx context kann nicht aufgelöst werden
+	       // xxx context kann nicht aufgelï¿½st werden
 //	            	AnalyzeItemResultDialog dialog = ContextInjectionFactory.make(AnalyzeItemResultDialog.class, context);
 //	            
 //	            	dialog.create();
@@ -1655,11 +1653,11 @@ public class ItemPart {
 
 		@Override
 		void execute() throws Exception {
-
-        	 	String local = _wrapper.getInboxFile().getCanonicalFile().toString();
-            	desktopHelper.openUrl(local);
-
-       
+			
+			// Clone else there will be file-lock
+        	desktopHelper.openInboxFileAsClone(_wrapper.getInboxFile());
+        	
+        	
 			
 		}
 		
