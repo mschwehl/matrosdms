@@ -293,7 +293,9 @@ public class InboxPart {
 		
 		        	try {
 						File doc = (File) viewer.getTree().getSelection()[0].getData();
-	                	desktopHelper.openUrl(doc.getCanonicalPath());
+						
+						// Clone else there will be file-lock
+	                	desktopHelper.openInboxFileAsClone(doc);
 	            	}catch(Exception ex) {
 	            		logger.error(ex);
 	            	}

@@ -143,6 +143,9 @@ public class MatrosMessage {
 	public String searchlistpart_col_contextname;
 	public String searchlistpart_col_itemname;
 	public String searchlistpart_col_archived;
+	public String wizzard_processedFolderTabLabel;
+	public String wizzard_processedFolderDescription;
+	public String setupworker_saving_processed_folder;
 
 	
 }

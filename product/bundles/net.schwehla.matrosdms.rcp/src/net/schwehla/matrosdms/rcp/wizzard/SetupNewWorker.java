@@ -120,6 +120,33 @@ public class SetupNewWorker implements IRunnableWithProgress {
             	  	
             	  
             	  	
+            	    // sleep a second
+           		 subMonitor.subTask(messages.setupworker_saving_processed_folder);
+           	 	 Thread.sleep(500);
+           	 	  	 
+           	     sync.syncExec(new Runnable() {
+                        @Override
+                        public void run() {
+                            
+                         	 String processedFolder = masterData.getProcessedFolder();
+                         	 
+                         	preferences.put(MyGlobalConstants.Preferences.PROCESSED_PATH, processedFolder);
+                         	
+                         	try {
+								preferences.flush();
+							} catch (BackingStoreException e1) {
+								logger.error(e1);
+							}
+                      
+                       
+                        }
+           	     });
+           	     
+           	  	subMonitor.worked(1);
+           	  	
+           	  	
+           	  	
+            	  	
                     // sleep a second
            		 subMonitor.subTask(messages.setupworker_create_database);
            		 

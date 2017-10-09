@@ -2,7 +2,10 @@ package net.schwehla.matrosdms.rcp.parts.helper;
 
 import java.awt.Desktop;
 import java.io.File;
+import java.io.IOException;
 import java.net.URI;
+import java.nio.file.Files;
+import java.nio.file.StandardCopyOption;
 
 import javax.inject.Inject;
 
@@ -58,7 +61,8 @@ public class DesktopHelper  {
 	@SuppressWarnings("restriction")
 	@Inject Logger logger;
 
-
+	// XXX
+	File localAppcache = new File("c:\\temp\\appcache");
 	
 	@Inject 
 	IMatrosServiceService service;
@@ -108,7 +112,50 @@ public class DesktopHelper  {
 	
 	
     
+	public void openInboxFileAsClone(File file)   {
+		
 
+		String extension = "";
+		String path = file.getAbsolutePath();
+		
+		int lastSeparator =  path.lastIndexOf(File.separator);
+		
+		if (lastSeparator > 0) {
+			path = file.getAbsolutePath().substring(lastSeparator+1);
+		}
+
+		int i = path.lastIndexOf('.');
+		if (i > 0) {
+		    extension = path.substring(i+1);
+		}
+		
+		if (extension.length() > 0) {
+			extension = "." + extension;
+		}
+		
+		
+		 // creates temporary file
+
+		try {
+			
+			localAppcache.mkdirs();
+			
+			 File f = new File(localAppcache,file.getName() + System.currentTimeMillis() + extension);
+					 f.deleteOnExit();
+					 
+					 Files.copy(file.toPath(), f.toPath(), StandardCopyOption.REPLACE_EXISTING);
+
+			openUrl(f.getAbsolutePath());
+			
+		} catch (Exception e) {
+			logger.error(e, "cannot open file: " + file.getName());
+		}
+
+		
+		
+
+        
+	}
 
 	
 	

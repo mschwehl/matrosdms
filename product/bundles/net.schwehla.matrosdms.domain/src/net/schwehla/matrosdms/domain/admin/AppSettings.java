@@ -7,6 +7,15 @@ import net.schwehla.matrosdms.domain.api.IComplete;
 public class AppSettings implements IComplete {
 	
 	String appPath;
+	String processedFolder;
+
+	public String getProcessedFolder() {
+		return processedFolder;
+	}
+
+	public void setProcessedFolder(String processedFolder) {
+		this.processedFolder = processedFolder;
+	}
 
 	public String getAppPath() {
 		return appPath;
