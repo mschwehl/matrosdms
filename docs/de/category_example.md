@@ -1,4 +1,4 @@
-#Wer
+# Wer
 
 * Familie
     * Vater
@@ -8,7 +8,7 @@
         * Kind 2
 
         
-#Was
+# Was
 
 * Haushalt
     * Auto
@@ -33,7 +33,7 @@
     * Kredite
     
             
-#Wo
+# Wo
 
 * Finanzdienstleiter
     * Sparkasse
@@ -60,7 +60,7 @@
     
         
         
-#Art
+# Art
 
 * Rechtsgeschäft / Vertrag
     * Police
