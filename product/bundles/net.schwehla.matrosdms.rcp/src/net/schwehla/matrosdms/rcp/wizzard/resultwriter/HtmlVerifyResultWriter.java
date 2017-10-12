@@ -48,9 +48,6 @@ public class HtmlVerifyResultWriter extends AbstractResultWriter {
 		try {
 			
 			String appdir = mcr.getApplicationCacheDir();
-	
-			
-			
 			return appdir + File.separator + fileName + "_" + System.nanoTime();
 			
 			

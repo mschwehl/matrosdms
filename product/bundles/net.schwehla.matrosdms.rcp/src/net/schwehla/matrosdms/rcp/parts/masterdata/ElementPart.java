@@ -8,6 +8,8 @@ import javax.annotation.PostConstruct;
 import javax.inject.Inject;
 
 import org.eclipse.core.databinding.observable.sideeffect.ISideEffect;
+import org.eclipse.e4.core.contexts.ContextInjectionFactory;
+import org.eclipse.e4.core.contexts.IEclipseContext;
 import org.eclipse.e4.core.services.events.IEventBroker;
 import org.eclipse.e4.core.services.log.Logger;
 import org.eclipse.e4.ui.workbench.modeling.ESelectionService;
@@ -73,26 +75,16 @@ public class ElementPart {
 	Transfer[] transferTypes = { DomainClassTransfer.getTransfer(InfoKategory.class)};
 	
 	
-	
 	@Inject IMatrosServiceService matrosService;
 	
 	@Inject
 	ESelectionService selectionService;
 	
 	
-	@Inject
-	InfoKategoryListWrapper wer;
-	
-	@Inject
-	InfoKategoryListWrapper was;
-
-	@Inject
-	InfoKategoryListWrapper wo;
-
-	@Inject
-	InfoKategoryListWrapper art;
-
-	
+	Wrapper wer_wrapper;
+	Wrapper was_wrapper;
+	Wrapper wo_wrapper;
+	Wrapper art_wrapper;
 	
 	@Inject
 	private IMatrosServiceService service;
@@ -101,41 +93,25 @@ public class ElementPart {
 	private IEventBroker eventBroker;
 	
 	
-	
+	@Inject
+	IEclipseContext context;
 	
 	@Inject Logger logger;
 	
 	SquareButtonGroup sg = new SquareButtonGroup();
-
-	InfoBaseElement baseelement;
 
 
 	ToolItem btnCommons;
 	Composite compositeContentArea ;
 	
 	StackLayout sl_compositeContentArea = new StackLayout();
-	Composite compositeWer ;
-	Composite compositeWas ;
-	Composite compositeWo ;
-	Composite compositeArt ;
-	
 
-	
 	List<ToolItem> toolItemList = new ArrayList<>();
 
 
 	Composite compositeRoot;
 	
-	
 	InfoContext _localDropfieldContext;
-	private Table table;
-	private Text txtOk;
-	private Composite compositeTree;
-	private Text text;
-	private Text txtParent;
-	
-	
-
 
 	@PostConstruct
 	public void postConstruct(Composite parent) {
@@ -186,18 +162,155 @@ public class ElementPart {
 
 		
 		{
-			compositeWer = new Composite(compositeContentArea, SWT.NONE);
-			
+			wer_wrapper = new Wrapper();
+			wer_wrapper.build(compositeContentArea, context , MyGlobalConstants.ROOT_WER);
 	
-			sl_compositeContentArea.topControl = compositeWer;
-			compositeWer.setLayout(new GridLayout(1, false));
+			
+			sl_compositeContentArea.topControl = wer_wrapper.compositeRootComposite;
+
+		}
+		
+
+		{
+			was_wrapper = new Wrapper();
+			was_wrapper.build(compositeContentArea, context , MyGlobalConstants.ROOT_WAS);
+		}
+		
+		{
+			wo_wrapper = new Wrapper();
+			wo_wrapper.build(compositeContentArea, context , MyGlobalConstants.ROOT_WO);
+			
+		}
+		
+		{
+			art_wrapper = new Wrapper();
+			art_wrapper.build(compositeContentArea, context , MyGlobalConstants.ROOT_ART);
+		}
+		
+		
+		
+	//	sg.setCurrentlyToggledButton(button);
+	
+
+	}
+	
+
+
+	private SquareButton buildSquareButton(String name, Composite parent, Integer data) {
+		
+		SquareButton.SquareButtonBuilder builder = new SquareButton.SquareButtonBuilder();
+	    builder .setParent(parent)
+	    	.setText(name)
+	    	.setCornerRadius(3).setToggleable(true)
+	        .setDefaultMouseClickAndReturnKeyHandler(new SquareButton.ButtonClickHandler() {
+	          @Override
+	          public void clicked() {
+	        	  
+	     
+	        	  activate( data );
+	           // openTestDialog(shell);
+	          }
+	        });
+	    
+	    
+	    SquareButton b = builder.build();
+	    b.setData(data);
+	  
+		b.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, false, false, 1, 1));
+		
+	    
+	    sg.addButton(b);
+	    
+	    return b;
+	    
+	}
+
+
+	
+	public void activate(int component) {
+
+		switch (component) {
+
+		case COMPONENT_WER:
+
+			sl_compositeContentArea.topControl = wer_wrapper.compositeRootComposite;
+			compositeContentArea.layout();
+
+			break;
+			
+		case COMPONENT_WAS:
+
+			sl_compositeContentArea.topControl = was_wrapper.compositeRootComposite;
+			compositeContentArea.layout();
+			
+			break;
+
+
+		case COMPONENT_WO:
+
+			sl_compositeContentArea.topControl = wo_wrapper.compositeRootComposite;
+			compositeContentArea.layout();
+			
+			break;
+
+			
+		case COMPONENT_ART:
+
+			sl_compositeContentArea.topControl = art_wrapper.compositeRootComposite;
+			compositeContentArea.layout();
+			
+			break;
+
+			
+			
+
+		default:
+			break;
+		}
+
+
+		compositeContentArea.getParent().redraw();
+		compositeContentArea.getParent().getParent().redraw();
+
+
+	}
+	
+	
+
+	class Wrapper {
+		
+		Composite compositeRootComposite ;
+		Composite compositeAction ;
+	
+		
+		Table table;
+		Text txtOk;
+		Composite compositeTree;
+		Text text;
+		Text txtParent;
+		
+		InfoKategoryListWrapper listInfoWrapper;
+		
+
+		public void build(Composite compositeContentArea, IEclipseContext context, Identifier rootIdentifier) {
+			
+
+			listInfoWrapper = ContextInjectionFactory.make(InfoKategoryListWrapper.class, context);
+			
+			compositeRootComposite = new Composite(compositeContentArea, SWT.NONE);
+			compositeAction = new Composite(compositeRootComposite, SWT.NONE);	
+			compositeAction.setLayout(new GridLayout(2, false));
+			compositeAction.setLayoutData(new GridData(SWT.FILL, SWT.BOTTOM, true, false, 1, 1));
+
+		
+			compositeRootComposite.setLayout(new GridLayout(1, false));
 			{
-				compositeTree = new Composite(compositeWer, SWT.NONE);
+				compositeTree = new Composite(compositeRootComposite, SWT.NONE);
 				compositeTree.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true, 1, 1));
 				compositeTree.setLayout(new GridLayout(1, false));
 			}
 			
-			Composite compositeAction = new Composite(compositeWer, SWT.NONE);
+			Composite compositeAction = new Composite(compositeRootComposite, SWT.NONE);
 			compositeAction.setLayout(new GridLayout(2, false));
 			compositeAction.setLayoutData(new GridData(SWT.FILL, SWT.BOTTOM, true, false, 1, 1));
 			
@@ -257,12 +370,12 @@ public class ElementPart {
 					
 					InfoKategory elemenent = (InfoKategory) ((List)listViewer.getInput()).get(0);
 					InfoKategory parent = (InfoKategory) ((IStructuredSelection)
-							wer.getTreeViewer().getSelection()).getFirstElement();
+							listInfoWrapper.getTreeViewer().getSelection()).getFirstElement();
 					
 					try {
 						service.updateInfoKategory(elemenent,parent.getIdentifier());
 						
-						InfoKategory toSend = service.getInfoKategoryByIdentifier(wer.getRootIdentifier());
+						InfoKategory toSend = service.getInfoKategoryByIdentifier(listInfoWrapper.getRootIdentifier());
 						eventBroker.send(MyEventConstants.TOPIC_REFRESH_INFOKATEGORY_MODIFIED, toSend);
 						
 					} catch (MatrosServiceException e1) {
@@ -277,8 +390,8 @@ public class ElementPart {
 
 			
 			try {
-				wer.init(compositeTree,MyGlobalConstants.ROOT_WER,true);
-				wer.setEditMode(true);
+				listInfoWrapper.init(compositeTree,rootIdentifier,true);
+				listInfoWrapper.setEditMode(true);
 			} catch (Exception e) {
 				logger.error(e);
 			}
@@ -287,7 +400,7 @@ public class ElementPart {
 			// binding
 			
 			IViewerObservableValue  viewerSelectionObservable = ViewerProperties.singleSelection()
-					.observe(wer.getTreeViewer());
+					.observe(listInfoWrapper.getTreeViewer());
 			
 
 		
@@ -314,135 +427,13 @@ public class ElementPart {
 			
 			compositeTree.addDisposeListener( e->viewerSelectionObservable.dispose() );
 			compositeTree.addDisposeListener( e->enableOkButtonSideEffect.dispose() );		
-			
-			
-		}
-		
 
-		{
-			compositeWas = new Composite(compositeContentArea, SWT.NONE);
-
-			try {
-				was.init(compositeWas,MyGlobalConstants.ROOT_WAS,true);
-				was.setEditMode(true);
-				compositeWas.setLayout(new GridLayout(1, false));
-			} catch (Exception e) {
-				logger.error(e);
-			}
+			listInfoWrapper.setEditMode(true);
 			
 		}
-		
-		{
-			compositeWo = new Composite(compositeContentArea, SWT.NONE);
 
-			try {
-				wo.init(compositeWo,MyGlobalConstants.ROOT_WO,true);
-				wo.setEditMode(true);
-				compositeWo.setLayout(new GridLayout(1, false));
-			} catch (Exception e) {
-				logger.error(e);
-			}
-			
-		}
 		
-		{
-			compositeArt = new Composite(compositeContentArea, SWT.NONE);
-
-			try {
-				art.init(compositeArt,MyGlobalConstants.ROOT_ART,true);
-				art.setEditMode(true);
-				compositeArt.setLayout(new GridLayout(1, false));
-			} catch (Exception e) {
-				logger.error(e);
-			}
-			
-		}
-		
-		
-		
-	//	sg.setCurrentlyToggledButton(button);
-	
-
 	}
 	
-
-
-	private SquareButton buildSquareButton(String name, Composite parent, Integer data) {
-		
-		SquareButton.SquareButtonBuilder builder = new SquareButton.SquareButtonBuilder();
-	    builder .setParent(parent)
-	    	.setText(name)
-	    	.setCornerRadius(3).setToggleable(true)
-	        .setDefaultMouseClickAndReturnKeyHandler(new SquareButton.ButtonClickHandler() {
-	          @Override
-	          public void clicked() {
-	        	  
-	     
-	        	  activate( data );
-	           // openTestDialog(shell);
-	          }
-	        });
-	    
-	    
-	    SquareButton b = builder.build();
-	    b.setData(data);
-	  
-		b.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, false, false, 1, 1));
-		
-	    
-	    sg.addButton(b);
-	    
-	    return b;
-	    
-	}
-
-
 	
-	public void activate(int component) {
-
-		switch (component) {
-
-		case COMPONENT_WER:
-
-			sl_compositeContentArea.topControl = compositeWer;
-			compositeContentArea.layout();
-
-			break;
-			
-		case COMPONENT_WAS:
-
-			sl_compositeContentArea.topControl = compositeWas;
-			compositeContentArea.layout();
-			
-			break;
-
-
-		case COMPONENT_WO:
-
-			sl_compositeContentArea.topControl = compositeWo;
-			compositeContentArea.layout();
-			
-			break;
-
-			
-		case COMPONENT_ART:
-
-			sl_compositeContentArea.topControl = compositeArt;
-			compositeContentArea.layout();
-			
-			break;
-
-			
-			
-
-		default:
-			break;
-		}
-
-
-		compositeContentArea.getParent().redraw();
-		compositeContentArea.getParent().getParent().redraw();
-
-
-	}
 }

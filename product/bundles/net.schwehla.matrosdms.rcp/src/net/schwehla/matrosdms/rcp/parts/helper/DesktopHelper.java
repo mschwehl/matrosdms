@@ -2,11 +2,13 @@ package net.schwehla.matrosdms.rcp.parts.helper;
 
 import java.awt.Desktop;
 import java.io.File;
-import java.io.IOException;
 import java.net.URI;
 import java.nio.file.Files;
 import java.nio.file.StandardCopyOption;
+import java.util.LinkedHashMap;
+import java.util.Map;
 
+import javax.annotation.PreDestroy;
 import javax.inject.Inject;
 
 import org.eclipse.e4.core.di.annotations.Creatable;
@@ -14,12 +16,13 @@ import org.eclipse.e4.core.services.log.Logger;
 
 import net.schwehla.matrosdms.domain.core.InfoItem;
 import net.schwehla.matrosdms.persistenceservice.IMatrosServiceService;
+import net.schwehla.matrosdms.persistenceservice.internal.MatrosConfigReader;
 import net.schwehla.matrosdms.rcp.MatrosServiceException;
 
 @Creatable
 public class DesktopHelper  {
 	
-	/*
+	/*	
 	
 	// let's save the last 50 file-calls for this session
     Map <String,File> tempFileCache = createLRUMap(50);
@@ -55,14 +58,16 @@ public class DesktopHelper  {
 		
 	}
     
-    */
+	}
+    
+*/
     
     
 	@SuppressWarnings("restriction")
 	@Inject Logger logger;
 
 	// XXX
-	File localAppcache = new File("c:\\temp\\appcache");
+	MatrosConfigReader configReader = new MatrosConfigReader();
 	
 	@Inject 
 	IMatrosServiceService service;
@@ -138,14 +143,20 @@ public class DesktopHelper  {
 
 		try {
 			
-			localAppcache.mkdirs();
+			File tempFoder = new File (configReader.getApplicationCacheDir() + File.separator + "docs");
+			tempFoder.mkdirs();
 			
-			 File f = new File(localAppcache,file.getName() + System.currentTimeMillis() + extension);
-					 f.deleteOnExit();
-					 
-					 Files.copy(file.toPath(), f.toPath(), StandardCopyOption.REPLACE_EXISTING);
-
-			openUrl(f.getAbsolutePath());
+			String filename = file.lastModified() + "_" +file.hashCode() + "_" +  file.getName();
+			
+			File total = new File(tempFoder.getAbsolutePath() + File.separator + filename);
+			
+			if (!total.exists()) {
+				Files.copy(file.toPath(), total.toPath(), StandardCopyOption.REPLACE_EXISTING);
+				total.deleteOnExit();
+			}
+			
+			
+			openUrl(total.getAbsolutePath());
 			
 		} catch (Exception e) {
 			logger.error(e, "cannot open file: " + file.getName());

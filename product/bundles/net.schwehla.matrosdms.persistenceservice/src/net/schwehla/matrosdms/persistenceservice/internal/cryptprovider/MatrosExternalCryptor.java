@@ -2,11 +2,10 @@ package net.schwehla.matrosdms.persistenceservice.internal.cryptprovider;
 
 import java.io.File;
 import java.nio.file.Path;
-import java.util.LinkedHashMap;
-import java.util.Map;
 import java.util.Objects;
 
 import net.schwehla.matrosdms.domain.util.Identifier;
+import net.schwehla.matrosdms.persistenceservice.internal.MatrosConfigReader;
 import net.schwehla.matrosdms.persistenceservice.internal.StoreResult;
 import net.schwehla.matrosdms.persistenceservice.internal.cryptprovider.externalcommand.ExternalCommand;
 import net.schwehla.matrosdms.persistenceservice.internal.cryptprovider.externalcommand.ExternalCommandResult;
@@ -49,8 +48,10 @@ public class MatrosExternalCryptor extends AbstractMatrosCryptor implements IMat
 		this.uncryptLine = uncryptLine;
 	}
 	
-	
-	
+	// XXX
+	MatrosConfigReader configReader = new MatrosConfigReader();
+
+    
 	@Override
 	public StoreResult persist(File droppedFile, Identifier identifier) throws MatrosServiceException {
 		
@@ -108,14 +109,6 @@ public class MatrosExternalCryptor extends AbstractMatrosCryptor implements IMat
 	
 	
     
-    public static <K, V> Map<K, V> createLRUMap(final int maxEntries) {
-        return new LinkedHashMap<K, V>(maxEntries*10/7, 0.7f, true) {
-            @Override
-            protected boolean removeEldestEntry(Map.Entry<K, V> eldest) {
-                return size() > maxEntries;
-            }
-        };
-    }
 
 
     
@@ -125,16 +118,22 @@ public class MatrosExternalCryptor extends AbstractMatrosCryptor implements IMat
 		
 		File finalFileName = buildFinalFilename(identifier);
 		
+        try {
+        	
+        	
+			File tmp = new File (configReader.getApplicationCacheDir());
+			tmp.mkdirs();
 
     //    Command command = new Command( "e", "destination2.7z" , "-aoa" , "-oc:\\temp\\unpacked.vbs" ,  "-pSECTRET"  ) {
 
 		// TODO: c:\temp is hardcoded
    
-        ExternalCommand unpack = new ExternalCommand(   "e" , "-aoa" ,  finalFileName.getAbsolutePath() , "-oc:\\temp\\" + identifier.getUuid()  ,  "-p"  + password  ) {
+        ExternalCommand unpack = new ExternalCommand(   "e" , "-aoa" ,  finalFileName.getAbsolutePath() 
+        		, "-o" + tmp.getAbsolutePath() + File.separator + identifier.getUuid()  ,  "-p"  + password  ) {
 
             @Override
             protected File directory() {
-                  return new File("c:\\temp");
+                  return tmp;
             }
 
             @Override
@@ -145,8 +144,7 @@ public class MatrosExternalCryptor extends AbstractMatrosCryptor implements IMat
         };
 
      
-        try {
-        	
+
         	
        	System.out.println(unpack);
         	ExternalCommandResult externalResult = unpack.execute();
@@ -156,7 +154,7 @@ public class MatrosExternalCryptor extends AbstractMatrosCryptor implements IMat
          	}
          	
          	
-         	File root = new File("c:\\temp\\" + identifier.getUuid() );
+         	File root = new File(tmp + File.separator + identifier.getUuid() );
          	
          	File testDirectory = root;
          	File[] files = testDirectory.listFiles();
