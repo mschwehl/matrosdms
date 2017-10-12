@@ -86,6 +86,7 @@ import org.eclipse.swt.graphics.Color;
 import org.eclipse.swt.layout.FillLayout;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
+import org.eclipse.swt.layout.RowLayout;
 import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Display;
@@ -1079,13 +1080,31 @@ public class ItemPart {
 		
 		_swtGroupActions =   new Group(compositeContent, SWT.NONE);
 		_swtGroupActions.setText(messages.itempart_swtGroupActions);
-		_swtGroupActions.setLayout(new GridLayout(1,false));
+		
+		  RowLayout layout = new RowLayout();
+	        // Optionally set layout fields.
+	        layout.wrap = true;
+	        layout.marginLeft = 5;
+	        layout.marginTop = 5;
+	        layout.marginRight = 5;
+	        layout.marginBottom = 5;
+	        layout.spacing = 10;
+	        layout.type = SWT.HORIZONTAL;
+	        
+		_swtGroupActions.setLayout(layout);
 		
 		
-		GridData groupDocumentsLayout = new GridData(SWT.LEFT, SWT.CENTER, true, false, 1, 1);
+		GridData gridData = new GridData();
+		gridData.horizontalAlignment = GridData.FILL;
+		gridData.grabExcessHorizontalSpace = true;
+
+		_swtGroupActions.setLayoutData(gridData);
+		
+		
+//		GridData groupDocumentsLayout = new GridData(SWT.LEFT, SWT.CENTER, true, false, 1, 1);
 	//	groupDocumentsLayout.minimumHeight  = 50;
 		
-		_swtGroupActions.setLayoutData(groupDocumentsLayout);
+//		_swtGroupActions.setLayoutData(groupDocumentsLayout);
 		
 		
 		// add some actions
