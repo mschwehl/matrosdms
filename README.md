@@ -72,6 +72,9 @@ using Eclipse E4 / Tycho / Eclipse Oxygen
 ## Search document view
 ![search view](/docs/en/images/search.png?raw=true "Search View")
 
+## Masterdata view
+![masterdata view](/docs/en/images/masterdata.png?raw=true "Materdata View")
+
 # Licence
 
 * not descition yet, for commercial use contact me. 
