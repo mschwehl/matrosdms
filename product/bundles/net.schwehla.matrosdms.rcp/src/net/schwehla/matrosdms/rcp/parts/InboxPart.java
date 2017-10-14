@@ -55,6 +55,7 @@ import org.eclipse.swt.widgets.TreeItem;
 import org.osgi.framework.Bundle;
 import org.osgi.framework.FrameworkUtil;
 
+
 import net.schwehla.matrosdms.i18n.MatrosMessage;
 import net.schwehla.matrosdms.lucene.ILuceneService;
 import net.schwehla.matrosdms.rcp.MyEventConstants;
@@ -174,20 +175,20 @@ public class InboxPart {
 //
 		
 		TreeViewerColumn mainColumn = new TreeViewerColumn(viewer, SWT.NONE);
-		mainColumn.getColumn().setText("Name");
+		mainColumn.getColumn().setText(messages.InboxPart_name);
 		mainColumn.getColumn().setWidth(300);
 		mainColumn.setLabelProvider(
 				new DelegatingStyledCellLabelProvider(new ViewLabelProvider(createImageDescriptor())));
 
 		TreeViewerColumn modifiedColumn = new TreeViewerColumn(viewer, SWT.NONE);
-		modifiedColumn.getColumn().setText("Last Modified");
+		modifiedColumn.getColumn().setText(messages.InboxPart_lastModified);
 		modifiedColumn.getColumn().setWidth(100);
 		modifiedColumn.getColumn().setAlignment(SWT.RIGHT);
 		modifiedColumn
 				.setLabelProvider(new DelegatingStyledCellLabelProvider(new FileModifiedLabelProvider(dateFormat)));
 
 		TreeViewerColumn fileSizeColumn = new TreeViewerColumn(viewer, SWT.NONE);
-		fileSizeColumn.getColumn().setText("Size");
+		fileSizeColumn.getColumn().setText(messages.InboxPart_size);
 		fileSizeColumn.getColumn().setWidth(100);
 		fileSizeColumn.getColumn().setAlignment(SWT.RIGHT);
 		fileSizeColumn.setLabelProvider(new DelegatingStyledCellLabelProvider(new FileSizeLabelProvider()));
@@ -259,8 +260,8 @@ public class InboxPart {
 						// create a dialog with ok and cancel buttons and a question icon
 						MessageBox dialog =
 						        new MessageBox(shell, SWT.ICON_WARNING | SWT.OK );
-						dialog.setText("to much elements");
-						dialog.setMessage("just 4 elements");
+						dialog.setText(messages.InboxPart_toMuchElements);
+						dialog.setMessage(messages.InboxPart_justFourElements);
 
 						// open dialog and await originalstore selection
 						int val = dialog.open();
@@ -426,7 +427,7 @@ public class InboxPart {
 		
 		rootFiles.clear();
 	
-		String inbox =  preferences.get(MyGlobalConstants.Preferences.INBOX_PATH, "" );
+		String inbox =  preferences.get(MyGlobalConstants.Preferences.INBOX_PATH, "" ); //$NON-NLS-1$
 		String[] inboxArray = inbox.split(MyGlobalConstants.Preferences.DELIMITER);
 		
 		try {
@@ -439,13 +440,13 @@ public class InboxPart {
 				if (f.exists() && f.isDirectory()) {
 					rootFiles.add(f);
 				} else {
-					logger.error("Inbox not a directory, go to the preferences: " + tmp);
+					logger.error(messages.InboxPart_noInboxSpecified + tmp);
 				}
 				
 			}
 			
 		} catch (Exception e) {
-			logger.error(e,"inbox " + inbox);
+			logger.error(e,"inbox " + inbox); //$NON-NLS-1$
 		}
 		
 
@@ -455,7 +456,7 @@ public class InboxPart {
 	// XXX global resource monitor
 	private ImageDescriptor createImageDescriptor() {
 		Bundle bundle = FrameworkUtil.getBundle(ViewLabelProvider.class);
-		URL url = FileLocator.find(bundle, new Path("icons/sample.png"), null);
+		URL url = FileLocator.find(bundle, new Path(messages.InboxPart_icon), null);
 		return ImageDescriptor.createFromURL(url);
 	}
 
@@ -516,7 +517,7 @@ public class InboxPart {
 				StyledString styledString = new StyledString(getFileName(file));
 				String[] files = file.list();
 				if (files != null) {
-					styledString.append(" (" + files.length + ") ", StyledString.COUNTER_STYLER);
+					styledString.append(" (" + files.length + ") ", StyledString.COUNTER_STYLER); //$NON-NLS-1$ //$NON-NLS-2$
 				}
 				return styledString;
 			}
