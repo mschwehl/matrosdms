@@ -1,6 +1,7 @@
 package net.schwehla.matrosdms.persistenceservice.internal;
 
 import java.io.File;
+import java.io.FileInputStream;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.ArrayList;
@@ -69,7 +70,7 @@ import net.schwehla.matrosdms.persistenceservice.entity.internal.attribute.DBTex
 import net.schwehla.matrosdms.persistenceservice.entity.internal.management.DBConfig;
 import net.schwehla.matrosdms.persistenceservice.entity.internal.management.DBUser;
 import net.schwehla.matrosdms.persistenceservice.internal.cryptprovider.MatrosExternalCryptor;
-import net.schwehla.matrosdms.persistenceservice.internal.cryptprovider.MatrosInternalCryptor;
+import net.schwehla.matrosdms.persistenceservice.internal.cryptprovider.MatrosNoCryptor;
 import net.schwehla.matrosdms.rcp.MatrosServiceException;
 import net.schwehla.matrosdms.rcp.MyEventConstants;
 import net.schwehla.matrosdms.rcp.MyGlobalConstants;
@@ -364,23 +365,18 @@ public class MatrosServiceImpl implements IMatrosServiceService {
 			
 	}
 
-
-	
-	
-
 	@Override
-	public File getDisplayLink(Identifier identifier) throws MatrosServiceException {
-
+	public FileInputStream getStreamedContent(Identifier identifier) throws MatrosServiceException {
+	
 		if (getObjectStore().exists( identifier)) {
-			return getObjectStore().getDisplayLink(identifier);
+			return getObjectStore().getStreamedContent(identifier);
 		} else {
 			throw new MatrosServiceException("File not exists: " + identifier);
 		}
 		
 		
 	}
-
-
+	
 	
 	@Override
 	public List<InfoOrginalstore> loadInfoStoreList() throws MatrosServiceException {
@@ -1470,18 +1466,17 @@ public class MatrosServiceImpl implements IMatrosServiceService {
 					break;
 					
 					
+					// Not implemented
 					case INTERNAL:
+						throw new MatrosServiceException("Not implemented");
 						
-						MatrosInternalCryptor internalCryptor = new MatrosInternalCryptor(Paths.get(file));
-						internalCryptor.setPassword(passwd);
+					case NONE:
 						
-						os = new MatrosObjectStore(internalCryptor);
+						MatrosNoCryptor matrosNoCryptor = new MatrosNoCryptor(Paths.get(file));
 						
-					break;
+						os = new MatrosObjectStore(matrosNoCryptor);
 						
-					default:
-						throw new IllegalStateException("not implemented");
-						
+						break;
 				
 				}
 				

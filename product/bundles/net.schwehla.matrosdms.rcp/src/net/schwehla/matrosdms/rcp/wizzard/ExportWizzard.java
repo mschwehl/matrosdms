@@ -4,7 +4,6 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.nio.ByteBuffer;
-import java.nio.channels.Channels;
 import java.nio.channels.FileChannel;
 import java.nio.channels.ReadableByteChannel;
 import java.nio.file.Files;
@@ -233,10 +232,10 @@ public class ExportWizzard extends Wizard {
 														p = Paths.get(p.getParent() + File.separator + ((i++) + "_") + p.getFileName());
 													}
 
-													File linked = service.getDisplayLink(element.getIdentifier());
 													
 													try (
-														ReadableByteChannel in = Channels.newChannel(new FileInputStream(linked));
+														FileInputStream fos = service.getStreamedContent(element.getIdentifier());
+														ReadableByteChannel in = fos.getChannel();
 														FileChannel out = new FileOutputStream(p.toFile()).getChannel()) {
 														ByteBuffer buffer = ByteBuffer.allocate(1024);
 

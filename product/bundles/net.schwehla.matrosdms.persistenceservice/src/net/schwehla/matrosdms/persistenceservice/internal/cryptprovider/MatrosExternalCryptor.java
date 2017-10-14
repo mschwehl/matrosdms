@@ -1,11 +1,12 @@
 package net.schwehla.matrosdms.persistenceservice.internal.cryptprovider;
 
 import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileOutputStream;
 import java.nio.file.Path;
 import java.util.Objects;
 
 import net.schwehla.matrosdms.domain.util.Identifier;
-import net.schwehla.matrosdms.persistenceservice.internal.MatrosConfigReader;
 import net.schwehla.matrosdms.persistenceservice.internal.StoreResult;
 import net.schwehla.matrosdms.persistenceservice.internal.cryptprovider.externalcommand.ExternalCommand;
 import net.schwehla.matrosdms.persistenceservice.internal.cryptprovider.externalcommand.ExternalCommandResult;
@@ -48,8 +49,7 @@ public class MatrosExternalCryptor extends AbstractMatrosCryptor implements IMat
 		this.uncryptLine = uncryptLine;
 	}
 	
-	// XXX
-	MatrosConfigReader configReader = new MatrosConfigReader();
+
 
     
 	@Override
@@ -57,7 +57,7 @@ public class MatrosExternalCryptor extends AbstractMatrosCryptor implements IMat
 		
 		StoreResult result = new StoreResult();
 		
-		File finalFileName = buildFinalFilename(identifier);
+		File finalFileName = buildFinalStoredElementFilename(identifier);
 		File finalFileNameParent = finalFileName.getParentFile();
 
 		if (!finalFileNameParent.exists() && ! finalFileNameParent.mkdirs()) {
@@ -69,7 +69,7 @@ public class MatrosExternalCryptor extends AbstractMatrosCryptor implements IMat
 
                @Override
                protected File directory() {
-                     return buildFinalFilename(identifier).getParentFile().getAbsoluteFile();
+                     return buildFinalStoredElementFilename(identifier).getParentFile().getAbsoluteFile();
                }
 
                @Override
@@ -96,7 +96,7 @@ public class MatrosExternalCryptor extends AbstractMatrosCryptor implements IMat
 
             
 		} catch (Exception e) {
-			throw new MatrosServiceException(e, "Error packing");
+			throw new MatrosServiceException(e, "Error packing: " + e);
 		}
           
 	
@@ -107,84 +107,98 @@ public class MatrosExternalCryptor extends AbstractMatrosCryptor implements IMat
 		
 	}
 	
+	@Override
+	public FileInputStream getStreamedContent(Identifier identifier) throws MatrosServiceException {
+	
+		File finalFileName = buildFinalStoredElementFilename(identifier);
+		
+	       try {
+	    	   
+				File tmp = new File (configReader.getApplicationCacheDir());
+				tmp.mkdirs();
+				
+				
+
+
+			    //    Command command = new Command( "e", "destination2.7z" , "-aoa" , "-oc:\\temp\\unpacked.vbs" ,  "-pSECTRET"  ) {
+
+					// TODO: c:\temp is hardcoded
+			   
+			        ExternalCommand unpack = new ExternalCommand(   "e" , "-aoa" ,  finalFileName.getAbsolutePath() 
+			        		, "-o" + tmp.getAbsolutePath() + File.separator + identifier.getUuid()  ,  "-p"  + password  ) {
+
+			            @Override
+			            protected File directory() {
+			                  return tmp;
+			            }
+
+			            @Override
+			            protected String command() {
+			                  return pathToExe;
+			            }
+
+			        };
+
+			      	
+			     //  	System.out.println(unpack);
+			        	ExternalCommandResult externalResult = unpack.execute();
+			         	
+			         	if (Objects.isNull(externalResult) || externalResult.code != 0) {
+			         		throw new MatrosServiceException("Returncode != 0 " + externalResult.output);
+			         	}
+			         	
+			         	
+			         	File root = new File(tmp + File.separator + identifier.getUuid() );
+			         	
+			         	File testDirectory = root;
+			         	File[] files = testDirectory.listFiles();
+			         	
+			         	if (files.length == 1) {
+			         		
+			         		// File is extracted
+			         		
+			         		FileInputStream fos = new FileInputStream(files[0]);
+			         		return fos;
+			         		
+			         		
+			         	}
+			         	
+			         	throw new RuntimeException("Cannot extract: " + identifier);
+			         	
+			         	
+			         
+				
+	       }
+	       
+    catch(Exception e) {
+    	
+    	if (e instanceof MatrosServiceException) {
+    		throw (MatrosServiceException) e;
+    	}
+    	
+    	throw new RuntimeException(e);
+    }
+    	
+    
+		
+	}
 	
     
 
 
-    
-    
-	@Override
-	public File getDisplayLink(Identifier identifier)   {
-		
-		File finalFileName = buildFinalFilename(identifier);
-		
-        try {
-        	
-        	
-			File tmp = new File (configReader.getApplicationCacheDir());
-			tmp.mkdirs();
-
-    //    Command command = new Command( "e", "destination2.7z" , "-aoa" , "-oc:\\temp\\unpacked.vbs" ,  "-pSECTRET"  ) {
-
-		// TODO: c:\temp is hardcoded
-   
-        ExternalCommand unpack = new ExternalCommand(   "e" , "-aoa" ,  finalFileName.getAbsolutePath() 
-        		, "-o" + tmp.getAbsolutePath() + File.separator + identifier.getUuid()  ,  "-p"  + password  ) {
-
-            @Override
-            protected File directory() {
-                  return tmp;
-            }
-
-            @Override
-            protected String command() {
-                  return pathToExe;
-            }
-
-        };
-
-     
-
-        	
-       	System.out.println(unpack);
-        	ExternalCommandResult externalResult = unpack.execute();
-         	
-         	if (Objects.isNull(externalResult) || externalResult.code != 0) {
-         		throw new MatrosServiceException("Returncode != 0 " + externalResult.output);
-         	}
-         	
-         	
-         	File root = new File(tmp + File.separator + identifier.getUuid() );
-         	
-         	File testDirectory = root;
-         	File[] files = testDirectory.listFiles();
-         	
-         	if (files.length == 1) {
-         		return files[0];
-         	}
-         	
-         	throw new RuntimeException("Cannot extract: " + identifier);
-         	
-        } catch(Exception e) {
-        	
-        	throw new RuntimeException(e);
-        }
-        	
-   
-     
-	}
-
+	
 	@Override
 	public File getStoredElementFile(Identifier identifier) {
-		return buildFinalFilename(identifier);
+		return buildFinalStoredElementFilename(identifier);
 	}
 	
 
-	private File buildFinalFilename(Identifier identifier) {
+	private File buildFinalStoredElementFilename(Identifier identifier) {
 		
 		File fItem = new File( cloudRoot.toFile().getAbsolutePath() + File.separator + identifier.getUuid().toLowerCase().substring(0, 2)
 				+  File.separator + identifier.getUuid().toLowerCase() + ".7z");
 		return fItem;
 	}
-	
+
+
 }

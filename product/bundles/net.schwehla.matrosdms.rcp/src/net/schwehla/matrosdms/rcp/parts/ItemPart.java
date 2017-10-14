@@ -70,7 +70,6 @@ import org.eclipse.jface.viewers.TableViewerColumn;
 import org.eclipse.jface.viewers.TableViewerEditor;
 import org.eclipse.jface.viewers.TextCellEditor;
 import org.eclipse.jface.window.Window;
-import org.eclipse.jface.wizard.IWizard;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.dnd.DND;
 import org.eclipse.swt.dnd.DropTarget;
@@ -1674,7 +1673,8 @@ public class ItemPart {
 		void execute() throws Exception {
 			
 			// Clone else there will be file-lock
-        	desktopHelper.openInboxFileAsClone(_wrapper.getInboxFile());
+        	String path = desktopHelper.getInboxNonBlockingLink(_wrapper.getInboxFile());
+        	desktopHelper.openUrl(path);
         	
         	
 			

@@ -1,6 +1,7 @@
 package net.schwehla.matrosdms.persistenceservice;
 
 import java.io.File;
+import java.io.FileInputStream;
 import java.util.List;
 
 import net.schwehla.matrosdms.domain.admin.CloudSettings;
@@ -43,10 +44,10 @@ public interface IMatrosServiceService {
     // neuen Mappe anlegen
     public void createContext(InfoContext con) throws MatrosServiceException;;
 
-    // Dokument der Mappe hinzufügen
+    // Dokument der Mappe hinzufï¿½gen
     public void appendContainer(File droppedFile,  InfoItem myNewContainer) throws MatrosServiceException;;
 
-    // Überblick laden
+    // ï¿½berblick laden
     public InfoItemList loadInfoItemList(InfoContext context, boolean inclArchive) throws MatrosServiceException;
     
     
@@ -71,8 +72,7 @@ public interface IMatrosServiceService {
 
 	public MatrosUser checkLogin(MatrosConnectionCredential dbCredentials) throws MatrosServiceException;
 
-	// get local cached link
-	public File getDisplayLink(Identifier identifier) throws MatrosServiceException;
+	public FileInputStream  getStreamedContent(Identifier identifier) throws MatrosServiceException;
 
 	public void createOrignalStore(InfoOrginalstore store) throws MatrosServiceException;
 

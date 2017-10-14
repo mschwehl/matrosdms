@@ -139,10 +139,12 @@ public class SetupPageServerCloudstore extends WizardPage {
 		btn7zip.setText("External (7Zip) - RECOMENDED");
 		
 		btnInternalCryption = new Button(group, SWT.RADIO);
-		btnInternalCryption.setText("Internal Cryption");
+		btnInternalCryption.setEnabled(false);
+		btnInternalCryption.setText("Internal Cryption (not implemented)");
 		
 		btnNoCrypt = new Button(group, SWT.RADIO);
-		btnNoCrypt.setText("No Encryption (NOT RECOMENDED)");
+		btnNoCrypt.setEnabled(false);
+		btnNoCrypt.setText("No Encryption (NOT RECOMENDED) (not implemented)");
 		new Label(compositeTreeAndButtons, SWT.NONE);
 		
 

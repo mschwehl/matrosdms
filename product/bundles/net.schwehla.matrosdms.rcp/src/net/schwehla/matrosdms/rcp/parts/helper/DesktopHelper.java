@@ -2,13 +2,11 @@ package net.schwehla.matrosdms.rcp.parts.helper;
 
 import java.awt.Desktop;
 import java.io.File;
+import java.io.FileInputStream;
 import java.net.URI;
 import java.nio.file.Files;
 import java.nio.file.StandardCopyOption;
-import java.util.LinkedHashMap;
-import java.util.Map;
 
-import javax.annotation.PreDestroy;
 import javax.inject.Inject;
 
 import org.eclipse.e4.core.di.annotations.Creatable;
@@ -97,18 +95,28 @@ public class DesktopHelper  {
 	}
     
 
-    
-
-    // evtl. cachen mit weakhashmap 10 elemente
 	public  String getLocallink(InfoItem doc) throws MatrosServiceException {
 
 		
 	      // XXX
-	      try {
+	      try  (FileInputStream fos = service.getStreamedContent(doc.getIdentifier() )) {
 	    	  
-	    	  return service.getDisplayLink(doc.getIdentifier()).getAbsolutePath();
-	    	  
+	    		File tempFoder = new File (configReader.getApplicationCacheDir() + File.separator + "docs");
+				tempFoder.mkdirs();
+	  
+				String filename = doc.getMetadata().getFilename();
+				
+				File total = new File(tempFoder.getAbsolutePath() + File.separator + filename);
+				
+				if (!total.exists()) {
+					
+					Files.copy(fos,  total.toPath(), StandardCopyOption.REPLACE_EXISTING);
+					total.deleteOnExit();
+			
+				}
 		      
+				return total.getAbsolutePath();
+				
 	      } catch (Exception ex) {
 	    	  throw new MatrosServiceException("cannot stream file to temp-folder: " + ex);
 	      }
@@ -117,7 +125,7 @@ public class DesktopHelper  {
 	
 	
     
-	public void openInboxFileAsClone(File file)   {
+	public String getInboxNonBlockingLink(File file) throws Exception   {
 		
 
 		String extension = "";
@@ -155,11 +163,12 @@ public class DesktopHelper  {
 				total.deleteOnExit();
 			}
 			
-			
-			openUrl(total.getAbsolutePath());
+
+			return total.getAbsolutePath();
 			
 		} catch (Exception e) {
 			logger.error(e, "cannot open file: " + file.getName());
+			throw e;
 		}
 
 		

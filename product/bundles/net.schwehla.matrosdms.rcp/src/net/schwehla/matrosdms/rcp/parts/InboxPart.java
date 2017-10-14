@@ -55,11 +55,8 @@ import org.eclipse.swt.widgets.TreeItem;
 import org.osgi.framework.Bundle;
 import org.osgi.framework.FrameworkUtil;
 
-import net.schwehla.matrosdms.domain.core.tagcloud.InfoKategory;
-import net.schwehla.matrosdms.domain.util.ObjectCloner;
 import net.schwehla.matrosdms.i18n.MatrosMessage;
 import net.schwehla.matrosdms.lucene.ILuceneService;
-import net.schwehla.matrosdms.rcp.MatrosServiceException;
 import net.schwehla.matrosdms.rcp.MyEventConstants;
 import net.schwehla.matrosdms.rcp.MyGlobalConstants;
 import net.schwehla.matrosdms.rcp.parts.helper.DesktopHelper;
@@ -295,7 +292,10 @@ public class InboxPart {
 						File doc = (File) viewer.getTree().getSelection()[0].getData();
 						
 						// Clone else there will be file-lock
-	                	desktopHelper.openInboxFileAsClone(doc);
+	                	String clonePath = desktopHelper.getInboxNonBlockingLink(doc);
+	                	desktopHelper.openUrl(clonePath);
+	                	
+	                	
 	            	}catch(Exception ex) {
 	            		logger.error(ex);
 	            	}
