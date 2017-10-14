@@ -14,8 +14,13 @@ import java.nio.file.OpenOption;
 import java.nio.file.Path;
 import java.security.MessageDigest;
 
+import net.schwehla.matrosdms.persistenceservice.internal.MatrosConfigReader;
+
 
 public abstract class AbstractMatrosCryptor implements IMatrosStoreCryptor {
+	
+	// XXX
+	protected MatrosConfigReader configReader = new MatrosConfigReader();
 
 	Path cloudRoot;
 	final ByteBuffer buffer = ByteBuffer.allocateDirect(4*1024);

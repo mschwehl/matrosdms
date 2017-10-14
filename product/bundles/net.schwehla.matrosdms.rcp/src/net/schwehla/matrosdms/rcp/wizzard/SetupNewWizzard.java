@@ -37,7 +37,6 @@ public class SetupNewWizzard extends Wizard   {
 	@Inject 
 	SetupPageServerUser userpage; 
 	
-
 	@Inject 
 	SetupPageInbox inboxpage; 
 	

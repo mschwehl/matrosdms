@@ -1,6 +1,7 @@
 package net.schwehla.matrosdms.persistenceservice.internal;
 
 import java.io.File;
+import java.io.FileInputStream;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
@@ -42,24 +43,22 @@ class MatrosObjectStore {
 
 		
 	}
-
-
-
-	public File  getDisplayLink(Identifier uuid) throws MatrosServiceException {
 	
+	
+	public FileInputStream getStreamedContent(Identifier identifier) throws MatrosServiceException {
+
 		File rootDir = storeCryptor.getCloudRoot().toFile();
 		
-		if (!rootDir.exists()) {
-			logger.info("Rootdir not exists " + rootDir);
-		}
-		
-		try {
-			return storeCryptor.getDisplayLink(uuid);
-		} catch (Exception e) {
-			 throw new MatrosServiceException(e.getMessage());
-		}
-		
-		
+			if (!rootDir.exists()) {
+				logger.info("Rootdir not exists " + rootDir);
+			}
+			
+			try {
+				return storeCryptor.getStreamedContent(identifier);
+			} catch (Exception e) {
+				 throw new MatrosServiceException(e.getMessage());
+			}
+			
 	}
 
 	
@@ -106,6 +105,9 @@ class MatrosObjectStore {
 		return false;
 		
 	}
+
+
+
 
 
 
