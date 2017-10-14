@@ -35,22 +35,12 @@ public class Masterdata {
 	
 	AppSettings appSettings;
 	CloudSettings  cloudSettings ;
-	String processedFolder;
+
 
 	List <MatrosUser> userList = new ArrayList<>();
 	List <MatrosPreferenceInbox> inboxList = new ArrayList<>();
 	List <InfoOrginalstore> orignalStoreList = new ArrayList<>();
 	
-
-
-	 
-	public String getProcessedFolder() {
-		return processedFolder;
-	}
-
-	public void setProcessedFolder(String processedFolder) {
-		this.processedFolder = processedFolder;
-	}
 
 
 	List <AbstractInfoAttribute> infoAttributeList = new ArrayList<>();

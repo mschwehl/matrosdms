@@ -430,18 +430,29 @@ public class ItemPart {
 		 						
 		 						try {
 									
+		 							
+		 				
 
 		 							String inboxProcessed =  preferences.get(MyGlobalConstants.Preferences.PROCESSED_PATH, "" );
 		 							inboxProcessed = inboxProcessed.replaceAll(";","");
 		 							
-		 							
-		 							if(! new File(inboxProcessed).exists()) {
+		 							if (inboxProcessed == null || inboxProcessed.trim().length() == 0) {
 		 								throw new IllegalStateException("no processed folder specified, please go to the preferences");
 		 							}
 		 							
-		 							if(!_wrapper.getInboxFile().exists()) {
-		 								throw new IllegalStateException("Source file not exists anymore");
-		 							}
+		 							
+		 							File targetProcessed = new File(inboxProcessed);
+		 								
+		 								if(! targetProcessed.exists()) {
+		 									
+		 									boolean create = targetProcessed.mkdirs();
+		 									
+		 									if (!create) {
+		 										throw new IllegalStateException("cannot create processed folder");
+		 									}
+
+		 								}
+		 								
 		 							
 		 							
 		 							Path moveSourcePath = _wrapper.getInboxFile().toPath() ;
@@ -1735,11 +1746,25 @@ public class ItemPart {
 					String inboxProcessed =  preferences.get(MyGlobalConstants.Preferences.PROCESSED_PATH, "" );
 					inboxProcessed = inboxProcessed.replaceAll(";","");
 					
-					
-					if(! new File(inboxProcessed).exists()) {
+					if (inboxProcessed == null || inboxProcessed.trim().length() == 0) {
 						throw new IllegalStateException("no processed folder specified, please go to the preferences");
 					}
 					
+					
+					File targetProcessed = new File(inboxProcessed);
+						
+						if(! targetProcessed.exists()) {
+							
+							boolean create = targetProcessed.mkdirs();
+							
+							if (!create) {
+								throw new IllegalStateException("cannot create processed folder");
+							}
+
+						}
+						
+					
+				
 					if(!_wrapper.getInboxFile().exists()) {
 						throw new IllegalStateException("Source file not exists anymore");
 					}

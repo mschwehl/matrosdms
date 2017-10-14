@@ -128,8 +128,7 @@ public class SetupNewWorker implements IRunnableWithProgress {
                         @Override
                         public void run() {
                             
-                         	 String processedFolder = masterData.getProcessedFolder();
-                         	 
+                         	String processedFolder = masterData.getAppSettings().getProcessedFolder();
                          	preferences.put(MyGlobalConstants.Preferences.PROCESSED_PATH, processedFolder);
                          	
                          	try {

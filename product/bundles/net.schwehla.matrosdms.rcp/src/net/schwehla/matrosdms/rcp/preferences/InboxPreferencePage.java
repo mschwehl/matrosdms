@@ -74,7 +74,7 @@ public class InboxPreferencePage extends PreferencePage {
      	
      	 getPreferenceStore().setValue(MyGlobalConstants.Preferences.INBOX_PATH, inboxPath);
      	
-     	 getPreferenceStore().setValue(MyGlobalConstants.Preferences.PROCESSED_PATH, masterData.getProcessedFolder());
+ //    	 getPreferenceStore().setValue(MyGlobalConstants.Preferences.PROCESSED_PATH, masterData.getAppSettings().getProcessedFolder());
      	 
 		
 	}
