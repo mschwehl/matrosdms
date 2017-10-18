@@ -128,23 +128,8 @@ public class DesktopHelper  {
 	public String getInboxNonBlockingLink(File file) throws Exception   {
 		
 
-		String extension = "";
-		String path = file.getAbsolutePath();
-		
-		int lastSeparator =  path.lastIndexOf(File.separator);
-		
-		if (lastSeparator > 0) {
-			path = file.getAbsolutePath().substring(lastSeparator+1);
-		}
+		String extension = getExtension(file.getAbsolutePath());
 
-		int i = path.lastIndexOf('.');
-		if (i > 0) {
-		    extension = path.substring(i+1);
-		}
-		
-		if (extension.length() > 0) {
-			extension = "." + extension;
-		}
 		
 		
 		 // creates temporary file
@@ -177,6 +162,28 @@ public class DesktopHelper  {
         
 	}
 
-	
+	public static String getExtension(String filename) {
+					
+			String extension = "";
+			String path = filename;
+			
+			int lastSeparator =  path.lastIndexOf(File.separator);
+			
+			if (lastSeparator > 0) {
+				path = filename.substring(lastSeparator+1);
+			}
+
+			int i = path.lastIndexOf('.');
+			if (i > 0) {
+			    extension = path.substring(i+1);
+			}
+			
+			if (extension.length() > 0) {
+				extension = "." + extension;
+			}
+			
+			return extension;
+		}
+
 	
 }

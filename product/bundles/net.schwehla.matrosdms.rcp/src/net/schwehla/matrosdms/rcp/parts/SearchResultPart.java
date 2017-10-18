@@ -26,6 +26,7 @@ import org.eclipse.swt.widgets.Table;
 import org.eclipse.swt.widgets.TableColumn;
 import org.eclipse.swt.widgets.Text;
 
+import net.schwehla.matrosdms.domain.core.InfoItem;
 import net.schwehla.matrosdms.domain.search.SearchItemInput;
 import net.schwehla.matrosdms.domain.search.SearchedInfoItemElement;
 import net.schwehla.matrosdms.i18n.MatrosMessage;
@@ -144,7 +145,11 @@ public class SearchResultPart {
 				
 	        	try {
 	        		
-            	 	String local = desktopHelper.getLocallink(rowObject);
+	        		// load metadat
+	        		
+	        		InfoItem item = service.loadInfoItemByIdentifier(rowObject.getIdentifier());
+	        		
+            	 	String local = desktopHelper.getLocallink(item);
                 	desktopHelper.openUrl(local);
             	}catch(Exception ex) {
             		logger.error(ex);
