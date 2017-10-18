@@ -1074,13 +1074,18 @@ public class MatrosServiceImpl implements IMatrosServiceService {
 		
 		 List<DBItemMetadata> duplicates = em.createNamedQuery("DBItemMetadata.findByChecksum", DBItemMetadata.class).setParameter("checksum", metadata.getSha256()).getResultList();
 		 
-		 InfoContext c = new InfoContext(Identifier.createNEW(), "DUPLICATES"); //$NON-NLS-1$
+		
 		 	
 		 for (DBItemMetadata dbFile : duplicates ) {
 			
 			if (dbFile != null) {
 				
 				DBItem item = em.createNamedQuery("DBItem.findByMetadataId", DBItem.class).setParameter("id", dbFile.getFileId() ) .getSingleResult();
+				
+				
+				
+				 InfoContext c = new InfoContext(Identifier.create(item.getInfoContext().getPK() ,  item.getInfoContext().getUuid()), item.getInfoContext().getName()); //$NON-NLS-1$
+				
 				
 				MatrosMetadata mm = buildMetadataFromDatabase(dbFile);
 				InfoItem container = new InfoItem(c ,Identifier.create(item.getPK(), item.getUuid()), item.getName());
@@ -1566,7 +1571,8 @@ public class MatrosServiceImpl implements IMatrosServiceService {
 			
 		}
 
-		
+
+
 
 
 }

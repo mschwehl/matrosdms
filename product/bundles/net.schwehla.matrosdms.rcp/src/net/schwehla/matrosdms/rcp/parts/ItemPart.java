@@ -5,10 +5,13 @@ import java.io.File;
 import java.lang.reflect.Constructor;
 import java.nio.file.Files;
 import java.nio.file.Path;
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
+import java.util.Objects;
 
 import javax.annotation.PostConstruct;
 import javax.inject.Inject;
@@ -53,6 +56,7 @@ import org.eclipse.jface.databinding.swt.WidgetSideEffects;
 import org.eclipse.jface.databinding.viewers.IViewerObservableValue;
 import org.eclipse.jface.databinding.viewers.ViewerProperties;
 import org.eclipse.jface.dialogs.MessageDialog;
+import org.eclipse.jface.layout.GridLayoutFactory;
 import org.eclipse.jface.util.LocalSelectionTransfer;
 import org.eclipse.jface.viewers.ArrayContentProvider;
 import org.eclipse.jface.viewers.CellEditor;
@@ -135,6 +139,8 @@ import net.schwehla.matrosdms.resourcepool.IMatrosResource;
 public class ItemPart {
 
 
+    DateFormat df = new SimpleDateFormat("yyyy-MM-dd");
+    
 	@Inject
 	@Named(TranslationService.LOCALE) Locale locale;
 	
@@ -172,6 +178,8 @@ public class ItemPart {
 
 	TableViewer _selected;
 	private Text textOrderNumber;
+	private Button checkBoxAutonnumber;
+	
 	private Color defaultListColor;
 
 
@@ -456,8 +464,31 @@ public class ItemPart {
 		 							
 		 							
 		 							Path moveSourcePath = _wrapper.getInboxFile().toPath() ;
-		 							Path moveTargetPath = new File(inboxProcessed + File.separator + _wrapper.getInfoItem().getIdentifier()
-		 									.getUuid() + "_" + moveSourcePath.getFileName() ).toPath();
+		 							
+		 							String filename = _wrapper.getInfoItem().getName() ;
+		 							
+		 							
+		 							if (Objects.nonNull( _wrapper.getInfoItem().getStoreIdentifier())) {
+		 								
+		 								String storeid = matrosService.getInfoStoreByIdentifer( 
+		 										_wrapper.getInfoItem().getStoreIdentifier()).getName();
+		 								
+		 								storeid += "_" + _wrapper.getInfoItem().getStoreItemNumber();
+		 								
+		 								filename += "@STORE_" + storeid;
+		 								
+		 							} else {
+		 								
+		 								filename += "@DELETED_";
+		 								
+		 							}
+		 						
+		 							filename += "@DATE_" + df.format(_wrapper.getInboxFile().lastModified());
+		 							
+		 							filename += "@UUID_" +  _wrapper.getInfoItem().getIdentifier().getUuid();
+		 							filename += DesktopHelper.getExtension(_wrapper.getInfoItem().getMetadata().getFilename());
+		 							
+		 							Path moveTargetPath = new File(inboxProcessed + File.separator  + filename ).toPath();
 		 							
 		 							Files.move( moveSourcePath, moveTargetPath );
 		 							
@@ -917,9 +948,29 @@ public class ItemPart {
 			
 			
 		// http://stackoverflow.com/questions/8168658/eclipse-rcp-clear-button-in-textinput
-		textOrderNumber = new Text(compositeStorageDetail,SWT.BORDER);
-		textOrderNumber.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1));
-		textOrderNumber.setEnabled(false);
+	
+			Composite numbers = new Composite(compositeStorageDetail, SWT.NONE);
+			numbers.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1));
+			
+			
+			numbers.setLayout( new GridLayout(2, false));
+			
+			textOrderNumber = new Text(numbers,SWT.BORDER);
+			textOrderNumber.setEnabled(false);
+			
+			checkBoxAutonnumber =  new Button(numbers,SWT.CHECK);
+			checkBoxAutonnumber.setText("auto");
+			checkBoxAutonnumber.addSelectionListener(new SelectionAdapter() {
+			    @Override
+			    public void widgetSelected(SelectionEvent event) {
+			        if (event.detail == SWT.CHECK) {
+			            // Now what should I do here to get
+			            // Whether it is a checked event or unchecked event.
+			        }
+			    }
+			});
+			
+			
 		
 // https://bugs.eclipse.org/bugs/show_bug.cgi?id=293230
 // NOT ON WINDOWS :-(		
@@ -1067,12 +1118,16 @@ public class ItemPart {
 		try {
 			int nextNumber = matrosService.getNextFreeOriginalstoreNumber(box.getSelection().getIdentifier());
 			
-				if (textOrderNumber != null && (textOrderNumber.getText().equals("") || textOrderNumber.getText().indexOf("auto") > 0)) {
+				if (textOrderNumber != null && (textOrderNumber.getText().equals("") || checkBoxAutonnumber.getSelection())) {
 					
-					textOrderNumber.setText("" + nextNumber + (" (auto)"));
+					checkBoxAutonnumber.setSelection(true);
+					checkBoxAutonnumber.setText("autoupdate");
+					
+					textOrderNumber.setText("" + nextNumber );
 					textOrderNumber.redraw();
+					checkBoxAutonnumber.redraw();
 					
-					_wrapper.getInfoItem().setStoreItemNumber("" + nextNumber + (" (auto)"));
+					_wrapper.getInfoItem().setStoreItemNumber("" + nextNumber );
 					
 				}
 			
@@ -1248,7 +1303,7 @@ public class ItemPart {
 					
 					MatrosMetadata mmd = null;
 					
-					boolean doublette = false;
+					List <InfoItem> doubles = new ArrayList <>();
 			
 					  @Override
 					  protected IStatus run(IProgressMonitor monitor) {
@@ -1275,12 +1330,8 @@ public class ItemPart {
 							    
 							    
 														
-								List <InfoItem> doubles = matrosService.checkForDuplicate(mmd);
+								doubles = matrosService.checkForDuplicate(mmd);
 																
-								if (doubles.size() > 0) {
-									
-									doublette = true;
-								}
 								
 				    	 		// auto-sync
 				    	 		eventBroker.send(MyEventConstants.STATUSBAR,  mmd.getSha256() );
@@ -1295,7 +1346,7 @@ public class ItemPart {
 							monitor.worked(1);
 								
 							
-							if (doublette) {
+							if (doubles != null && ! doubles.isEmpty()) {
 								
 							    // If you want to update the UI
 							    sync.asyncExec(new Runnable() {
@@ -1309,7 +1360,10 @@ public class ItemPart {
 										MessageBox dialog =
 										        new MessageBox(shell, SWT.ICON_QUESTION | SWT.OK| SWT.CANCEL);
 										dialog.setText("My info");
-										dialog.setMessage("File gibt es schon");
+										
+										
+										
+										dialog.setMessage("File gibt es schon: " + doubles.get(0).getName() + "-> " + doubles.get(0).getContext().getName() );
 
 										// open dialog and await user selection
 										int i = dialog.open();
