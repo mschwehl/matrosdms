@@ -64,6 +64,16 @@ public class InfoItem extends InfoBaseElement {
 
 	private Date lastIndexRun;
 	
+	private Date issueDate;
+	
+
+	public Date getIssueDate() {
+		return issueDate;
+	}
+
+	public void setIssueDate(Date issueDate) {
+		this.issueDate = issueDate;
+	}
 
 	public Date getLastIndexRun() {
 		return lastIndexRun;

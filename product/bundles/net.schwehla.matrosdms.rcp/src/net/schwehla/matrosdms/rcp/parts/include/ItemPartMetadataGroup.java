@@ -1,16 +1,9 @@
 package net.schwehla.matrosdms.rcp.parts.include;
 
-import java.util.Map;
-
 import javax.inject.Inject;
 
 import org.eclipse.e4.core.contexts.IEclipseContext;
 import org.eclipse.e4.core.di.annotations.Creatable;
-import org.eclipse.e4.core.services.events.IEventBroker;
-import org.eclipse.e4.ui.model.application.MApplication;
-import org.eclipse.e4.ui.model.application.ui.MDirtyable;
-import org.eclipse.e4.ui.workbench.modeling.ESelectionService;
-import org.eclipse.jface.viewers.TableViewer;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
@@ -20,32 +13,12 @@ import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Text;
 
 import net.schwehla.matrosdms.domain.core.InfoItem;
-import net.schwehla.matrosdms.domain.util.Identifier;
-import net.schwehla.matrosdms.persistenceservice.IMatrosServiceService;
 import net.schwehla.matrosdms.rcp.swt.composite.MatrosTagGroup;
 
 @Creatable
 public class ItemPartMetadataGroup    {
 	
-	
-	@Inject ESelectionService selectionService;
 
-	@Inject
-	private MDirtyable _dirty;
-
-	@Inject
-	private IEventBroker eventBroker;
-
-	 
-	
-	Map<Identifier, TableViewer> _tagGraphMap;
-
-
-	@Inject
-	MApplication application;
-
-
-	@Inject IMatrosServiceService matrosService;
 	
 	@Inject
 	IEclipseContext context;

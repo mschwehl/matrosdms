@@ -6,6 +6,8 @@ import javax.inject.Inject;
 
 import org.eclipse.core.databinding.DataBindingContext;
 import org.eclipse.jface.wizard.WizardPage;
+import org.eclipse.swt.events.DisposeEvent;
+import org.eclipse.swt.events.DisposeListener;
 import org.eclipse.swt.widgets.Composite;
 
 import net.schwehla.matrosdms.rcp.wizzard.model.setup.Masterdata;
@@ -52,6 +54,13 @@ public abstract class MatrosWizzardPage extends WizardPage implements Consumer <
 		if (masterData != null) {
 			m_bindingContext = initDataBindings();
 		}
+		
+		
+	    parent.addDisposeListener(new DisposeListener() {
+	        public void widgetDisposed(DisposeEvent e) {
+	        	m_bindingContext.dispose();
+	        }
+	    });
 		
 	}
 

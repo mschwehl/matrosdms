@@ -21,6 +21,8 @@ import org.eclipse.swt.SWT;
 import org.eclipse.swt.custom.CLabel;
 import org.eclipse.swt.custom.ScrolledComposite;
 import org.eclipse.swt.custom.StackLayout;
+import org.eclipse.swt.events.DisposeEvent;
+import org.eclipse.swt.events.DisposeListener;
 import org.eclipse.swt.events.SelectionAdapter;
 import org.eclipse.swt.events.SelectionEvent;
 import org.eclipse.swt.graphics.Color;
@@ -110,7 +112,7 @@ public class PropertiesPart {
 				m_bindingContext = initDataBindings();
 			}
 			
-			
+		
 
 			
 			
@@ -444,6 +446,12 @@ public class PropertiesPart {
 		
 		
 		m_bindingContext = initDataBindings();
+		
+	    parent.addDisposeListener(new DisposeListener() {
+	        public void widgetDisposed(DisposeEvent e) {
+	        	m_bindingContext.dispose();
+	        }
+	    });
 
 	}
 

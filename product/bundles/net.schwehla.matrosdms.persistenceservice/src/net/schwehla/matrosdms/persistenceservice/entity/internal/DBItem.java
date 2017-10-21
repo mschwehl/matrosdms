@@ -71,7 +71,20 @@ public class DBItem extends AbstractDBInfoBaseEntity  {
 	@Column
 	private int indexState;
 
-  @ManyToMany 
+	
+	@Temporal(TemporalType.TIMESTAMP)
+	Date issueDate;
+	
+	
+  public Date getIssueDate() {
+		return issueDate;
+	}
+
+	public void setIssueDate(Date issueDate) {
+		this.issueDate = issueDate;
+	}
+
+@ManyToMany 
   @JoinTable(
       name="Item_Kategorie",
       joinColumns=@JoinColumn(name="ITEM_ID", referencedColumnName="ITEM_ID"),
