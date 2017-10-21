@@ -642,6 +642,11 @@ public class MatrosServiceImpl implements IMatrosServiceService {
 		DBItem dbItem = em.createNamedQuery("DBItem.findByUUID", DBItem.class).setParameter("uuid",infoItem.getIdentifier().getUuid()).getSingleResult();
 
 	    dbItem.setStage(infoItem.getStage());
+	    dbItem.setIndexState(infoItem.getIndexState());
+	    dbItem.setLastIndexRun(infoItem.getLastIndexRun());
+	    dbItem.setIssueDate(infoItem.getIssueDate());
+	    
+	    
 	    mapBasicPropertiesFromModelToDatabase(dbItem, infoItem);
 	    
 		mergeMetadata( infoItem, dbItem, dbItem.getFile());
@@ -739,6 +744,7 @@ public class MatrosServiceImpl implements IMatrosServiceService {
 	    dbItem.setStage(myNewContainer.getStage());
 	    dbItem.setIndexState(myNewContainer.getIndexState());
 	    dbItem.setLastIndexRun(myNewContainer.getLastIndexRun());
+	    dbItem.setIssueDate(myNewContainer.getIssueDate());
 	    
 	    mapBasicPropertiesFromModelToDatabase(dbItem , myNewContainer);
 	    
@@ -971,6 +977,7 @@ public class MatrosServiceImpl implements IMatrosServiceService {
 		beInfoItem.setStage(dbItem.getStage());
 		beInfoItem.setIndexState(dbItem.getIndexState());
 		beInfoItem.setLastIndexRun(dbItem.getLastIndexRun());
+		beInfoItem.setIssueDate(dbItem.getIssueDate());
 		
 		
 		if (dbItem.getStore() != null) {

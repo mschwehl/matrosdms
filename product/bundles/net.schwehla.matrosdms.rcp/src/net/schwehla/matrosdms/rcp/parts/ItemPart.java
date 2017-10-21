@@ -56,7 +56,6 @@ import org.eclipse.jface.databinding.swt.WidgetSideEffects;
 import org.eclipse.jface.databinding.viewers.IViewerObservableValue;
 import org.eclipse.jface.databinding.viewers.ViewerProperties;
 import org.eclipse.jface.dialogs.MessageDialog;
-import org.eclipse.jface.layout.GridLayoutFactory;
 import org.eclipse.jface.util.LocalSelectionTransfer;
 import org.eclipse.jface.viewers.ArrayContentProvider;
 import org.eclipse.jface.viewers.CellEditor;
@@ -130,6 +129,7 @@ import net.schwehla.matrosdms.rcp.parts.helper.AutoResizeTableLayout;
 import net.schwehla.matrosdms.rcp.parts.helper.DesktopHelper;
 import net.schwehla.matrosdms.rcp.parts.helper.ItemPartElementWrapper;
 import net.schwehla.matrosdms.rcp.parts.helper.ItemPartElementWrapper.Type;
+import net.schwehla.matrosdms.rcp.parts.include.ItemPartFixedAttributesGroup;
 import net.schwehla.matrosdms.rcp.parts.include.ItemPartMetadataGroup;
 import net.schwehla.matrosdms.rcp.swt.TypedComboBox;
 import net.schwehla.matrosdms.rcp.swt.TypedComboBoxLabelProvider;
@@ -198,7 +198,7 @@ public class ItemPart {
 	
 	
 	Link link_showMetadata;
-	Link link_moveInbox;
+	Link link_moveNotProcessed;
 	
 	
 	@Inject
@@ -233,6 +233,7 @@ public class ItemPart {
 
 
 	@ Inject ItemPartMetadataGroup _partMetaIncludeContent;
+	@ Inject ItemPartFixedAttributesGroup _itemPartFixedAttributesGroup;
 
 	
 
@@ -760,19 +761,29 @@ public class ItemPart {
 	private void createGroupAttributes(Composite compositeContent) {
 		_swtGroupAttributes = new Group(compositeContent, SWT.NONE);
 		 _swtGroupAttributes.setText("Attribute");
-		 _swtGroupAttributes.setLayout(new FillLayout(SWT.HORIZONTAL));
+		 
+		 
+		 
+		 _swtGroupAttributes.setLayout(new GridLayout(1,false));
+		 
+
 		 
 		 GridData gd_groupAttributes = new GridData(SWT.FILL, SWT.FILL, true, true, 1, 1);
 		 gd_groupAttributes.minimumHeight  = 50;
 		 
 		 _swtGroupAttributes.setLayoutData(gd_groupAttributes);
 		 
-		 
+
+		 _itemPartFixedAttributesGroup.appendElementsToParentComposit(_wrapper.getInfoItem(), _swtGroupAttributes);
 		 
 		 
 		 // Table einf�gen
 		 // http://help.eclipse.org/kepler/index.jsp?topic=%2Forg.eclipse.platform.doc.isv%2Freference%2Fapi%2Forg%2Feclipse%2Fjface%2Fviewers%2FViewerColumn.html&anchor=setEditingSupport(org.eclipse.jface.viewers.EditingSupport)
         _swtTableViewerAttributes = new TableViewer(_swtGroupAttributes,SWT.FULL_SELECTION);
+        
+        
+        _swtTableViewerAttributes.getTable().setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true, 1, 1 ));
+        
         _swtTableViewerAttributes.setContentProvider(ArrayContentProvider.getInstance());
         
 
@@ -996,7 +1007,7 @@ public class ItemPart {
 			
 			if (_wrapper.getInfoItem().getStoreItemNumber() != null) {
 				textOrderNumber.setText(_wrapper.getInfoItem().getStoreItemNumber() );
-			}
+			} 
 			
 				
 			
@@ -1016,7 +1027,11 @@ public class ItemPart {
 
 			}
 			
-
+		// not selected
+		if (_wrapper.getInfoItem().getStoreItemNumber() == null) {
+			btnRadioButtonOriginalDeleted.setSelection(true);
+			btnRadioButtonOriginalStored.setSelection(false);
+		} 
 		
 		
 	
@@ -1264,19 +1279,19 @@ public class ItemPart {
 		
 		link_showMetadata.setVisible(false);
 		
-		link_moveInbox = new Link(_swtGroupActions, SWT.NONE);
+		link_moveNotProcessed = new Link(_swtGroupActions, SWT.NONE);
 		
-		link_moveInbox.setText("<a>Move Inbox</a>");
-		link_moveInbox.setData(new MoveInbox());
+		link_moveNotProcessed.setText("<a>Move to not_processed</a>");
+		link_moveNotProcessed.setData(new MoveInbox());
 		
-		link_moveInbox.addSelectionListener(new SelectionAdapter()
+		link_moveNotProcessed.addSelectionListener(new SelectionAdapter()
         {
             @Override
             public void widgetSelected(SelectionEvent e)
             {
             	try {
             	 
-            		((Jobber) link_moveInbox.getData()).execute();
+            		((Jobber) link_moveNotProcessed.getData()).execute();
             		
             	}catch(Exception ex) {
             		logger.error(ex);
@@ -1288,7 +1303,7 @@ public class ItemPart {
         });
 		
 		
-		link_moveInbox.setVisible(false);
+	//	link_moveNotProcessed.setVisible(false);
 
 
 	}
@@ -1392,7 +1407,7 @@ public class ItemPart {
 						    	  
 						    	  
 						    	  link_showMetadata.setVisible(true);
-						    	  link_moveInbox.setVisible(true);
+						    //	  link_moveNotProcessed.setVisible(true);
 						   
 						      }
 						    });
@@ -1825,8 +1840,12 @@ public class ItemPart {
 					
 					
 					Path moveSourcePath = _wrapper.getInboxFile().toPath() ;
-					Path moveTargetPath = new File(inboxProcessed + File.separator + _wrapper.getInfoItem().getIdentifier()
+					
+					// xxx diry hack
+					Path moveTargetPath = new File("not_" + inboxProcessed + File.separator + _wrapper.getInfoItem().getIdentifier()
 							.getUuid() + "_" + moveSourcePath.getFileName() ).toPath();
+					
+					moveTargetPath.getParent().toFile().mkdirs();
 					
 					Files.move( moveSourcePath, moveTargetPath );
 					
@@ -1848,6 +1867,12 @@ public class ItemPart {
 				} finally {
 					// synch viewer
 					eventBroker.send(MyEventConstants.TOPIC_REFRESH_INBOX_FILE_MOVED, _wrapper.getInboxFile());
+					
+					
+	 				// http://stackoverflow.com/questions/18715369/how-to-programmatically-close-a-eclipse-rcp-4-mwindow
+					partService.hidePart(_part,true);
+					
+					
 				}
 				
 			} else {
