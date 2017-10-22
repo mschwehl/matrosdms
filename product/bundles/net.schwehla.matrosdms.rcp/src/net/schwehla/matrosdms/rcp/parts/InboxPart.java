@@ -449,7 +449,8 @@ public class InboxPart {
 								    	  
 								    	  
 								  		NotificationNote note = new NotificationNote();
-								  		note.setHeading("Dokument kann gespeichert werden \n" + mmd != null ? mmd.getSha256() : "kein Hash verfügbar" );
+								  		note.setHeading("Dokument kann gespeichert werden"  );
+								  		note.setBody( mmd != null ? mmd.getSha256() : "kein Hash verfügbar" );
 										notificationService.openPopup(note);
 											
 								    	  
