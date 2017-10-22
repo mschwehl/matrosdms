@@ -352,6 +352,29 @@ public class InboxPart {
 		        return;
 		      }
 
+		      
+
+		      
+	          manager.add(new Action() {
+	        	  
+	        	  public String getText() { return "refresh"; };
+	        	  
+		          @Override
+		          public void run() {
+		        	  
+		        	  viewer.refresh(true);
+		          }
+		        		
+		    
+	          });
+	          
+	          
+	          
+	          manager.add(new Separator("-----"));
+	          
+	          
+		      
+		      
 		      if(viewer.getSelection() instanceof IStructuredSelection) {
 		        IStructuredSelection selection = (IStructuredSelection)viewer.getSelection();
 		        
@@ -394,6 +417,8 @@ public class InboxPart {
 			        		
 			    
 		          });
+		          
+		          
 		          
 		          manager.add(new Separator("-----"));
 		          
@@ -443,6 +468,7 @@ public class InboxPart {
 											dialog.setText("My info");
 											dialog.setMessage("File gibt es schon: " + doubles.get(0).getName() + "-> " + doubles.get(0).getContext().getName() );
 
+											dialog.open();
 											
 									
 								      } else {

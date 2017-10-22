@@ -17,7 +17,7 @@ import javax.persistence.Table;
 @NamedQuery(name="DBOriginalstore.findByUUID", query="SELECT c FROM DBOriginalstore c where c.uuid = :uuid"),
 @NamedQuery(name="DBOriginalstore.findById", query="SELECT c FROM DBOriginalstore c where c.id = :id") })
 
-public class DBOriginalstore extends AbstractDBInfoBaseEntity  {
+public class DBOriginalstore extends AbstractDBInfoBaseEntityWithOrdinal  {
 	
 	@Id
 	@GeneratedValue(strategy=GenerationType.AUTO )
