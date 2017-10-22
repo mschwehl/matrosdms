@@ -20,7 +20,7 @@ public class NotificationServiceImpl implements INotificationService {
 	
 		
 		SuccessNotificationPopup popup = new SuccessNotificationPopup(shell.getDisplay());
-		popup.setDelayClose(1500L);
+		popup.setDelayClose(3000L);
 		popup.setFadingEnabled(false);
 		popup.setNote(note);
 		

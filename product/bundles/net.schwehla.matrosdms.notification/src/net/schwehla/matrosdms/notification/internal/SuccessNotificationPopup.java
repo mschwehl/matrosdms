@@ -6,11 +6,14 @@ import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Label;
 
 import net.schwehla.matrosdms.notification.NotificationNote;
+import org.eclipse.swt.widgets.Text;
+import org.eclipse.swt.layout.GridData;
 
 public class SuccessNotificationPopup extends AbstractNotificationPopup {
 
 	
 	NotificationNote note;
+	private Text textContent;
 	
 	public NotificationNote getNote() {
 		return note;
@@ -32,6 +35,18 @@ public class SuccessNotificationPopup extends AbstractNotificationPopup {
 	    protected void createContentArea(Composite parent) {
 	             Label l = new Label(parent, SWT.None);
 	             l.setText(note.getHeading());
+	             
+	             if (note.getBody() != null) {
+		             textContent = new Text(parent, SWT.MULTI | SWT.BORDER | SWT.WRAP | SWT.V_SCROLL);
+		             textContent.setEditable(false);
+		             
+		             textContent.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true, 1, 1));
+		             
+		             textContent.setText(note.getBody());
+	             }
+	             
+
+	          
 	    }
 	  
 	  
