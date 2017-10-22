@@ -18,7 +18,7 @@ import net.schwehla.matrosdms.persistenceservice.entity.internal.AbstractDBInfoB
  */
 
 @NamedQueries ({
-@NamedQuery(name="DBAttributeType.findAll", query="SELECT c FROM DBAttributeType c order by c.oridinal, c.name") ,
+@NamedQuery(name="DBAttributeType.findAll", query="SELECT c FROM DBAttributeType c order by c.ordinal, c.name") ,
 @NamedQuery(name="DBAttributeType.findByUUID", query="SELECT c FROM DBAttributeType c where c.uuid = :uuid") 
 })
 
