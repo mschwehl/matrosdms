@@ -294,23 +294,6 @@ public class MatrosServiceImpl implements IMatrosServiceService {
 	
 	
 
-	@Override
-	public InfoOrginalstore loadOrginalstoreByIdentifier(Identifier storeIdentifier) throws MatrosServiceException {
-	
-		 
-		DBOriginalstore dbOrginalstore = em.createNamedQuery("DBOriginalstore.findByUUID", DBOriginalstore.class)
-				.setParameter("uuid", storeIdentifier.getUuid()). getSingleResult();
-
-				 
-			 InfoOrginalstore beOrginalstore = new InfoOrginalstore(Identifier.create(dbOrginalstore.getStoreId(), dbOrginalstore.getUuid()), dbOrginalstore.getName());
-			 mapBasicPropertiesFromDatabaseToModel(beOrginalstore, dbOrginalstore);
-			             
-			 // extended Attributes
-			 beOrginalstore.setShortname(dbOrginalstore.getShortname());
-		
-		return beOrginalstore;
-		
-	}
 
 
 
@@ -379,7 +362,8 @@ public class MatrosServiceImpl implements IMatrosServiceService {
 	
 	
 	@Override
-	public List<InfoOrginalstore> loadInfoStoreList() throws MatrosServiceException {
+
+	public List<InfoOrginalstore> loadOriginalStoreList() throws MatrosServiceException {
 
 		 List<InfoOrginalstore> rv = new ArrayList();
 
@@ -421,12 +405,16 @@ public class MatrosServiceImpl implements IMatrosServiceService {
 
 	
 	@Override
-	public InfoOrginalstore getInfoStoreByIdentifer(Identifier identifier) throws MatrosServiceException {
+	public InfoOrginalstore getOriginalStoreByIdentifer(Identifier identifier) throws MatrosServiceException {
 		
 		DBOriginalstore element = em.createNamedQuery("DBOriginalstore.findByUUID", DBOriginalstore.class)
 				.setParameter("uuid",identifier.getUuid()).getSingleResult();
 		InfoOrginalstore c = new InfoOrginalstore(Identifier.create(element.getStoreId() , element.getUuid()), element.getName());
 
+		
+		 // extended Attributes
+		 c.setShortname(element.getShortname());
+		 
 		
 		return c;
 	 		
@@ -468,7 +456,8 @@ public class MatrosServiceImpl implements IMatrosServiceService {
 	
 
 	@Override
-	public void createOrignalStore(InfoOrginalstore store) throws MatrosServiceException {
+
+	public void createOriginalStore(InfoOrginalstore store) throws MatrosServiceException {
 		
 		DBOriginalstore dbStore = new DBOriginalstore();
 		mapBasicPropertiesFromModelToDatabase(dbStore, store);

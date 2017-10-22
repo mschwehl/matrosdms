@@ -12,13 +12,17 @@ import net.schwehla.matrosdms.persistenceservice.IMatrosServiceService;
 
 public class ServiceContextFunction extends ContextFunction {
 	
+		static MatrosServerProxy handler;
     
         @Override
         public Object compute(IEclipseContext context, String contextKey) {
         	
         	
       	  // InvocationHandler erzeugen
-          MatrosServerProxy handler = new MatrosServerProxy();
+        	if (handler == null) {
+        		 handler = new MatrosServerProxy();
+
+        	}
 
       	  handler.setServiceImpl( new MatrosServiceImpl());
   

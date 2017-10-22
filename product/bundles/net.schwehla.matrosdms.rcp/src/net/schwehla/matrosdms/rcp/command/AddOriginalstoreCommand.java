@@ -49,10 +49,10 @@ public class AddOriginalstoreCommand {
 
         			try {
         				
-        			  	service.createOrignalStore(orginalNew);
+        			  	service.createOriginalStore(orginalNew);
         	             
         				eventBroker.send(MyEventConstants.TOPIC__REFRESH_ORIGINALSTORE_ADD, 
-        						service.loadOrginalstoreByIdentifier(orginalNew.getIdentifier()));
+        						service.getOriginalStoreByIdentifer(orginalNew.getIdentifier()));
         						
         			} catch (MatrosServiceException e) {
         				logger.error(e, "Cannot refresh Attributes"); //$NON-NLS-1$

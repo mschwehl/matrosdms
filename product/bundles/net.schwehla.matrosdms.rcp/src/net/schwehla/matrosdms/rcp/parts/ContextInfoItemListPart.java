@@ -70,6 +70,7 @@ import org.eclipse.swt.widgets.TreeItem;
 import net.schwehla.matrosdms.domain.core.InfoContext;
 import net.schwehla.matrosdms.domain.core.InfoItem;
 import net.schwehla.matrosdms.domain.core.InfoItemList;
+import net.schwehla.matrosdms.domain.core.InfoOrginalstore;
 import net.schwehla.matrosdms.domain.core.tagcloud.InfoKategory;
 import net.schwehla.matrosdms.domain.util.Identifier;
 import net.schwehla.matrosdms.i18n.MatrosMessage;
@@ -293,7 +294,6 @@ public class ContextInfoItemListPart {
 	 * 
 	 */
 	
-
 
 	private void loadAsyncInfoDetailList(InfoContext infoContext) {
 		
@@ -810,8 +810,12 @@ public class ContextInfoItemListPart {
 
 				InfoItem item = (InfoItem) element;
 				
-				return df.format(item.getDateCreated());
-
+				if (item.getIssueDate() != null) {
+					return df.format(item.getIssueDate());
+				} else {
+					return df.format(item.getDateCreated());
+				}
+				
 			}
 			
 		});
@@ -884,7 +888,11 @@ public class ContextInfoItemListPart {
 					 	StringBuffer sb = new StringBuffer();
 					 	
 					 	if (e.getStoreIdentifier() != null) {
-					 		sb.append("todo");
+					 		try { // cached, should not be so bad
+								sb.append(service.getOriginalStoreByIdentifer(e.getStoreIdentifier()).getName());
+							} catch (MatrosServiceException e1) {
+								logger.error(e1);
+							}
 					 	}
 					 	
 					 	if (e.getStoreItemNumber() != null) {
