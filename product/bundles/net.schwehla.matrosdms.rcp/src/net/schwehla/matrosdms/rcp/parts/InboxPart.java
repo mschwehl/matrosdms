@@ -2,6 +2,8 @@ package net.schwehla.matrosdms.rcp.parts;
 
 import java.io.File;
 import java.net.URL;
+import java.nio.file.Files;
+import java.nio.file.Path;
 import java.text.DateFormat;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -10,8 +12,9 @@ import java.util.List;
 import javax.annotation.PostConstruct;
 import javax.inject.Inject;
 
-import org.eclipse.core.runtime.FileLocator;
-import org.eclipse.core.runtime.Path;
+import org.eclipse.core.databinding.observable.value.IObservableValue;
+import org.eclipse.core.runtime.IProgressMonitor;
+import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.preferences.IEclipsePreferences;
 import org.eclipse.e4.core.contexts.Active;
 import org.eclipse.e4.core.di.annotations.Optional;
@@ -22,6 +25,13 @@ import org.eclipse.e4.core.services.nls.Translation;
 import org.eclipse.e4.core.services.statusreporter.StatusReporter;
 import org.eclipse.e4.ui.di.Focus;
 import org.eclipse.e4.ui.di.UIEventTopic;
+import org.eclipse.e4.ui.di.UISynchronize;
+import org.eclipse.jface.action.Action;
+import org.eclipse.jface.action.IMenuListener;
+import org.eclipse.jface.action.IMenuManager;
+import org.eclipse.jface.action.MenuManager;
+import org.eclipse.jface.action.Separator;
+import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.resource.ImageDescriptor;
 import org.eclipse.jface.resource.JFaceResources;
 import org.eclipse.jface.resource.LocalResourceManager;
@@ -29,6 +39,7 @@ import org.eclipse.jface.resource.ResourceManager;
 import org.eclipse.jface.util.LocalSelectionTransfer;
 import org.eclipse.jface.viewers.DelegatingStyledCellLabelProvider;
 import org.eclipse.jface.viewers.DelegatingStyledCellLabelProvider.IStyledLabelProvider;
+import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.jface.viewers.ITreeContentProvider;
 import org.eclipse.jface.viewers.LabelProvider;
 import org.eclipse.jface.viewers.StructuredSelection;
@@ -48,6 +59,8 @@ import org.eclipse.swt.events.MouseEvent;
 import org.eclipse.swt.graphics.Image;
 import org.eclipse.swt.layout.FillLayout;
 import org.eclipse.swt.widgets.Composite;
+import org.eclipse.swt.widgets.Display;
+import org.eclipse.swt.widgets.Menu;
 import org.eclipse.swt.widgets.MessageBox;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.swt.widgets.Tree;
@@ -55,9 +68,16 @@ import org.eclipse.swt.widgets.TreeItem;
 import org.osgi.framework.Bundle;
 import org.osgi.framework.FrameworkUtil;
 
-
+import net.schwehla.matrosdms.domain.core.InfoItem;
+import net.schwehla.matrosdms.domain.metadata.MatrosMetadata;
 import net.schwehla.matrosdms.i18n.MatrosMessage;
 import net.schwehla.matrosdms.lucene.ILuceneService;
+import net.schwehla.matrosdms.notification.INotificationService;
+import net.schwehla.matrosdms.notification.NotificationNote;
+import net.schwehla.matrosdms.persistenceservice.IMatrosServiceService;
+import net.schwehla.matrosdms.progress.IProgressConstants;
+import net.schwehla.matrosdms.progress.IProgressService;
+import net.schwehla.matrosdms.rcp.MatrosServiceException;
 import net.schwehla.matrosdms.rcp.MyEventConstants;
 import net.schwehla.matrosdms.rcp.MyGlobalConstants;
 import net.schwehla.matrosdms.rcp.parts.helper.DesktopHelper;
@@ -98,6 +118,12 @@ public class InboxPart {
     @Inject
     ILuceneService indexService;
     
+
+	@Inject IMatrosServiceService matrosService;
+	
+	@Inject UISynchronize sync;
+	
+    
 	@Inject 
 	DesktopHelper desktopHelper;
     
@@ -113,6 +139,7 @@ public class InboxPart {
 		@Preference(nodePath = MyGlobalConstants.Preferences.NODE_COM_MATROSDMS) 
 		IEclipsePreferences preferences ;
 
+		@Inject INotificationService notificationService;
 		
 	// Auto-Track changes
 	// http://www.vogella.com/tutorials/EclipsePreferences/article.html
@@ -307,122 +334,170 @@ public class InboxPart {
 	  		
 		viewer.setInput(rootFiles);
 		
+		addMenu(viewer);
+		
 		addInboxRoots();
 	}
-	/*
-	
-	//@PostConstruct
-	public void createControls(Composite parent) {
-		
-		// XXX sollte im Bootstrap-code sein 
-		indexService.bootstrap();
-		
-		viewer = new TreeViewer(parent, SWT.MULTI | SWT.H_SCROLL | SWT.V_SCROLL);
-		viewer.setContentProvider(new ViewContentProvider());
-		viewer.getTree().setHeaderVisible(true);
-
-		TreeViewerColumn mainColumn = new TreeViewerColumn(viewer, SWT.NONE);
-		mainColumn.getColumn().setText("Name");
-		mainColumn.getColumn().setWidth(300);
-		mainColumn.setLabelProvider(
-				new DelegatingStyledCellLabelProvider(new ViewLabelProvider(createImageDescriptor())));
-
-		TreeViewerColumn modifiedColumn = new TreeViewerColumn(viewer, SWT.NONE);
-		modifiedColumn.getColumn().setText("Last Modified");
-		modifiedColumn.getColumn().setWidth(100);
-		modifiedColumn.getColumn().setAlignment(SWT.RIGHT);
-		modifiedColumn
-				.setLabelProvider(new DelegatingStyledCellLabelProvider(new FileModifiedLabelProvider(dateFormat)));
-
-		TreeViewerColumn fileSizeColumn = new TreeViewerColumn(viewer, SWT.NONE);
-		fileSizeColumn.getColumn().setText("Size");
-		fileSizeColumn.getColumn().setWidth(100);
-		fileSizeColumn.getColumn().setAlignment(SWT.RIGHT);
-		fileSizeColumn.setLabelProvider(new DelegatingStyledCellLabelProvider(new FileSizeLabelProvider()));
+	private void addMenu(TreeViewer viewer) {
 
 
 		
-		// Drag and Drop
-		DragSource source = new DragSource(viewer.getControl(),  DND.DROP_MOVE | DND.DROP_LINK | DND.DROP_COPY);
-		
+		// Create the popup menu
+		  MenuManager menuMgr = new MenuManager();
+		  Menu menu = menuMgr.createContextMenu(viewer.getControl());
+		  menuMgr.addMenuListener(new IMenuListener() {
+		    @Override
+		    public void menuAboutToShow(IMenuManager manager) {
+		      if(viewer.getSelection().isEmpty()) {
+		        return;
+		      }
 
-//
-//			source.setDragSourceEffect(new DragSourceEffect(viewer.getControl()) {
-//  				@Override
-//  				public void dragStart(DragSourceEvent event) {
-//  					super.dragStart(event);
-//  					event.image = shell.getDisplay().getSystemImage(SWT.ICON_WARNING);
-//  					event.
-//  				
-//  				}
-//  			});
-//  			
-//			
-	    
-	  		// Step 1: Get JFace's LocalSelectionTransfer instance
-	  		final LocalSelectionTransfer transfer = LocalSelectionTransfer.getTransfer();
-	  		source.setTransfer(new Transfer[] { transfer });
+		      if(viewer.getSelection() instanceof IStructuredSelection) {
+		        IStructuredSelection selection = (IStructuredSelection)viewer.getSelection();
+		        
+		    
+		        File file = (File)selection.getFirstElement();
 
-	  		source.addDragListener(new DragSourceAdapter() {
-	  			
-	 
+		      
+		          manager.add(new Action() {
+		        	  
+		        	  public String getText() { return "Move to not processed"; };
+		        	  
+			          @Override
+			          public void run() {
+			        	  
+			      		
+	 						NotificationNote note = new NotificationNote();
+	 			
+	 				
 
-			@Override
-			public void dragStart(DragSourceEvent event) {
-				
-				eventBroker.send(MyEventConstants.TOPIC__DRAG_INBOX_START,new HashMap());
-				
-				super.dragStart(event);
-			}
-
-			@Override
-			public void dragFinished(DragSourceEvent event) {
-				
-				// post ist asynchron
-				eventBroker.send(MyEventConstants.TOPIC__DRAG_INBOX_FINISHED,new HashMap());
-
-				super.dragFinished(event);
-			}
-
-			public void dragSetData(DragSourceEvent event) {
-
-				Tree table = (Tree) source.getControl();
-
-				TreeItem[] selection = table.getSelection();
-
-				if (selection != null) {
-
-					if (selection.length > 4) {
-						
-						// create a dialog with ok and cancel buttons and a question icon
-						MessageBox dialog =
-						        new MessageBox(shell, SWT.ICON_WARNING | SWT.OK );
-						dialog.setText("to much elements");
-						dialog.setMessage("just 4 elements");
-
-						// open dialog and await originalstore selection
-						int val = dialog.open();
-						
-						if (val == Window.OK) {
-							return;
+			        	  
+			        	try {
+							desktopHelper.moveFromInbox(file);
+							
+							viewer.remove(selection.getFirstElement());
+							viewer.refresh(true);
+							
+							note.setHeading("Dokument verschoben");
+							notificationService.openPopup(note);
+	 						
+							
+						} catch (MatrosServiceException e) {
+							  MessageDialog.openError(Display.getDefault().getActiveShell(),"Move" , e.getMessage());
+							  
+								viewer.refresh(true);
+								
 						}
-					}
-					
-					
-					transfer.setSelection(new StructuredSelection(selection));
-  			
-				}
-	
-			}
+			        		
+						
+			          }
+			        		
+			    
+		          });
+		          
+		          manager.add(new Separator("-----"));
+		          
+		          manager.add(new Action() {
+		        	  
+		        	  public String getText() { return "Check for Duplicate"; };
+		        	  
+			          @Override
+			          public void run() {
+			        	  
+			        	  
+			        	   if(! (viewer.getSelection() instanceof IStructuredSelection)
+			        			   && (IStructuredSelection)viewer.getSelection() != null ) {
+							return;
+						         
+					      }
+			        	   
+			          
+			        	  final File file = (File)selection.getFirstElement() ;
+		        	  
+				      if (file == null) {
+				    	  return;
+				      }
+		        		
+		      			
+				      
+						try {
+							
+						    sync.asyncExec(new Runnable() {
+						    	
+						    	 @Override
+							      public void run() {
 
-		});
+						    		 MatrosMetadata mmd;
+									try {
+										
+										 List <InfoItem> doubles = new ArrayList <>();
+							    	
+										mmd = indexService.parseMetadata(file);
+										doubles = matrosService.checkForDuplicate(mmd);
+										if (doubles != null && ! doubles.isEmpty()) {
+											
+										  	
+										     
+											MessageBox dialog =
+											        new MessageBox(shell, SWT.ICON_QUESTION | SWT.OK| SWT.CANCEL);
+											dialog.setText("My info");
+											dialog.setMessage("File gibt es schon: " + doubles.get(0).getName() + "-> " + doubles.get(0).getContext().getName() );
+
+											
+									
+								      } else {
+								    	  
+								    	  
+								  		NotificationNote note = new NotificationNote();
+								  		note.setHeading("Dokument kann gespeichert werden \n" + mmd != null ? mmd.getSha256() : "kein Hash verfügbar" );
+										notificationService.openPopup(note);
+											
+								    	  
+								      }
+										
+										
+									} catch (Exception e) {
+										throw new RuntimeException(e);
+									}
+										
+										
+								
+								    };
+								     
+						    	 });
+							
+						} catch (Exception e) {
+							  MessageDialog.openError(Display.getDefault().getActiveShell(),"Doublecheck" , e.getMessage());
+								
+						}
+						
+			
+					    	
+						
+		        	  
+		        	  
+		          }
+		        		
+		    
+			          
+		        		  
+		          	  });
+		          
+		          
+		          
+		        
+		   
+		      }
+		    }
+		  });
+
+		  menuMgr.setRemoveAllWhenShown(true);
+		  viewer.getControl().setMenu(menu);
 		
-		viewer.setInput(rootFiles);
-		
-		addInboxRoots();
 	}
 
-*/
+
+	
 	private void addInboxRoots() {
 		
 		rootFiles.clear();
@@ -456,7 +531,7 @@ public class InboxPart {
 	// XXX global resource monitor
 	private ImageDescriptor createImageDescriptor() {
 		Bundle bundle = FrameworkUtil.getBundle(ViewLabelProvider.class);
-		URL url = FileLocator.find(bundle, new Path(messages.InboxPart_icon), null);
+		URL url = org.eclipse.core.runtime.FileLocator.find(bundle, new org.eclipse.core.runtime.Path(messages.InboxPart_icon), null);
 		return ImageDescriptor.createFromURL(url);
 	}
 

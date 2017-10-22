@@ -36,7 +36,9 @@ public interface MyGlobalConstants {
 		
 		public static final String LAST_LOGIN = "LAST_LOGIN"; 	//$NON-NLS-1$
 		public static final String LAST_LOGIN_CHECKBOX = "LAST_LOGIN_CHECKBOX"; 	//$NON-NLS-1$
+		
 		public static final String PROCESSED_PATH = "PROCESSED_PATH"; //$NON-NLS-1$
+		public static final String NOT_PROCESSED_PATH = "NOT_PROCESSED_PATH"; //$NON-NLS-1$
 	    
 		
 	}

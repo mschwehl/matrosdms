@@ -129,6 +129,7 @@ import net.schwehla.matrosdms.rcp.parts.helper.AutoResizeTableLayout;
 import net.schwehla.matrosdms.rcp.parts.helper.DesktopHelper;
 import net.schwehla.matrosdms.rcp.parts.helper.ItemPartElementWrapper;
 import net.schwehla.matrosdms.rcp.parts.helper.ItemPartElementWrapper.Type;
+import net.schwehla.matrosdms.rcp.parts.helper.Jobber;
 import net.schwehla.matrosdms.rcp.parts.include.ItemPartFixedAttributesGroup;
 import net.schwehla.matrosdms.rcp.parts.include.ItemPartMetadataGroup;
 import net.schwehla.matrosdms.rcp.swt.TypedComboBox;
@@ -1282,29 +1283,6 @@ public class ItemPart {
 		
 		link_showMetadata.setVisible(false);
 		
-		link_moveNotProcessed = new Link(_swtGroupActions, SWT.NONE);
-		
-		link_moveNotProcessed.setText("<a>Move to not_processed</a>");
-		link_moveNotProcessed.setData(new MoveInbox());
-		
-		link_moveNotProcessed.addSelectionListener(new SelectionAdapter()
-        {
-            @Override
-            public void widgetSelected(SelectionEvent e)
-            {
-            	try {
-            	 
-            		((Jobber) link_moveNotProcessed.getData()).execute();
-            		
-            	}catch(Exception ex) {
-            		logger.error(ex);
-            	}
-           
-            		
-    		  
-            }
-        });
-		
 		
 	//	link_moveNotProcessed.setVisible(false);
 
@@ -1743,17 +1721,13 @@ public class ItemPart {
 	}
 	
 	// Should also work with functional interfaces !?
-	
-	abstract class Jobber {
-		
-		abstract void execute() throws Exception;
-		
-	}
+
+
 	
 	class OpenNewJobber extends Jobber {
 
 		@Override
-		void execute() throws Exception {
+		public void execute() throws Exception {
 			
 			// Clone else there will be file-lock
         	String path = desktopHelper.getInboxNonBlockingLink(_wrapper.getInboxFile());
@@ -1771,7 +1745,7 @@ public class ItemPart {
 	class OpenExistingJobber extends Jobber {
 
 		@Override
-		void execute() throws Exception {
+		public void execute() throws Exception {
 
 			String local = desktopHelper.getLocallink(_wrapper.getInfoItem());
 
@@ -1785,7 +1759,7 @@ public class ItemPart {
 	class ShowMetadataJobber extends Jobber {
 
 		@Override
-		void execute() throws Exception {
+		public void execute() throws Exception {
 
 			if (_wrapper.getInfoItem().getMetadata() != null) {
 				
@@ -1805,85 +1779,6 @@ public class ItemPart {
 	}
 	
 	
-	
-	class MoveInbox extends Jobber {
-
-		@Override
-		void execute() throws Exception {
-
-			if (_wrapper.getInboxFile() != null) {
-				
-				
-				try {
-					String inboxProcessed =  preferences.get(MyGlobalConstants.Preferences.PROCESSED_PATH, "" );
-					inboxProcessed = inboxProcessed.replaceAll(";","");
-					
-					if (inboxProcessed == null || inboxProcessed.trim().length() == 0) {
-						throw new IllegalStateException("no processed folder specified, please go to the preferences");
-					}
-					
-					
-					File targetProcessed = new File(inboxProcessed);
-						
-						if(! targetProcessed.exists()) {
-							
-							boolean create = targetProcessed.mkdirs();
-							
-							if (!create) {
-								throw new IllegalStateException("cannot create processed folder");
-							}
-
-						}
-						
-					
-				
-					if(!_wrapper.getInboxFile().exists()) {
-						throw new IllegalStateException("Source file not exists anymore");
-					}
-					
-					
-					Path moveSourcePath = _wrapper.getInboxFile().toPath() ;
-					
-					// xxx diry hack
-					Path moveTargetPath = new File("not_" + inboxProcessed + File.separator + _wrapper.getInfoItem().getIdentifier()
-							.getUuid() + "_" + moveSourcePath.getFileName() ).toPath();
-					
-					moveTargetPath.getParent().toFile().mkdirs();
-					
-					Files.move( moveSourcePath, moveTargetPath );
-					
-					
-					if(! moveTargetPath.toFile().exists()) {
-						throw new IllegalStateException("targetfile not created " +  moveTargetPath.getFileName());
-					}
-					
-					if( moveSourcePath.toFile().exists()) {
-						throw new IllegalStateException("sourcefile not moved " +  moveSourcePath.getFileName());
-					}
-					
-	
-
-					
-				} catch (Exception e1) {
-			        MessageDialog.openError(Display.getDefault().getActiveShell(),"Move" , "cannot move inbox " + e1);
-					
-				} finally {
-					// synch viewer
-					eventBroker.send(MyEventConstants.TOPIC_REFRESH_INBOX_FILE_MOVED, _wrapper.getInboxFile());
-					
-					
-	 				// http://stackoverflow.com/questions/18715369/how-to-programmatically-close-a-eclipse-rcp-4-mwindow
-					partService.hidePart(_part,true);
-					
-					
-				}
-				
-			} else {
-	            MessageDialog.openInformation(Display.getDefault().getActiveShell(),"Move" , "cannot move inbox");
-			}
-		}
-
-	}
 	
 	
 	

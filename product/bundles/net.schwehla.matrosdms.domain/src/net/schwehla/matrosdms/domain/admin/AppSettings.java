@@ -8,6 +8,15 @@ public class AppSettings implements IComplete {
 	
 	String appPath;
 	String processedFolder;
+	String notprocessedFolder;
+	
+	public String getNotprocessedFolder() {
+		return notprocessedFolder;
+	}
+
+	public void setNotprocessedFolder(String notprocessedFolder) {
+		this.notprocessedFolder = notprocessedFolder;
+	}
 
 	public String getProcessedFolder() {
 		return processedFolder;

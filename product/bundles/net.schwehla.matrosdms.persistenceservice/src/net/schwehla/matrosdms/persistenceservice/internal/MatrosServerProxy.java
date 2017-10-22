@@ -156,9 +156,9 @@ public class MatrosServerProxy 	implements InvocationHandler,  Serializable  {
 			
 			if (cached != null) {
 				 
-				if ("NONE".equals(cached.name())) {
+				if ("NONE".equals(cached.name()) && cached.evictAll() == false) {
 					 myCaches.clear();
-					throw new IllegalStateException("No Cache specified");
+					throw new IllegalStateException("No Cache specified: " + method.getName());
 				}
 				
 				if (cached.evictAll()) {
