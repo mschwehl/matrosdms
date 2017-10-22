@@ -13,7 +13,7 @@ import java.util.Timer;
 import java.util.TimerTask;
 import java.util.stream.Collectors;
 
-@SuppressWarnings("unused")
+
 public abstract class ExternalCommand {
 
     protected final String[] args;
@@ -48,7 +48,7 @@ public abstract class ExternalCommand {
         ProcessBuilder builder = new ProcessBuilder(args);
         
         // http://stackoverflow.com/questions/21764578/change-the-working-drive-java-processbuilder
-        // https://community.oracle.com/thread/2066415 -- directory is outDir :-§
+        // https://community.oracle.com/thread/2066415 -- directory is outDir :-ï¿½
         
         builder = builder.directory(directory());
 

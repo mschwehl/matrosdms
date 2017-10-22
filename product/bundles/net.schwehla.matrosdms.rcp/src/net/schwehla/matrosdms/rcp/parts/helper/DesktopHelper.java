@@ -58,23 +58,29 @@ public class DesktopHelper  {
 		         desktop.browse(u);
 		          
 		    } catch (Exception ex) {
-		    	logger.error(ex, "cannot open file: " + path);
+		    	logger.error(ex, "ERR_000001: CANNOT OPEN FILE: " + path); //$NON-NLS-1$
 		    }
 		}
 		
 	}
     
 
+    /**
+     * Streaming to local clone
+     * @param doc
+     * @return
+     * @throws MatrosServiceException
+     */
 	public  String getLocallink(InfoItem doc) throws MatrosServiceException {
 
 		
 	      // XXX
 	      try  (FileInputStream fos = service.getStreamedContent(doc.getIdentifier() )) {
 	    	  
-	    		File tempFoder = new File (configReader.getApplicationCacheDir() + File.separator + "docs");
+	    		File tempFoder = new File (configReader.getApplicationCacheDir() + File.separator + "remotecopy"); //$NON-NLS-1$
 				tempFoder.mkdirs();
 	  
-				String filename = doc.getMetadata().getFilename();
+				String filename = doc.getIdentifier().getUuid() + "_" + doc.getMetadata().getFilename(); //$NON-NLS-1$
 				
 				File total = new File(tempFoder.getAbsolutePath() + File.separator + filename);
 				
@@ -88,28 +94,27 @@ public class DesktopHelper  {
 				return total.getAbsolutePath();
 				
 	      } catch (Exception ex) {
-	    	  throw new MatrosServiceException("cannot stream file to temp-folder: " + ex);
+	    	  throw new MatrosServiceException("ERR_000002: CANNOT STREAM FILE TO TEMP FOLDER " + ex); //$NON-NLS-1$
 	      }
 		
 		}
 	
 	
-    
+    /**
+     * Creates a temp file for opening in the folder localcopy
+     * @param file
+     * @return
+     * @throws Exception
+     */
 	public String getInboxNonBlockingLink(File file) throws Exception   {
 		
 
-		String extension = getExtension(file.getAbsolutePath());
-
-		
-		
-		 // creates temporary file
-
 		try {
 			
-			File tempFoder = new File (configReader.getApplicationCacheDir() + File.separator + "docs");
+			File tempFoder = new File (configReader.getApplicationCacheDir() + File.separator + "localcopy"); //$NON-NLS-1$
 			tempFoder.mkdirs();
 			
-			String filename = file.lastModified() + "_" +file.hashCode() + "_" +  file.getName();
+			String filename = file.lastModified() + "_" +file.hashCode() + "_" +  file.getName();  //$NON-NLS-1$//$NON-NLS-2$
 			
 			File total = new File(tempFoder.getAbsolutePath() + File.separator + filename);
 			
@@ -118,23 +123,19 @@ public class DesktopHelper  {
 				total.deleteOnExit();
 			}
 			
-
 			return total.getAbsolutePath();
 			
 		} catch (Exception e) {
-			logger.error(e, "cannot open file: " + file.getName());
+			logger.error(e, "ERR_000003: CANNOT OPEN FILE: " + file.getName()); //$NON-NLS-1$
 			throw e;
 		}
 
-		
-		
-
-        
+		        
 	}
 
 	public static String getExtension(String filename) {
 					
-			String extension = "";
+			String extension = ""; //$NON-NLS-1$
 			String path = filename;
 			
 			int lastSeparator =  path.lastIndexOf(File.separator);
@@ -149,7 +150,7 @@ public class DesktopHelper  {
 			}
 			
 			if (extension.length() > 0) {
-				extension = "." + extension;
+				extension = "." + extension; //$NON-NLS-1$
 			}
 			
 			return extension;
@@ -159,11 +160,11 @@ public class DesktopHelper  {
 	public void moveFromInbox(File file) throws MatrosServiceException {
 
 		try {
-			String inboxNotProcessed =  preferences.get(MyGlobalConstants.Preferences.NOT_PROCESSED_PATH, "" );
-			inboxNotProcessed = inboxNotProcessed.replaceAll(";","");
+			String inboxNotProcessed =  preferences.get(MyGlobalConstants.Preferences.NOT_PROCESSED_PATH, "" ); //$NON-NLS-1$
+			inboxNotProcessed = inboxNotProcessed.replaceAll(";","");  //$NON-NLS-1$//$NON-NLS-2$
 			
 			if (inboxNotProcessed == null || inboxNotProcessed.trim().length() == 0) {
-				throw new MatrosServiceException("no processed folder specified, please go to the preferences");
+				throw new MatrosServiceException("ERR_000004: NO PROCESSED-FOLDER DEFINED, GO TO THE PREFERENCES"); //$NON-NLS-1$
 			}
 			
 			
@@ -174,13 +175,13 @@ public class DesktopHelper  {
 					boolean create = targetProcessed.mkdirs();
 					
 					if (!create) {
-						throw new MatrosServiceException("cannot create processed folder");
+						throw new MatrosServiceException("ERR_000005: cannot create processed folder"); //$NON-NLS-1$
 					}
 
 				}
 				
 			if(!file.exists()) {
-				throw new MatrosServiceException("Source file not exists anymore");
+				throw new MatrosServiceException("ERR_000006: Source file not exists anymore"); //$NON-NLS-1$
 			}
 			
 			Path moveSourcePath = file.toPath() ;
@@ -188,7 +189,7 @@ public class DesktopHelper  {
 			File target = new File( inboxNotProcessed + File.separator + file.getName() ) ;
 			
 			if (target.exists()) {
-				target = new File(inboxNotProcessed + File.separator + System.currentTimeMillis() + "_" + file.getName() );
+				target = new File(inboxNotProcessed + File.separator + System.currentTimeMillis() + "_" + file.getName() ); //$NON-NLS-1$
 			}
 			
 			Path moveTargetPath = target.toPath();
@@ -197,11 +198,11 @@ public class DesktopHelper  {
 			Files.move( moveSourcePath, moveTargetPath );
 			
 			if(! moveTargetPath.toFile().exists()) {
-				throw new MatrosServiceException("targetfile not created " +  moveTargetPath.getFileName());
+				throw new MatrosServiceException("ERR_000007: targetfile not created " +  moveTargetPath.getFileName()); //$NON-NLS-1$
 			}
 			
 			if( moveSourcePath.toFile().exists()) {
-				throw new MatrosServiceException("sourcefile not moved " +  moveSourcePath.getFileName());
+				throw new MatrosServiceException("ERR_000008: sourcefile not moved " +  moveSourcePath.getFileName()); //$NON-NLS-1$
 			}
 			
 
@@ -210,7 +211,7 @@ public class DesktopHelper  {
 		} catch (MatrosServiceException e1) {
 			throw e1;
 		} catch (Exception e) {
-			throw new MatrosServiceException("Error moving file" + e);
+			throw new MatrosServiceException("ERR_000009: Error moving file" + e); //$NON-NLS-1$
 		}
 		
 		

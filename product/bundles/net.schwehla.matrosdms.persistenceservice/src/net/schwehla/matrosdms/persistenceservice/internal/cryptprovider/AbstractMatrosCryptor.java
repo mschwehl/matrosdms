@@ -19,6 +19,8 @@ import net.schwehla.matrosdms.persistenceservice.internal.MatrosConfigReader;
 
 public abstract class AbstractMatrosCryptor implements IMatrosStoreCryptor {
 	
+	final static String ALGORITHM = "SHA-256"; //$NON-NLS-1$
+	
 	// XXX
 	protected MatrosConfigReader configReader = new MatrosConfigReader();
 
@@ -64,7 +66,7 @@ public abstract class AbstractMatrosCryptor implements IMatrosStoreCryptor {
     	 
     	 try (FileInputStream in = new FileInputStream(sourcePath)) {
     		 
-    	   MessageDigest md = MessageDigest.getInstance("SHA-256");
+    	 MessageDigest md = MessageDigest.getInstance( ALGORITHM );
     	   
     	 FileChannel channel = in.getChannel(); 
     	 long length = channel.size(); 

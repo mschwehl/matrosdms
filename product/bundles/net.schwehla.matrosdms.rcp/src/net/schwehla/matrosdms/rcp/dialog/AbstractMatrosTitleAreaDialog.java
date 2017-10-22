@@ -40,9 +40,7 @@ public abstract class AbstractMatrosTitleAreaDialog extends TitleAreaDialog{
 
 	
 	// not abstract due to windowBuilder
-	protected void buildBinding() {
-		
-	}
+	protected abstract void buildBinding();
 
 
 	/**
