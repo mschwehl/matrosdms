@@ -1,0 +1,7 @@
+-- updates itemdate from subselect
+UPDATE item a
+   SET issuedate = ( SELECT datevalue
+                     FROM (select datevalue, item.item_id  from item join attribute
+on item.ITEM_ID = attribute.ITEM_ID where attribute.ATTRIBUTETYPE_ATTRIBUTETYPE_ID = 107) b
+                    WHERE b.ITEM_ID = a.ITEM_ID )
+;
