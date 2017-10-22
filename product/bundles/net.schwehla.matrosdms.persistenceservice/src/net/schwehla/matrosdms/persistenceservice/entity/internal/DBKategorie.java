@@ -17,7 +17,7 @@ import javax.persistence.Table;
 
 @Entity
 @Table(name = "Kategory")
-public class DBKategorie extends AbstractDBInfoBaseEntity {
+public class DBKategorie extends AbstractDBInfoBaseEntityWithOrdinal {
 	
 	@Id
 	@GeneratedValue(strategy=GenerationType.AUTO )

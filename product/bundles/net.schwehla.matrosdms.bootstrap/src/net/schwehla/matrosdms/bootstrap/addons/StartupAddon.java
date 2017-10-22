@@ -180,7 +180,7 @@ public class StartupAddon implements Reciever {
 		} catch (Exception e) {
 			
 			if (e.getMessage().contains("The file is locked")) {
-				logger.error(e,"Error in Startup: Databasefile is locked!");
+				logger.error(e,"Error in Startup: Databasefile is locked!" + e.getMessage());
 			} else {
 				logger.error(e,"Error in Startup");				
 			}
