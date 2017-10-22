@@ -14,7 +14,7 @@ import net.schwehla.matrosdms.domain.core.tagcloud.InfoKategory;
 	 */
 	public class LocalTreeFilter extends ViewerFilter {
 
-		private String searchString = "";
+		private String searchString = ""; //$NON-NLS-1$
 
 		public String getSearchString() {
 			return searchString;

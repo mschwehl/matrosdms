@@ -1,6 +1,12 @@
 package net.schwehla.matrosdms.rcp.wizzard.page.dialog;
 
+import java.util.Locale;
+
+import javax.inject.Inject;
+import javax.inject.Named;
+
 import org.eclipse.e4.core.di.annotations.Creatable;
+import org.eclipse.e4.core.services.translation.TranslationService;
 import org.eclipse.jface.dialogs.IDialogConstants;
 import org.eclipse.jface.dialogs.IMessageProvider;
 import org.eclipse.jface.dialogs.TitleAreaDialog;
@@ -21,6 +27,7 @@ import net.schwehla.matrosdms.rcp.binding.MatrosBinder;
 
 @Creatable
 public class UserDialog extends TitleAreaDialog  {
+	
 	
     MatrosUser local_clone_user;
     MatrosUser givenUser;

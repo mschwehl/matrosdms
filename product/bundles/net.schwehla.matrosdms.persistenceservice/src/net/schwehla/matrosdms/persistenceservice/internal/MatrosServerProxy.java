@@ -660,7 +660,7 @@ public class MatrosServerProxy 	implements InvocationHandler,  Serializable  {
 			//	--,(a.ATTRIBUTE_ID) as ATTRIBUTE
 			//	--, count (a.ATTRIBUTE_ID) as ATTRIBUTE
 				"FROM CONTEXT C " +
-				"LEFT OUTER JOIN ITEM I " +
+				"JOIN ITEM I " +
 				"ON I.CONTEXT_ID = C.CONTEXT_ID " +
 				"LEFT OUTER JOIN ATTRIBUTE A " +
 				"ON I.ITEM_ID = A.ITEM_ID     " + 

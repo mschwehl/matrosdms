@@ -140,7 +140,7 @@ import net.schwehla.matrosdms.resourcepool.IMatrosResource;
 public class ItemPart {
 
 
-    DateFormat df = new SimpleDateFormat("yyyy-MM-dd");
+    DateFormat df = new SimpleDateFormat("yyyy-MM-dd"); //$NON-NLS-1$
     
 	@Inject
 	@Named(TranslationService.LOCALE) Locale locale;
@@ -838,12 +838,12 @@ public class ItemPart {
 			@Override
 			public void drop(DropTargetEvent event) {
 
-				if (event.currentDataType.equals( TextTransfer.getInstance())) {
+				if (TextTransfer.getInstance().equals( event.currentDataType)) {
 					
 					// create a dialog with ok and cancel buttons and a question icon
 					MessageBox dialog =
 					        new MessageBox(shell, SWT.ICON_WARNING | SWT.OK );
-					dialog.setText("to much elements" );
+					dialog.setText("to much elements" ); 
 					dialog.setMessage("just 4 elements");
 
 					// open dialog and await originalstore selection
