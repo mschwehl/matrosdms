@@ -471,7 +471,7 @@ public class ItemPart {
 		 							
 		 							if (Objects.nonNull( _wrapper.getInfoItem().getStoreIdentifier())) {
 		 								
-		 								String storeid = matrosService.getInfoStoreByIdentifer( 
+		 								String storeid = matrosService.getOriginalStoreByIdentifer( 
 		 										_wrapper.getInfoItem().getStoreIdentifier()).getName();
 		 								
 		 								storeid += "_" + _wrapper.getInfoItem().getStoreItemNumber();
@@ -575,7 +575,7 @@ public class ItemPart {
 			// initial value
 			if (_wrapper.getInfoItem().getStoreIdentifier() != null) {
 				try {
-					InfoOrginalstore ost = matrosService.loadOrginalstoreByIdentifier(_wrapper.getInfoItem().getStoreIdentifier() );
+					InfoOrginalstore ost = matrosService.getOriginalStoreByIdentifer(_wrapper.getInfoItem().getStoreIdentifier() );
 					box.setSelection(ost);
 				} catch (MatrosServiceException e) {
 					logger.error(e);
@@ -945,7 +945,7 @@ public class ItemPart {
 
 			try {
 				
-				List <InfoOrginalstore> content = matrosService.loadInfoStoreList();
+				List <InfoOrginalstore> content = matrosService.loadOriginalStoreList();
 
 				box.setContent(content);
 		    
@@ -1024,15 +1024,18 @@ public class ItemPart {
 						break;
 					}
 				}
+				
+				
+				// not selected
+				if (_wrapper.getInfoItem().getStoreItemNumber() == null) {
+					btnRadioButtonOriginalDeleted.setSelection(true);
+					btnRadioButtonOriginalStored.setSelection(false);
+				} 
+				
 
 			}
 			
-		// not selected
-		if (_wrapper.getInfoItem().getStoreItemNumber() == null) {
-			btnRadioButtonOriginalDeleted.setSelection(true);
-			btnRadioButtonOriginalStored.setSelection(false);
-		} 
-		
+
 		
 	
        IObservableValue <String> pojoObserverStoreUUID = PojoProperties.value("storeIdentifier.uuid").observe(_wrapper.getInfoItem());

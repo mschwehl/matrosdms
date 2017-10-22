@@ -23,13 +23,20 @@ import org.eclipse.e4.core.services.events.IEventBroker;
 import org.eclipse.e4.core.services.log.Logger;
 import org.eclipse.persistence.config.PersistenceUnitProperties;
 import org.eclipse.persistence.jpa.PersistenceProvider;
+import org.ehcache.Cache;
+import org.ehcache.CacheManager;
+import org.ehcache.config.builders.CacheConfigurationBuilder;
+import org.ehcache.config.builders.CacheManagerBuilder;
+import org.ehcache.config.builders.ResourcePoolsBuilder;
 
 import net.schwehla.matrosdms.domain.admin.AppSettings;
 import net.schwehla.matrosdms.domain.admin.CloudSettings;
 import net.schwehla.matrosdms.domain.admin.MatrosConnectionCredential;
 import net.schwehla.matrosdms.domain.admin.MatrosUser;
 import net.schwehla.matrosdms.domain.api.IIdentifiable;
+import net.schwehla.matrosdms.persistenceservice.CacheConstants;
 import net.schwehla.matrosdms.persistenceservice.entity.internal.management.DBConfig;
+import net.schwehla.matrosdms.persistenceservice.internal.cache.Matroscache;
 import net.schwehla.matrosdms.rcp.MatrosNoServerconfigServiceException;
 import net.schwehla.matrosdms.rcp.MatrosServiceException;
 
@@ -59,8 +66,38 @@ public class MatrosServerProxy 	implements InvocationHandler,  Serializable  {
 	private EntityManagerFactory emf;
 
 	
+	 
+	 MyCaches myCaches;
+	 
+
+	
 		public MatrosServerProxy() {
-		
+			
+			CacheManager cacheManager;
+			
+			 cacheManager = CacheManagerBuilder.newCacheManagerBuilder() 
+//				    .withCache("preConfigured",
+//				        CacheConfigurationBuilder.newCacheConfigurationBuilder(Long.class, String.class, ResourcePoolsBuilder.heap(100))) 
+				    .withClassLoader(this.getClass().getClassLoader())
+				    .build(); 
+				cacheManager.init(); 
+				
+				
+				myCaches = new MyCaches();
+				 
+				 myCaches.addCache(CacheConstants.ORIGINALSTORE,	 cacheManager.createCache(CacheConstants.ORIGINALSTORE, 
+						    CacheConfigurationBuilder.newCacheConfigurationBuilder(String.class, Object.class, ResourcePoolsBuilder.heap(10))));
+				 
+				 
+				 myCaches.addCache(CacheConstants.INFOKATEGORY,	 cacheManager.createCache(CacheConstants.INFOKATEGORY, 
+						    CacheConfigurationBuilder.newCacheConfigurationBuilder(String.class, Object.class, ResourcePoolsBuilder.heap(10))));
+				 
+
+				 // Default: 500 elements
+				 myCaches.addCache(CacheConstants.INFOITEM,	 cacheManager.createCache(CacheConstants.INFOITEM, 
+						    CacheConfigurationBuilder.newCacheConfigurationBuilder(String.class, Object.class, ResourcePoolsBuilder.heap(500))));
+
+				 
 		}
 		
 	
@@ -88,12 +125,57 @@ public class MatrosServerProxy 	implements InvocationHandler,  Serializable  {
 			this.serviceImpl = serviceImpl;
 		}
 
-
+		
+		
+		private String toCacheIdentifer(String methodName, Object[] array) {
+			
+			if (array == null || array.length == 0) {
+				return methodName;
+			}
+			
+			if (array.length == 1) {
+				return methodName + "_" + array[0].toString();
+			}
+			
+			throw new IllegalStateException("too much parameter!");
+			
+			
+		}
+		  
+	
+		
+		
 
 		@Override
 		public Object invoke(Object proxy, Method method, Object[] args) throws Exception {
 			
+			Matroscache cached = method.getAnnotation(Matroscache.class);
+			
+			String identifier = null;
 
+			
+			if (cached != null) {
+				 
+				if ("NONE".equals(cached.name())) {
+					 myCaches.clear();
+					throw new IllegalStateException("No Cache specified");
+				}
+				
+				if (cached.evictAll()) {
+					 myCaches.clear();
+				} else {
+					
+					
+					identifier = toCacheIdentifer(cached.name(),args);
+					if (myCaches.get(cached.name()).containsKey(identifier)) {
+//						System.out.println("cache hit " + identifier);
+						return myCaches.get(cached.name()).get(identifier);
+					}
+					
+				}
+				
+				
+			}
 			
 			
 			EntityManager em = getEntityManager(false);
@@ -112,7 +194,14 @@ public class MatrosServerProxy 	implements InvocationHandler,  Serializable  {
 				// serviceImpl.setConfig(load config table here)
 				// the serviceImpl is not the rigtht place because of chicken-egg-problem
 				
-				return method.invoke(serviceImpl, args);
+				Object result = method.invoke(serviceImpl, args);
+				
+				if (identifier != null) {
+					myCaches.get(cached.name()).put(identifier, result);
+				}
+
+				return result;
+				
 				
 			} catch (Exception e) {
 				
@@ -582,10 +671,24 @@ public class MatrosServerProxy 	implements InvocationHandler,  Serializable  {
 	
 			  
 
-		  
-	
 		
 		
+		
+		class MyCaches {
+			private Map <String, Cache> myCaches = new HashMap();
+			
+			public void addCache(String key, Cache c) {
+			 myCaches.put(key , c);
+			}
+			
+			public void clear() {
+				myCaches.values().stream().forEach( e -> e.clear());
+			}
+			
+			public Cache get(String key) {
+				return myCaches.get(key);
+			}
+		}
 		
 
 

@@ -19,20 +19,16 @@ import net.schwehla.matrosdms.domain.search.SearchItemInput;
 import net.schwehla.matrosdms.domain.search.SearchedInfoItemElement;
 import net.schwehla.matrosdms.domain.util.Identifier;
 import net.schwehla.matrosdms.domain.util.VerifyMessage;
+import net.schwehla.matrosdms.persistenceservice.internal.cache.Matroscache;
 import net.schwehla.matrosdms.rcp.MatrosServiceException;
 
 public interface IMatrosServiceService {
 	
 	
-	// rootTagsExistent
-	public boolean isDatabaseSetupComplete() throws MatrosServiceException;
-	
-	// initiale Datenbak anlegen
-	public void setupInitialCategories() throws MatrosServiceException;
-	
-	// Kategorie laden
+	@Matroscache(name=CacheConstants.INFOKATEGORY)
     public InfoKategory getInfoKategoryByIdentifier(Identifier id) throws MatrosServiceException; ;
     
+	@Matroscache(evictAll=true)
     public void createInfoKategory(InfoKategory kategorie, Identifier parent) throws MatrosServiceException;;
     
     // Alle dokumente laden
@@ -41,11 +37,11 @@ public interface IMatrosServiceService {
     // Alle dokumente speichern
     public InfoContext  loadInfoContextByIdentifier(Identifier identifier) throws MatrosServiceException;;
     
-    // neuen Mappe anlegen
-    public void createContext(InfoContext con) throws MatrosServiceException;;
+	@Matroscache(evictAll=true)
+	public void createContext(InfoContext con) throws MatrosServiceException;;
 
-    // Dokument der Mappe hinzuf�gen
-    public void appendContainer(File droppedFile,  InfoItem myNewContainer) throws MatrosServiceException;;
+	@Matroscache(evictAll=true)
+	public void appendContainer(File droppedFile,  InfoItem myNewContainer) throws MatrosServiceException;;
 
     // �berblick laden
     public InfoItemList loadInfoItemList(InfoContext context, boolean inclArchive) throws MatrosServiceException;
@@ -59,54 +55,78 @@ public interface IMatrosServiceService {
     
     public AttributeType getAttributeTypeByIdentifier(Identifier identifier) throws MatrosServiceException;
     
+/* Originalstore */    
     
-    public List <InfoOrginalstore> loadInfoStoreList()  throws MatrosServiceException;
+	@Matroscache(name=CacheConstants.ORIGINALSTORE)
+    public List <InfoOrginalstore> loadOriginalStoreList()  throws MatrosServiceException;
     
-    public InfoOrginalstore getInfoStoreByIdentifer(Identifier identifier)  throws MatrosServiceException;
-    
+	@Matroscache(name=CacheConstants.ORIGINALSTORE)
+    public InfoOrginalstore getOriginalStoreByIdentifer(Identifier identifier)  throws MatrosServiceException;
+	
+	@Matroscache(name=CacheConstants.ORIGINALSTORE, evictAll=true)
+	public void createOriginalStore(InfoOrginalstore store) throws MatrosServiceException;
+	
+/* end Originalstore */
+	
+	@Matroscache(evictAll=true)
     public void createUser(MatrosUser user)  throws MatrosServiceException;
     
+	@Matroscache(evictAll=true)
     public void grantPermission(String userUUID, String permissionKey)  throws MatrosServiceException;
     
+	@Matroscache(evictAll=true)
     public void revokePermission(String userUUID, String permissionKey)  throws MatrosServiceException;
 
 	public MatrosUser checkLogin(MatrosConnectionCredential dbCredentials) throws MatrosServiceException;
 
 	public FileInputStream  getStreamedContent(Identifier identifier) throws MatrosServiceException;
 
-	public void createOrignalStore(InfoOrginalstore store) throws MatrosServiceException;
-
 	public int getNextFreeOriginalstoreNumber(Identifier identifier) throws MatrosServiceException;
 
+	@Matroscache(evictAll=true)
 	public void createAttributeType(AttributeType attributeType) throws MatrosServiceException;
 
+	@Matroscache(evictAll=true)
 	public void archivareContext(Identifier identifier)  throws MatrosServiceException;
 
-	public void archivareItem(Identifier identifier) throws MatrosServiceException;
-
 	public boolean verifyDatabase(VerifyMessage data) throws MatrosServiceException;
+	
+	@Matroscache(name=CacheConstants.INFOITEM)
+	public InfoItem loadInfoItemByIdentifier(Identifier identifier)throws MatrosServiceException;
 
-	public void moveInfoitems(Identifier target, List<InfoItem> intersection) throws MatrosServiceException;
-
+	@Matroscache(evictAll=true)
 	public void updateInfoElement(InfoItem infoItem)  throws MatrosServiceException;
 
-	public InfoOrginalstore loadOrginalstoreByIdentifier(Identifier storeIdentifier) throws MatrosServiceException;
-
-	public InfoItem loadInfoItemByIdentifier(Identifier identifier)throws MatrosServiceException;
+	@Matroscache(evictAll=true)
+	public void moveInfoitems(Identifier target, List<InfoItem> intersection) throws MatrosServiceException;
+	
+	@Matroscache(evictAll=true)
+	public void archivareItem(Identifier identifier) throws MatrosServiceException;
 
 	public List<InfoEvent> loadEventList() throws MatrosServiceException;
 
+	@Matroscache(evictAll=true)
 	public void updateInfoContext(InfoContext _context) throws MatrosServiceException;
 
+	@Matroscache(evictAll=true)
 	public void updateCloudSettings(CloudSettings settings)  throws MatrosServiceException;
-
-	public void backup()  throws MatrosServiceException;
 
 	public AttributeType loadAttributeTypeByIdentifier(Identifier identifier) throws MatrosServiceException;
 
 	public List <SearchedInfoItemElement> searchInfoContextItems(SearchItemInput input) throws MatrosServiceException;
 
-	public void updateInfoKategory(InfoKategory localTreeroot, Identifier identifier) throws MatrosServiceException;; 
+	@Matroscache(evictAll=true)
+	public void updateInfoKategory(InfoKategory localTreeroot, Identifier identifier) throws MatrosServiceException;
+
+// Database-Functions	
+	
+	// create initial database
+	public void setupInitialCategories() throws MatrosServiceException;
+
+	// rootTagsExistent
+	public boolean isDatabaseSetupComplete() throws MatrosServiceException;
+
+	public void backup()  throws MatrosServiceException;; 
 
     
     

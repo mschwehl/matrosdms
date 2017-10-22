@@ -236,7 +236,7 @@ public class SetupNewWorker implements IRunnableWithProgress {
                 	 
                	 	 for (InfoOrginalstore store:  masterData.getOrignalStoreList()) {
                	 		
-               	   	 	 service.createOrignalStore(store);
+               	   	 	 service.createOriginalStore(store);
                	    	 logger.info("OrignalStore " + store.getName() + " created ");
                	   	 	 
                	 	 }

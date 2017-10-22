@@ -74,7 +74,7 @@ public class OrginalstorePart {
 
 	        try {
 	        	  _allAttributes.clear();
-	        	  _allAttributes.addAll(service.loadInfoStoreList() );
+	        	  _allAttributes.addAll(service.loadOriginalStoreList() );
 				
 			} catch (MatrosServiceException e1) {
 				logger.error(e1);
@@ -151,7 +151,7 @@ public class OrginalstorePart {
           
           
           try {
-			_allAttributes = service.loadInfoStoreList();
+			_allAttributes = service.loadOriginalStoreList();
 		
 			
 		} catch (MatrosServiceException e1) {

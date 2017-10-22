@@ -29,5 +29,7 @@ Bundle-ClassPath: .,
  lib/jdbc/h2-1.4.192.jar,
  lib/commons-crypto/commons-crypto-1.0.0.jar,
  lib/commons-crypto/jna-4.2.2.jar,
- lib/ehcache/ehcache-3.3.0.jar
+ lib/ehcache/ehcache-3.3.0.jar,
+ lib/slf4j/slf4j-api-1.7.25.jar,
+ lib/slf4j/slf4j-jdk14-1.7.25.jar
 
