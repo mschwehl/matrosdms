@@ -2,6 +2,7 @@ package net.schwehla.matrosdms.persistenceservice.internal;
 
 import java.io.File;
 import java.io.IOException;
+import java.io.PrintWriter;
 import java.io.Serializable;
 import java.lang.reflect.InvocationHandler;
 import java.lang.reflect.InvocationTargetException;
@@ -9,6 +10,9 @@ import java.lang.reflect.Method;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.sql.Connection;
+import java.sql.SQLException;
+import java.sql.SQLFeatureNotSupportedException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.HashMap;
@@ -18,16 +22,23 @@ import java.util.function.Function;
 
 import javax.persistence.EntityManager;
 import javax.persistence.EntityManagerFactory;
+import javax.sql.DataSource;
 
 import org.eclipse.e4.core.services.events.IEventBroker;
 import org.eclipse.e4.core.services.log.Logger;
 import org.eclipse.persistence.config.PersistenceUnitProperties;
+import org.eclipse.persistence.internal.databaseaccess.DatabaseAccessor;
 import org.eclipse.persistence.jpa.PersistenceProvider;
+import org.eclipse.persistence.sessions.JNDIConnector;
+import org.eclipse.persistence.sessions.Session;
+import org.eclipse.persistence.sessions.server.ConnectionPool;
+import org.eclipse.persistence.sessions.server.ServerSession;
 import org.ehcache.Cache;
 import org.ehcache.CacheManager;
 import org.ehcache.config.builders.CacheConfigurationBuilder;
 import org.ehcache.config.builders.CacheManagerBuilder;
 import org.ehcache.config.builders.ResourcePoolsBuilder;
+import org.flywaydb.core.Flyway;
 
 import net.schwehla.matrosdms.domain.admin.AppSettings;
 import net.schwehla.matrosdms.domain.admin.CloudSettings;
@@ -183,7 +194,7 @@ public class MatrosServerProxy 	implements InvocationHandler,  Serializable  {
 			Exception localException = null;
 			
 			try {
-				
+
 				em.getTransaction().begin();
 				serviceImpl.setEntityManager(em);
 				serviceImpl.setUser(user);
@@ -478,6 +489,78 @@ public class MatrosServerProxy 	implements InvocationHandler,  Serializable  {
 
 		public void createEmptyDatabase() throws MatrosServiceException  {
 			
+			
+			// Eclipselink-Specific
+			Session session = getEntityManager(false).unwrap(Session.class);
+			  ConnectionPool defaultPool = ((ServerSession)session).getConnectionPool("default");
+			  DatabaseAccessor da = (DatabaseAccessor) defaultPool.acquireConnection();
+			  
+			java.sql.Connection connection = da.getConnection();
+			
+			Flyway flyway = new Flyway();
+			flyway.setDataSource( new DataSource() {
+				
+				@Override
+				public <T> T unwrap(Class<T> iface) throws SQLException {
+					// TODO Auto-generated method stub
+					return null;
+				}
+				
+				@Override
+				public boolean isWrapperFor(Class<?> iface) throws SQLException {
+					// TODO Auto-generated method stub
+					return false;
+				}
+				
+				@Override
+				public void setLoginTimeout(int seconds) throws SQLException {
+					// TODO Auto-generated method stub
+					
+				}
+				
+				@Override
+				public void setLogWriter(PrintWriter out) throws SQLException {
+//					PrintWriter wrapped = new 
+				}
+				
+				@Override
+				public java.util.logging.Logger getParentLogger() throws SQLFeatureNotSupportedException {
+					return java.util.logging.Logger.getLogger(MatrosServerProxy.class.getName());
+				}
+				
+				@Override
+				public int getLoginTimeout() throws SQLException {
+					// TODO Auto-generated method stub
+					return 0;
+				}
+				
+				@Override
+				public PrintWriter getLogWriter() throws SQLException {
+				    return new PrintWriter(System.out);
+				}
+				
+				@Override
+				public Connection getConnection(String username, String password) throws SQLException {
+					// TODO Auto-generated method stub
+					return null;
+				}
+				
+				@Override
+				public Connection getConnection() throws SQLException {
+					return connection;
+				}
+			});
+			
+			
+			flyway.setClassLoader(this.getClass().getClassLoader());
+			
+			// TODO: figure out which is relevant
+			flyway.setLocations("classpath:setup/database");
+			flyway.setLocations("classpath:/");
+			
+			flyway.migrate();
+			/*
+			
 			Function<EntityManager,java.util.Optional<Object>> consumer = (em -> {
 				
 				String executeResult;
@@ -507,8 +590,9 @@ public class MatrosServerProxy 	implements InvocationHandler,  Serializable  {
 			});
 			
 			
-			execute(consumer);
 			
+			execute(consumer);
+			*/
 		}
 
 
@@ -606,71 +690,6 @@ public class MatrosServerProxy 	implements InvocationHandler,  Serializable  {
 		
 
 
-		String[] statements = new String[] {
-		
-				"CREATE TABLE Context (CONTEXT_ID BIGINT NOT NULL UNIQUE, DATEARCHIVED TIMESTAMP, DATECREATED TIMESTAMP, DATEUPDATED TIMESTAMP, DESCRIPTION VARCHAR, ICON VARCHAR, NAME VARCHAR NOT NULL, UUID VARCHAR NOT NULL UNIQUE, PRIMARY KEY (CONTEXT_ID))",
-				"CREATE TABLE FileMetadata (FILE_ID BIGINT NOT NULL UNIQUE, CRYPTSETTINGS VARCHAR, FILENAME VARCHAR NOT NULL, FILESIZE BIGINT, MIMETYPE VARCHAR, SHA256CRYPTED VARCHAR NOT NULL UNIQUE, SHA256ORIGINAL VARCHAR NOT NULL UNIQUE, PRIMARY KEY (FILE_ID))",
-				"CREATE TABLE Item (ITEM_ID BIGINT NOT NULL UNIQUE, ISSUEDATE TIMESTAMP, DATEARCHIVED TIMESTAMP, DATECREATED TIMESTAMP, DATEUPDATED TIMESTAMP, DESCRIPTION VARCHAR, ICON VARCHAR, LASTINDEXRUN TIMESTAMP, INDEXSTATE INTEGER, NAME VARCHAR NOT NULL, STAGE INTEGER, STORAGEITEMIDENTIFIER VARCHAR, UUID VARCHAR NOT NULL UNIQUE, CONTEXT_ID BIGINT NOT NULL, FILE_ID BIGINT UNIQUE, STORE_STORE_ID BIGINT, USER_ID BIGINT NOT NULL, PRIMARY KEY (ITEM_ID))",
-				"CREATE TABLE Kategory (KATEGORY_ID BIGINT NOT NULL UNIQUE, DATEARCHIVED TIMESTAMP, DATECREATED TIMESTAMP, DATEUPDATED TIMESTAMP, DESCRIPTION VARCHAR, ICON VARCHAR, NAME VARCHAR NOT NULL, OBJECT BOOLEAN, UUID VARCHAR NOT NULL UNIQUE, PARENT_KATEGORY_ID BIGINT, ORDINAL INT, PRIMARY KEY (KATEGORY_ID))",
-				"CREATE TABLE Store (STORE_ID BIGINT NOT NULL UNIQUE, DATEARCHIVED TIMESTAMP, DATECREATED TIMESTAMP, DATEUPDATED TIMESTAMP, DESCRIPTION VARCHAR, ICON VARCHAR, NAME VARCHAR NOT NULL, SHORTNAME VARCHAR, UUID VARCHAR NOT NULL UNIQUE, ORDINAL INT, PRIMARY KEY (STORE_ID))",
-				"CREATE TABLE Event (EVENT_ID BIGINT NOT NULL UNIQUE, ACTIONSCRIPT VARCHAR, DATEARCHIVED TIMESTAMP, DATECOMPLETED TIMESTAMP, DATECREATED TIMESTAMP, DATESCHEDULED TIMESTAMP, DATEUPDATED TIMESTAMP, DESCRIPTION VARCHAR, ICON VARCHAR, NAME VARCHAR NOT NULL, UUID VARCHAR NOT NULL UNIQUE, ITEM_ID BIGINT NOT NULL, PRIMARY KEY (EVENT_ID))",
-				"CREATE TABLE Attribute (ATTRIBUTE_ID BIGINT NOT NULL UNIQUE, ATTR_SUBTPYE VARCHAR(31), DATEARCHIVED TIMESTAMP, DATECREATED TIMESTAMP, DATEUPDATED TIMESTAMP, DESCRIPTION VARCHAR, ICON VARCHAR, NAME VARCHAR NOT NULL, RELEVANCEFROM TIMESTAMP, RELEVANCETO TIMESTAMP, UUID VARCHAR NOT NULL UNIQUE, ITEM_ID BIGINT NOT NULL, ATTRIBUTETYPE_ATTRIBUTETYPE_ID BIGINT, BOOLEANVALUE BOOLEAN, DATEVALUE TIMESTAMP, INTERNALURL BOOLEAN, URL VARCHAR, NUMBERVALUE DOUBLE, TEXTVALUE VARCHAR, PRIMARY KEY (ATTRIBUTE_ID))",
-				"CREATE TABLE Attributetype (ATTRIBUTETYPE_ID BIGINT NOT NULL UNIQUE, DATEARCHIVED TIMESTAMP, DATECREATED TIMESTAMP, DATEUPDATED TIMESTAMP, DEFAULTVALUESCRIPT VARCHAR, DESCRIPTION VARCHAR, ICON VARCHAR, KEY VARCHAR NOT NULL, NAME VARCHAR NOT NULL, PATTERN VARCHAR, TYPE VARCHAR NOT NULL, UNIT VARCHAR, UUID VARCHAR NOT NULL UNIQUE, VALIDATESCRIPT VARCHAR, ORDINAL INT, PRIMARY KEY (ATTRIBUTETYPE_ID))",
-				"CREATE TABLE User (USER_ID BIGINT NOT NULL UNIQUE, DATEARCHIVED TIMESTAMP, DATECREATED TIMESTAMP, DATEUPDATED TIMESTAMP, DESCRIPTION VARCHAR, EMAIL VARCHAR, ICON VARCHAR, NAME VARCHAR NOT NULL, PASSWORDHASH VARCHAR, UUID VARCHAR NOT NULL UNIQUE, PRIMARY KEY (USER_ID))",
-				"CREATE TABLE Permission (PERMISSION_ID BIGINT NOT NULL UNIQUE, KEY VARCHAR, NAME VARCHAR, USER_ID BIGINT NOT NULL, PRIMARY KEY (PERMISSION_ID))",
-				"CREATE TABLE CONFIG (CONFIG_ID BIGINT NOT NULL UNIQUE, KEY VARCHAR, VALUE VARCHAR, PRIMARY KEY (CONFIG_ID))",
-				"CREATE TABLE Context_Kategorie (CONTEXT_ID BIGINT NOT NULL, KATEGORY_ID BIGINT NOT NULL, PRIMARY KEY (CONTEXT_ID, KATEGORY_ID))",
-				"CREATE TABLE Item_Kategorie (ITEM_ID BIGINT NOT NULL, KATEGORY_ID BIGINT NOT NULL, PRIMARY KEY (ITEM_ID, KATEGORY_ID))",
-				"ALTER TABLE Item ADD CONSTRAINT FK_Item_CONTEXT_ID FOREIGN KEY (CONTEXT_ID) REFERENCES Context (CONTEXT_ID)",
-				"ALTER TABLE Item ADD CONSTRAINT FK_Item_USER_ID FOREIGN KEY (USER_ID) REFERENCES User (USER_ID)",
-				"ALTER TABLE Item ADD CONSTRAINT FK_Item_FILE_ID FOREIGN KEY (FILE_ID) REFERENCES FileMetadata (FILE_ID)",
-				"ALTER TABLE Item ADD CONSTRAINT FK_Item_STORE_STORE_ID FOREIGN KEY (STORE_STORE_ID) REFERENCES Store (STORE_ID)",
-				"ALTER TABLE Kategory ADD CONSTRAINT FK_Kategory_PARENT_KATEGORY_ID FOREIGN KEY (PARENT_KATEGORY_ID) REFERENCES Kategory (KATEGORY_ID)",
-				"ALTER TABLE Event ADD CONSTRAINT FK_Event_ITEM_ID FOREIGN KEY (ITEM_ID) REFERENCES Item (ITEM_ID)",
-				"ALTER TABLE Attribute ADD CONSTRAINT FK_Attribute_ITEM_ID FOREIGN KEY (ITEM_ID) REFERENCES Item (ITEM_ID)",
-				"ALTER TABLE Attribute ADD CONSTRAINT FK_Attribute_ATTRIBUTETYPE_ATTRIBUTETYPE_ID FOREIGN KEY (ATTRIBUTETYPE_ATTRIBUTETYPE_ID) REFERENCES Attributetype (ATTRIBUTETYPE_ID)",
-				"ALTER TABLE Permission ADD CONSTRAINT FK_Permission_USER_ID FOREIGN KEY (USER_ID) REFERENCES User (USER_ID)",
-				"ALTER TABLE Context_Kategorie ADD CONSTRAINT FK_Context_Kategorie_KATEGORY_ID FOREIGN KEY (KATEGORY_ID) REFERENCES Kategory (KATEGORY_ID)",
-				"ALTER TABLE Context_Kategorie ADD CONSTRAINT FK_Context_Kategorie_CONTEXT_ID FOREIGN KEY (CONTEXT_ID) REFERENCES Context (CONTEXT_ID)",
-				"ALTER TABLE Item_Kategorie ADD CONSTRAINT FK_Item_Kategorie_ITEM_ID FOREIGN KEY (ITEM_ID) REFERENCES Item (ITEM_ID)",
-				"ALTER TABLE Item_Kategorie ADD CONSTRAINT FK_Item_Kategorie_KATEGORY_ID FOREIGN KEY (KATEGORY_ID) REFERENCES Kategory (KATEGORY_ID)",
-				"CREATE TABLE SEQUENCE (SEQ_NAME VARCHAR(50) NOT NULL, SEQ_COUNT NUMERIC(38), PRIMARY KEY (SEQ_NAME))",
-				"INSERT INTO SEQUENCE(SEQ_NAME, SEQ_COUNT) values ('SEQ_GEN', 0)",
-
-						
-			 
-			 // View is not autogenerated from jpa
-				 "create or replace view VW_CONTEXT as select c.* , count (i.context_id) as sum from context c left join item i on i.context_id = c.CONTEXT_ID where c.datearchived is null and i.datearchived is null group by c.CONTEXT_ID order by c.CONTEXT_ID",
-
-				
-				"create or replace view vw_search as " +
-				"SELECT DISTINCT  " +
-				"c.CONTEXT_ID as CONTEXT_ID " +
-				", c.NAME as CON_NAME " +
-				", c.UUID as CON_UUID " +
-				", I.ITEM_ID " +
-				", I.NAME as ITEM_NAME " +
-				", I.UUID as ITEM_UUID " +
-				", c.DATEARCHIVED as CON_DATEARCHIVED  " +
-				", I.DATEARCHIVED as ITEM_DATEARCHIVED " +
-				", I.DATEARCHIVED is not null or c.DATEARCHIVED is not null as ELEMENT_ARCHIVED " +
-				",I.STORE_STORE_ID " +
-				",I.STORAGEITEMIDENTIFIER " +
- 			//	--, CK.KATEGORY_ID " +
-			//	--,(a.ATTRIBUTE_ID) as ATTRIBUTE
-			//	--, count (a.ATTRIBUTE_ID) as ATTRIBUTE
-				"FROM CONTEXT C " +
-				"JOIN ITEM I " +
-				"ON I.CONTEXT_ID = C.CONTEXT_ID " +
-				"LEFT OUTER JOIN ATTRIBUTE A " +
-				"ON I.ITEM_ID = A.ITEM_ID     " + 
-//				--LEFT OUTER JOIN CONTEXT_KATEGORIE CK " +
-	//			--    ON CK.CONTEXT_ID = C.CONTEXT_ID " +
-				" ORDER BY CONTEXT_ID, CON_NAME "
-				
-		};
-
-	
 		
 		
 		class MyCaches {

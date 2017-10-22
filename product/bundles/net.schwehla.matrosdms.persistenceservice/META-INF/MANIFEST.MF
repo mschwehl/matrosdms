@@ -31,5 +31,7 @@ Bundle-ClassPath: .,
  lib/commons-crypto/jna-4.2.2.jar,
  lib/ehcache/ehcache-3.3.0.jar,
  lib/slf4j/slf4j-api-1.7.25.jar,
- lib/slf4j/slf4j-jdk14-1.7.25.jar
+ lib/slf4j/slf4j-jdk14-1.7.25.jar,
+ lib/flyway/flyway-core-4.2.0.jar,
+ setup/database/
 
