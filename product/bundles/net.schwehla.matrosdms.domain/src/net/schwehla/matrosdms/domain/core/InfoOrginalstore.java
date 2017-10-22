@@ -2,7 +2,7 @@ package net.schwehla.matrosdms.domain.core;
 
 import net.schwehla.matrosdms.domain.util.Identifier;
 
-public class InfoOrginalstore extends InfoBaseElement {
+public class InfoOrginalstore extends InfoBaseElementWithOrdinal {
 	
 	private InfoOrginalstore() {
 		

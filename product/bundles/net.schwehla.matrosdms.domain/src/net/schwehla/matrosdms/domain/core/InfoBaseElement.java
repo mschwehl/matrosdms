@@ -13,7 +13,8 @@ public class InfoBaseElement implements IIdentifiable, Serializable {
 	
 	private static final long serialVersionUID = 1L;
 
-	public InfoBaseElement() {
+	protected InfoBaseElement() {
+		throw new IllegalStateException("Called with no parameter");
 	}
 	
 

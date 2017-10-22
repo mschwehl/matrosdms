@@ -6,12 +6,12 @@ import java.util.Iterator;
 import java.util.List;
 
 import net.schwehla.matrosdms.domain.api.ITagInterface;
-import net.schwehla.matrosdms.domain.core.InfoBaseElement;
+import net.schwehla.matrosdms.domain.core.InfoBaseElementWithOrdinal;
 import net.schwehla.matrosdms.domain.util.Identifier;
 
 
 
-public class InfoKategory extends InfoBaseElement implements ITagInterface {
+public class InfoKategory extends InfoBaseElementWithOrdinal implements ITagInterface {
 	
 	public void setName(String name) {
 		this.name = name;
