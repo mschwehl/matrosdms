@@ -5,60 +5,30 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.net.URI;
 import java.nio.file.Files;
+import java.nio.file.Path;
 import java.nio.file.StandardCopyOption;
 
 import javax.inject.Inject;
 
+import org.eclipse.core.runtime.preferences.IEclipsePreferences;
 import org.eclipse.e4.core.di.annotations.Creatable;
+import org.eclipse.e4.core.di.extensions.Preference;
 import org.eclipse.e4.core.services.log.Logger;
+import org.eclipse.jface.dialogs.MessageDialog;
+import org.eclipse.swt.widgets.Display;
 
 import net.schwehla.matrosdms.domain.core.InfoItem;
 import net.schwehla.matrosdms.persistenceservice.IMatrosServiceService;
 import net.schwehla.matrosdms.persistenceservice.internal.MatrosConfigReader;
 import net.schwehla.matrosdms.rcp.MatrosServiceException;
+import net.schwehla.matrosdms.rcp.MyGlobalConstants;
 
 @Creatable
 public class DesktopHelper  {
 	
-	/*	
-	
-	// let's save the last 50 file-calls for this session
-    Map <String,File> tempFileCache = createLRUMap(50);
-    
-    
-    @PreDestroy
-    void clear() {
-    	
-    	if (tempFileCache != null) {
-        	tempFileCache.clear();
-        	tempFileCache = null;
-    	}
-
-    }
-    
-    public static <K, V> Map<K, V> createLRUMap(final int maxEntries) {
-        return new LinkedHashMap<K, V>(maxEntries*10/7, 0.7f, true) {
-            @Override
-            protected boolean removeEldestEntry(Map.Entry<K, V> eldest) {
-                return size() > maxEntries;
-            }
-        };
-    }
-
-    try {
-		if (tempFileCache.containsKey(doc.getIdentifier().getUuid())) {
-			
-			if (tempFileCache.get(doc.getIdentifier()).exists() ) {
-				return tempFileCache.get(doc.getIdentifier().getUuid()).getCanonicalPath();
-			}
-		} 
-	} catch(Exception e) {
-		
-	}
-    
-	}
-    
-*/
+	@Inject
+	@Preference(nodePath = MyGlobalConstants.Preferences.NODE_COM_MATROSDMS) 
+	IEclipsePreferences preferences ;
     
     
 	@SuppressWarnings("restriction")
@@ -184,6 +154,67 @@ public class DesktopHelper  {
 			
 			return extension;
 		}
+
+
+	public void moveFromInbox(File file) throws MatrosServiceException {
+
+		try {
+			String inboxNotProcessed =  preferences.get(MyGlobalConstants.Preferences.NOT_PROCESSED_PATH, "" );
+			inboxNotProcessed = inboxNotProcessed.replaceAll(";","");
+			
+			if (inboxNotProcessed == null || inboxNotProcessed.trim().length() == 0) {
+				throw new MatrosServiceException("no processed folder specified, please go to the preferences");
+			}
+			
+			
+			File targetProcessed = new File(inboxNotProcessed);
+				
+				if(! targetProcessed.exists()) {
+					
+					boolean create = targetProcessed.mkdirs();
+					
+					if (!create) {
+						throw new MatrosServiceException("cannot create processed folder");
+					}
+
+				}
+				
+			if(!file.exists()) {
+				throw new MatrosServiceException("Source file not exists anymore");
+			}
+			
+			Path moveSourcePath = file.toPath() ;
+			
+			File target = new File( inboxNotProcessed + File.separator + file.getName() ) ;
+			
+			if (target.exists()) {
+				target = new File(inboxNotProcessed + File.separator + System.currentTimeMillis() + "_" + file.getName() );
+			}
+			
+			Path moveTargetPath = target.toPath();
+			moveTargetPath.getParent().toFile().mkdirs();
+			
+			Files.move( moveSourcePath, moveTargetPath );
+			
+			if(! moveTargetPath.toFile().exists()) {
+				throw new MatrosServiceException("targetfile not created " +  moveTargetPath.getFileName());
+			}
+			
+			if( moveSourcePath.toFile().exists()) {
+				throw new MatrosServiceException("sourcefile not moved " +  moveSourcePath.getFileName());
+			}
+			
+
+
+			
+		} catch (MatrosServiceException e1) {
+			throw e1;
+		} catch (Exception e) {
+			throw new MatrosServiceException("Error moving file" + e);
+		}
+		
+		
+	}
 
 	
 }

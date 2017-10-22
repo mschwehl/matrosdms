@@ -16,6 +16,7 @@ import net.schwehla.matrosdms.rcp.MatrosActivator;
 import net.schwehla.matrosdms.rcp.MyGlobalConstants;
 import net.schwehla.matrosdms.rcp.preferences.ExportPreferencePage;
 import net.schwehla.matrosdms.rcp.preferences.InboxPreferencePage;
+import net.schwehla.matrosdms.rcp.preferences.NotProcessedFolderPreferencePage;
 import net.schwehla.matrosdms.rcp.preferences.ProcessedFolderPreferencePage;
 
 
@@ -37,7 +38,7 @@ public class OpenPreferenceDialogHandler
     	ExportPreferencePage epp = ContextInjectionFactory.make(ExportPreferencePage.class, context);
     	ProcessedFolderPreferencePage ppp = ContextInjectionFactory.make(ProcessedFolderPreferencePage.class, context); 
 
-    		
+    	NotProcessedFolderPreferencePage notppp = ContextInjectionFactory.make(NotProcessedFolderPreferencePage.class, context); 
 
     	        
         PreferenceManager pm = new PreferenceManager();
@@ -48,6 +49,7 @@ public class OpenPreferenceDialogHandler
         pm.addToRoot(new PreferenceNode( MyGlobalConstants.Preferences.NODE_COM_MATROSDMS ,ipp)); //$NON-NLS-1$
         pm.addToRoot(new PreferenceNode( MyGlobalConstants.Preferences.NODE_COM_MATROSDMS , epp)); //$NON-NLS-1$
         pm.addToRoot(new PreferenceNode( MyGlobalConstants.Preferences.NODE_COM_MATROSDMS , ppp)); //$NON-NLS-1$
+        pm.addToRoot(new PreferenceNode( MyGlobalConstants.Preferences.NODE_COM_MATROSDMS , notppp)); //$NON-NLS-1$
         
    //     pm.addToRoot(new PreferenceNode( MyGlobalConstants.Preferences.NODE_COM_MATROSDMS , generalTest)); //$NON-NLS-1$
 

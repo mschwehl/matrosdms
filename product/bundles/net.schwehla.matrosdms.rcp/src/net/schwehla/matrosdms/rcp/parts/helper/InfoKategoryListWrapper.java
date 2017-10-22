@@ -374,7 +374,7 @@ public class InfoKategoryListWrapper {
 
 		          // rename-popup
 
-		          MessageDialog.openConfirm(Display.getCurrent().getActiveShell(), "Confirm", "Please confirm");
+		          MessageDialog.openConfirm(Display.getCurrent().getActiveShell(), "NoAction", "No Action implemented");
 		          
 		    
 		      }
