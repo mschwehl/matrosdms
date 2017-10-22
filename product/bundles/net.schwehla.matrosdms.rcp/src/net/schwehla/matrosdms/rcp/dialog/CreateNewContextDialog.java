@@ -21,11 +21,12 @@ import org.eclipse.swt.widgets.Shell;
 import org.eclipse.swt.widgets.Text;
 
 import net.schwehla.matrosdms.domain.core.InfoBaseElement;
+import net.schwehla.matrosdms.domain.util.Identifier;
 
 @Creatable
 public class CreateNewContextDialog extends  AbstractMatrosTitleAreaDialog  {
 
-	InfoBaseElement baseElement = new InfoBaseElement();
+	InfoBaseElement baseElement = new InfoBaseElement(Identifier.createNEW(), "base");
 
 	
 	private Text txtName;

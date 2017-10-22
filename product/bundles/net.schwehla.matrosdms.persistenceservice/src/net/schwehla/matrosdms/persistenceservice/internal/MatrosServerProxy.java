@@ -654,7 +654,9 @@ public class MatrosServerProxy 	implements InvocationHandler,  Serializable  {
 				", c.DATEARCHIVED as CON_DATEARCHIVED  " +
 				", I.DATEARCHIVED as ITEM_DATEARCHIVED " +
 				", I.DATEARCHIVED is not null or c.DATEARCHIVED is not null as ELEMENT_ARCHIVED " +
-			//	--, CK.KATEGORY_ID " +
+				",I.STORE_STORE_ID " +
+				",I.STORAGEITEMIDENTIFIER " +
+ 			//	--, CK.KATEGORY_ID " +
 			//	--,(a.ATTRIBUTE_ID) as ATTRIBUTE
 			//	--, count (a.ATTRIBUTE_ID) as ATTRIBUTE
 				"FROM CONTEXT C " +
@@ -669,9 +671,6 @@ public class MatrosServerProxy 	implements InvocationHandler,  Serializable  {
 		};
 
 	
-			  
-
-		
 		
 		
 		class MyCaches {

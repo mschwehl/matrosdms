@@ -1,10 +1,10 @@
 package net.schwehla.matrosdms.domain.core.attribute;
 
 import net.schwehla.matrosdms.domain.api.E_ATTRIBUTETYPE;
-import net.schwehla.matrosdms.domain.core.InfoBaseElement;
+import net.schwehla.matrosdms.domain.core.InfoBaseElementWithOrdinal;
 import net.schwehla.matrosdms.domain.util.Identifier;
 
-public class AttributeType extends InfoBaseElement {
+public class AttributeType extends InfoBaseElementWithOrdinal {
 	
 	String key;
 	E_ATTRIBUTETYPE type;

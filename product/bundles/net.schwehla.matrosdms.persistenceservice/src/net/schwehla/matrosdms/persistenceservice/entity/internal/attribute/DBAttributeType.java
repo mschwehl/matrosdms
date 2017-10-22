@@ -10,6 +10,7 @@ import javax.persistence.NamedQuery;
 import javax.persistence.Table;
 
 import net.schwehla.matrosdms.persistenceservice.entity.internal.AbstractDBInfoBaseEntity;
+import net.schwehla.matrosdms.persistenceservice.entity.internal.AbstractDBInfoBaseEntityWithOrdinal;
 
 /**
  * @author Martin
@@ -17,14 +18,14 @@ import net.schwehla.matrosdms.persistenceservice.entity.internal.AbstractDBInfoB
  */
 
 @NamedQueries ({
-@NamedQuery(name="DBAttributeType.findAll", query="SELECT c FROM DBAttributeType c") ,
+@NamedQuery(name="DBAttributeType.findAll", query="SELECT c FROM DBAttributeType c order by c.oridinal, c.name") ,
 @NamedQuery(name="DBAttributeType.findByUUID", query="SELECT c FROM DBAttributeType c where c.uuid = :uuid") 
 })
 
 
 @Entity
 @Table(name="Attributetype")
-public class DBAttributeType  extends AbstractDBInfoBaseEntity {
+public class DBAttributeType  extends AbstractDBInfoBaseEntityWithOrdinal {
 	
 	@Id
 	@GeneratedValue(strategy=GenerationType.AUTO )

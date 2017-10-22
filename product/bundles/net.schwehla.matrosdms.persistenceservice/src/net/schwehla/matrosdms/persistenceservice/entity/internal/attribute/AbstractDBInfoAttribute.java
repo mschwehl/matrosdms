@@ -17,6 +17,7 @@ import javax.persistence.Table;
 
 import net.schwehla.matrosdms.domain.core.attribute.AbstractInfoAttribute;
 import net.schwehla.matrosdms.domain.core.attribute.AttributeType;
+import net.schwehla.matrosdms.persistenceservice.entity.internal.AbstractDBInfoBaseEntity;
 import net.schwehla.matrosdms.persistenceservice.entity.internal.AbstractDBInfoBaseEntityWithOrdinal;
 import net.schwehla.matrosdms.persistenceservice.entity.internal.DBItem;
 
@@ -32,7 +33,7 @@ import net.schwehla.matrosdms.persistenceservice.entity.internal.DBItem;
 
 @NamedQuery(name="AbstractDBInfoAttribute.findByPK", query="SELECT c FROM AbstractDBInfoAttribute c where c.id = :id") 
 
-public abstract class AbstractDBInfoAttribute  extends AbstractDBInfoBaseEntityWithOrdinal {
+public abstract class AbstractDBInfoAttribute  extends AbstractDBInfoBaseEntity  {
 	
 	
 	@Id

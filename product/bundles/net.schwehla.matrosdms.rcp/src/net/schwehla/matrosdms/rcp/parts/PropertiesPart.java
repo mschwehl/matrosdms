@@ -63,7 +63,7 @@ public class PropertiesPart {
 		if (elementParameter != null) {
 			this.baseelement = elementParameter;
 		} else {
-			this.baseelement = new InfoBaseElement();
+			this.baseelement = new InfoBaseElement(Identifier.createNEW(), "base");
 		}
 		
 		

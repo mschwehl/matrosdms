@@ -1,9 +1,12 @@
 package net.schwehla.matrosdms.rcp.parts;
 
 import java.io.File;
+import java.io.IOException;
 import java.net.URL;
+import java.nio.file.FileSystems;
 import java.nio.file.Files;
 import java.nio.file.Path;
+import java.nio.file.WatchService;
 import java.text.DateFormat;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -529,6 +532,8 @@ public class InboxPart {
 		
 		rootFiles.clear();
 	
+
+		
 		String inbox =  preferences.get(MyGlobalConstants.Preferences.INBOX_PATH, "" ); //$NON-NLS-1$
 		String[] inboxArray = inbox.split(MyGlobalConstants.Preferences.DELIMITER);
 		
@@ -664,5 +669,10 @@ public class InboxPart {
 	@Focus
 	public void setFocus() {
 	//	viewer.getControl().setFocus();
+	}
+	
+	@PostConstruct
+	public void addHooks() {
+
 	}
 }
