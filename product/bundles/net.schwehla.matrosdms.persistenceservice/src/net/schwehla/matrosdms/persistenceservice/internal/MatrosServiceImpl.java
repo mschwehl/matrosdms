@@ -134,21 +134,21 @@ public class MatrosServiceImpl implements IMatrosServiceService {
 		DBKategorie wer = new DBKategorie();
 		wer.setUuid(MyGlobalConstants.ROOT_WER.getUuid());
 		wer.setName("Wer");
-		wer.setOridinal(0);
+		wer.setOrdinal(0);
 	
 		DBKategorie was = new DBKategorie();
 		was.setUuid(MyGlobalConstants.ROOT_WAS.getUuid());
 		was.setName("Was");
-		was.setOridinal(0);
+		was.setOrdinal(0);
 		
 		DBKategorie wo = new DBKategorie();
 		wo.setUuid(MyGlobalConstants.ROOT_WO.getUuid());
 		wo.setName("Wo");
-		wo.setOridinal(0);
+		wo.setOrdinal(0);
 		DBKategorie art = new DBKategorie();
 		art.setUuid(MyGlobalConstants.ROOT_ART.getUuid());
 		art.setName("Art");
-		art.setOridinal(0);
+		art.setOrdinal(0);
 		
 		em.persist(wer);
 		em.persist(was);
@@ -382,7 +382,7 @@ public class MatrosServiceImpl implements IMatrosServiceService {
 			             
 			 // extended Attributes
 			 beOrginalstore.setShortname(dbOrginalstore.getShortname());
-			 beOrginalstore.setOridinal(dbOrginalstore.getOridinal());
+			 beOrginalstore.setOridinal(dbOrginalstore.getOrdinal());
 			 
 			rv.add(beOrginalstore);
 		 }
@@ -468,7 +468,7 @@ public class MatrosServiceImpl implements IMatrosServiceService {
 		
 		// advanced attributes
 		dbStore.setShortname(store.getShortname());
-		dbStore.setOridinal(store.getOridinal());
+		dbStore.setOrdinal(store.getOridinal());
 		
 		em.persist(dbStore);
 		
@@ -1056,7 +1056,7 @@ public class MatrosServiceImpl implements IMatrosServiceService {
 		for (DBAttributeType dbType: em.createNamedQuery("DBAttributeType.findAll",DBAttributeType.class).getResultList() ) {
 			
 			AttributeType element = createAttributeTypeFromDatabase(dbType);
-			element.setOridinal(dbType.getOridinal());
+			element.setOridinal(dbType.getOrdinal());
 			result.add(element);
 		}
 		
@@ -1243,7 +1243,7 @@ public class MatrosServiceImpl implements IMatrosServiceService {
 		
 		mapBasicPropertiesFromDatabaseToModel(element, rootEntity);
 		element.setObject(rootEntity.isObject());
-		element.setOridinal(rootEntity.getOridinal());
+		element.setOridinal(rootEntity.getOrdinal());
 	
 		return element;
 		
