@@ -188,7 +188,7 @@ public class SplashShell {
 	 * @wbp.parser.entryPoint
 	 */
 	public void createContents() {
-		shell = new Shell(SWT.TOOL | SWT.NO_TRIM  );
+		shell = new Shell(SWT.TOOL | SWT.NO_TRIM | SWT.ON_TOP  );
 		shell.setSize(450, 300);
 		shell.setText("SWT Application");
 		shell.setLayout(new GridLayout(1, false));

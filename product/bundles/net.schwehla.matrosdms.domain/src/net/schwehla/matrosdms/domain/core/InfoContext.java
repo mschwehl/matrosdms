@@ -34,6 +34,14 @@ public class InfoContext extends InfoBaseElement {
 	
 	private Map <Identifier,InfoKategoryList> dictionary;
 	
+
+	// Flag showing that tagging is incomplete
+	private int stage;
+	
+	
+	// Filtered or not
+	transient boolean visible = true;
+	
 	private transient InfoItemListProxy  storableInfoItemContainerListProxy;
 	
 	private InfoContext() {
@@ -103,13 +111,17 @@ public class InfoContext extends InfoBaseElement {
 		this.storableInfoItemContainerListProxy = storableInfoItemContainerListProxy;
 	}
 
-	public void setName(String name) {
-		super.name = name;
-		
-	}
 
 	
-	transient boolean visible = true;
+	public int getStage() {
+		return stage;
+	}
+
+	public void setStage(int stage) {
+		this.stage = stage;
+	}
+	
+
 
 	public boolean isVisible() {
 		return visible;

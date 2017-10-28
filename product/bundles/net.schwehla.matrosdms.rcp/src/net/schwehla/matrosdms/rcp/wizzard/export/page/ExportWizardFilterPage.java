@@ -40,7 +40,7 @@ public class ExportWizardFilterPage extends WizardPage {
 	private Button btnAllElements;
 	private Button btnRadioButtonContextlist;
 	private Button btnSelectedContextelement;
-	
+	private Button btnFullBackup;
 	
 	/**
 	 * Create the wizard.
@@ -91,14 +91,20 @@ public class ExportWizardFilterPage extends WizardPage {
 		grpFilter.setText(messages.ExportWizardFilterPage_filter);
 		
 		btnAllElements = new Button(grpFilter, SWT.RADIO);
+		btnAllElements.setSelection(true);
 		btnAllElements.setText(messages.ExportWizardFilterPage_groupelement_all_elements_in_database);
 		
 		btnRadioButtonContextlist = new Button(grpFilter, SWT.RADIO);
+		btnRadioButtonContextlist.setEnabled(false);
 		btnRadioButtonContextlist.setText(messages.ExportWizardFilterPage_groupelement_all_elements_in_contextlist);
 		
 		btnSelectedContextelement = new Button(grpFilter, SWT.RADIO);
+		btnSelectedContextelement.setEnabled(false);
 		btnSelectedContextelement.setText(messages.ExportWizardFilterPage_groupelement_selected_context);
 		 
+		
+		btnFullBackup = new Button(grpFilter, SWT.RADIO);
+		btnFullBackup.setText(messages.ExportWizardFilterPage_groupelement_fullBackup);
 	
 	}
 	
@@ -111,6 +117,9 @@ public class ExportWizardFilterPage extends WizardPage {
 		      return ExportWizzard.CONTEXTLIST;
 	    if (btnSelectedContextelement.getSelection())
 		      return ExportWizzard.SELECTION;
+	    if (btnFullBackup.getSelection())
+		      return ExportWizzard.FULL_BACKUP;
+	    
 	    return "";
 	  }
 

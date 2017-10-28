@@ -281,8 +281,8 @@ public class MatrosServiceImpl implements IMatrosServiceService {
 		InfoContext c = new InfoContext(Identifier.create(element.getPK(), element.getUuid()), element.getName());
 		
 		mapBasicPropertiesFromDatabaseToModel(c, element);
-		
 		c.init();
+		c.setStage(element.getStage());
 		
 		for (DBKategorie dbKat : element.getKategorieList()) {
 			
@@ -502,6 +502,7 @@ public class MatrosServiceImpl implements IMatrosServiceService {
 		DBContext dbContext = new DBContext();
 		
 		mapBasicPropertiesFromModelToDatabase(dbContext, beInfoContext);
+		dbContext.setStage(beInfoContext.getStage());
 
 
 		for (Identifier rootUUID : beInfoContext.getDictionary().keySet()) {

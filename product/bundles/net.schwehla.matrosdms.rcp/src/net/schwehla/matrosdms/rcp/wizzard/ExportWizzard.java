@@ -2,13 +2,10 @@ package net.schwehla.matrosdms.rcp.wizzard;
 
 import java.io.File;
 import java.io.FileInputStream;
-import java.io.FileOutputStream;
-import java.nio.ByteBuffer;
-import java.nio.channels.FileChannel;
-import java.nio.channels.ReadableByteChannel;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.nio.file.StandardCopyOption;
 import java.util.List;
 
 import javax.inject.Inject;
@@ -27,6 +24,7 @@ import org.eclipse.e4.core.di.annotations.Creatable;
 import org.eclipse.e4.core.di.annotations.Optional;
 import org.eclipse.e4.core.services.log.Logger;
 import org.eclipse.e4.core.services.nls.Translation;
+import org.eclipse.e4.core.services.statusreporter.StatusReporter;
 import org.eclipse.e4.ui.di.UISynchronize;
 import org.eclipse.e4.ui.services.IServiceConstants;
 import org.eclipse.jface.action.Action;
@@ -48,21 +46,19 @@ import net.schwehla.matrosdms.rcp.wizzard.export.page.ExportWizardFilterPage;
 import net.schwehla.matrosdms.rcp.wizzard.export.page.ExportWizardPageSummary;
 import net.schwehla.matrosdms.rcp.wizzard.model.ExportWizzardData;
 
+// https://wiki.eclipse.org/FAQ_What_is_the_purpose_of_job_families%3F
+
 @Creatable
 public class ExportWizzard extends Wizard {
 
 	public static final String ALL_DATABASE = "ALL_DATABASE";
-
-
-	public static final String CONTEXTLIST = "CONTEXTLIST";
-
-
-	public static final String SELECTION = "SELECTION";
-
+	public static final String CONTEXTLIST 	= "CONTEXTLIST";
+	public static final String SELECTION 	= "SELECTION";
+	public static final String FULL_BACKUP 	= "FULL_BACKUP";
+	
+	
 	@Inject
 	@Optional INotificationService notificationService;
-	
-
 	
 	// get UISynchronize injected as field
 	@Inject UISynchronize sync;
@@ -71,7 +67,7 @@ public class ExportWizzard extends Wizard {
 	@Inject
 	IMatrosServiceService service;
 
-
+	@Inject  StatusReporter statusReporter;
 	
 	
 	@Named(IServiceConstants.ACTIVE_SHELL) Shell activeShell;
@@ -149,7 +145,7 @@ public class ExportWizzard extends Wizard {
 				
 		Job job = new Job("export") {
 
-			// https://wiki.eclipse.org/FAQ_What_is_the_purpose_of_job_families%3F
+	
 
 			boolean allOk = true;
 			
@@ -159,168 +155,109 @@ public class ExportWizzard extends Wizard {
 			protected IStatus run(IProgressMonitor monitor) {
 
 				
-		//		setProperty(IProgressConstants.KEEPONE_PROPERTY, Boolean.TRUE);
+				setProperty(IProgressConstants.KEEPONE_PROPERTY, Boolean.TRUE);
 				setProperty(IProgressConstants.NO_IMMEDIATE_ERROR_PROMPT_PROPERTY, true);
 				
 				
-				Action a = new Action("ExportRun" , SWT.UNDERLINE_LINK) {
+				Action jobAction = new Action("ExportRun" , SWT.UNDERLINE_LINK) {
 					
 					@Override
 					public void run() {
 						// TODO Auto-generated method stub
+						// maybe open folder
 						super.run();
 					}
 				};
 				
-				a.setDescription("Jobresult");
-				setProperty(IProgressConstants.ACTION_PROPERTY, a);
+				jobAction.setDescription("Jobresult");
+				setProperty(IProgressConstants.ACTION_PROPERTY, jobAction);
 			
-				// If you want to update the UI
-
-				sync.asyncExec(new Runnable() {
-
-					@Override
-
-					public void run() {
-
+				List<InfoContext> contextList = null;
+				error = new StringBuffer();
 				
-
-							// https://github.com/alblue/com.packtpub.e4/blob/master/com.packtpub.e4.clock.ui/src/com/packtpub/e4/clock/ui/handlers/HelloHandler.java
-						     SubMonitor subMonitor = SubMonitor.convert(monitor,7);
-						     
-						    
-					                 try {
-					                	 
-											
-											List<InfoContext> contextList = service.loadInfoContextList(true);
-
-											for (InfoContext context : contextList) {
-
-												InfoItemList itemlist = service.loadInfoItemList(context, true);
-
-												for (InfoItem element : itemlist) {
-
-													String pattern = data.getPattern();
-
-													// Create or retrieve an engine
-													JexlEngine jexl = new JexlBuilder().create();
-
-													// Create an expression
-													String jexlExp = pattern;
-
-													// Create a context and add data
-													JexlContext jc = new MapContext();
-													jc.set("context", context); //$NON-NLS-1$
-													jc.set("item", element); //$NON-NLS-1$
-
-
-													Object evaluatedPath = jexl.createScript(jexlExp).execute(jc);
-
-													// Now evaluate the expression, getting the result
-													// Object o = e.evaluate(jc);
-
-													Path p = Paths.get(data.getPath() + File.separator + evaluatedPath);
-
-													// Creates Folders if not exists
-													Files.createDirectories(
-															Paths.get(new File(data.getPath() + File.separator + evaluatedPath).getParent()));
-
-													// same name exists in map -- usually shall not
-													// happen
-													int i = 1;
-													while (Files.exists(p)) {
-														p = Paths.get(p.getParent() + File.separator + ((i++) + "_") + p.getFileName());
-													}
-
-													
-													try (
-														FileInputStream fos = service.getStreamedContent(element.getIdentifier());
-														ReadableByteChannel in = fos.getChannel();
-														FileChannel out = new FileOutputStream(p.toFile()).getChannel()) {
-														ByteBuffer buffer = ByteBuffer.allocate(1024);
-
-														while (in.read(buffer) >= 0 || buffer.position() > 0) {
-															buffer.flip();
-															out.write(buffer);
-															buffer.compact();
-														}
-
-//														Status status = new Status(IStatus.INFO, "Exporter",
-//																messages.exportworker_file_export_success + " " //$NON-NLS-1$
-//																		+ element.getMetadata().getFilename());
-//
-//														statusReporter.report(status, StatusReporter.LOG);
-
-													} catch (Exception ex) {
-														
-														error.append("Error: " + ex.getMessage() + "\n");
-														
-														allOk = false;
-//														Status status = new Status(IStatus.INFO, "Exporter",
-//																messages.exportworker_file_export_itemerror + " " //$NON-NLS-1$
-//																		+ element.getMetadata().getFilename());
-//														statusReporter.report(status, StatusReporter.LOG);
-			
-													}
-												}
-											}
-										
-											
-										
-					         				
-					         			} catch (MatrosServiceException e2) {
-					         				
-					         				error.append("Error: " + e2.getMessage() + "\n");
-					         				
-					         				logger.error(e2);
-					         			 } catch (Exception e) {
-					                		Status status = new Status(IStatus.ERROR, "Verify", "Programming bug?", e); //$NON-NLS-2$
-						                 } finally {
-						      					monitor.done();
-						                 }
-
-					            
-					                	 sync.asyncExec(new Runnable() {
-											
-											@Override
-											public void run() {
-												
-												
-							
-									
-											     if (allOk) {
-
-														NotificationNote note = new NotificationNote();
-														note.setHeading("Export finished ok");
-														notificationService.openPopup(note);
-														
-											     } else {
-										
-														NotificationNote note = new NotificationNote();
-														note.setHeading("Export finished with error");
-														notificationService.openPopup(note);
-											    	 
-											     }
-											}
-										});
-					
-
-					}
-
-				});
-
-				// XXX 
-				if (!allOk) {
-					System.out.println(error.toString());
+				try {
+					 contextList = service.loadInfoContextList(true);
+				} catch (MatrosServiceException e1) {
+					logger.error(e1, "Cannot load Contextlist");
+					return new Status(IStatus.ERROR , "MATROS", "Export job with Error: " + e1);
 				}
-		
-			
-				return allOk ?  new Status(IStatus.OK , "MATROS", "Export job OK") //$NON-NLS-1$ 
-						:  new Status(IStatus.ERROR , "MATROS", "Export job with Error");//$NON-NLS-1$
+     			
+				//
+				
+			     SubMonitor subMonitor = SubMonitor.convert(monitor,contextList.size());
+		        
+		                 try {
+		                	 
+		                   for (int i=0; i < contextList.size(); i++) {
+		                	   
+		                	   InfoContext context = contextList.get(i);
+		   					   InfoItemList itemlist = service.loadInfoItemList(context, true);
+		   					   
+		   								
+							   for (InfoItem element : itemlist) {
+								   
+								   try {
+									   Path parent = exportElement(data.getPath(), data.getPattern(), context, element);
+									   
+								   } catch (Exception e) {
+									   error.append("Error: " + e + "\n");
+									   logger.error(e , "Cannot export " + element.getName());
+									   allOk = false;
+								   }
+								   
+		   				
+							   }
+								
+		   					   subMonitor.worked(i);
+		                	   
+		                   }
+		            	 
+		                 } catch (Exception e) {
+		                	 
+		 					logger.error(e, "Cannot export");
+							return new Status(IStatus.ERROR , "MATROS", "Export job with Error: " + e);
+		                    
+		                 } finally {
+		      					monitor.done();
+		                 }
+		                 
+		                 if (error.length() > 0) {
+		             		Status status = new Status(IStatus.ERROR, "SetupClass", error.toString()); //$NON-NLS-2$
+		                    statusReporter.report(status, StatusReporter.LOG );
+		                 }
+
+	                	 sync.asyncExec(new Runnable() {
+							
+							@Override
+							public void run() {
+								
+					
+							     if (allOk) {
+
+										NotificationNote note = new NotificationNote();
+										note.setHeading("Export finished ok");
+										notificationService.openPopup(note);
+										
+							     } else {
+						
+										NotificationNote note = new NotificationNote();
+										note.setHeading("Export finished with error");
+										notificationService.openPopup(note);
+							    	 
+							     }
+							}
+						});
+	
+	                	 
+		                 
+	     				return allOk ?  new Status(IStatus.OK , "MATROS", "Export job OK") //$NON-NLS-1$ 
+	    						:  new Status(IStatus.ERROR , "MATROS", "Export job with Error");//$NON-NLS-1$
+
 				
 		
 
 			}
+
 
 		};
 		
@@ -332,7 +269,51 @@ public class ExportWizzard extends Wizard {
 	}
 
 	
-	
+
+
+	private Path exportElement(String targetpath, String pattern, InfoContext context , InfoItem element) throws Exception {
+
+
+		// Create or retrieve an engine
+		JexlEngine jexl = new JexlBuilder().create();
+
+		// Create an expression
+		String jexlExp = pattern;
+
+		// Create a context and add data
+		JexlContext jc = new MapContext();
+		jc.set("context", context); //$NON-NLS-1$
+		jc.set("item", element); //$NON-NLS-1$
+
+
+		Object evaluatedPath = jexl.createScript(jexlExp).execute(jc);
+
+		// Now evaluate the expression, getting the result
+		// Object o = e.evaluate(jc);
+
+		Path p = Paths.get(targetpath + File.separator + evaluatedPath);
+
+		// Creates Folders if not exists
+		Files.createDirectories(
+				Paths.get(new File(targetpath + File.separator + evaluatedPath).getParent()));
+
+		// same name exists in map -- usually shall not  happen
+		int i = 1;
+		while (Files.exists(p)) {
+			p = Paths.get(p.getParent() + File.separator + ((i++) + "_") + p.getFileName());
+		}
+
+		
+		try (
+			FileInputStream fos = service.getStreamedContent(element.getIdentifier());) {
+			
+				Files.copy(fos, p , StandardCopyOption.REPLACE_EXISTING);
+
+				return p.getParent();
+		} 
+		
+	}
+
 		
 
 }

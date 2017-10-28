@@ -5,26 +5,19 @@ import org.eclipse.e4.core.services.nls.Message;
 @Message
 public class MatrosMessage {
 
+	public String abouthandler_detail;
+
+	public String abouthandler_heading;
+	
 	public String common_edit;
 	// inbox
-	
-	public String InboxPart_icon;
-	public String InboxPart_justFourElements;
-	public String InboxPart_lastModified;
-	public String InboxPart_name;
-	public String InboxPart_noInboxSpecified;
-	public String InboxPart_size;
-	public String InboxPart_toMuchElements;
-	
-	public String abouthandler_detail;
-	public String abouthandler_heading;
-
 	public String contexlistpart_col_map;
 	public String contexlistpart_searchfield_helptext;
 	public String contextlistpart_tab_newpart;
 	public String contextlistpart_table_col_context;
 	public String contextlistpart_table_col_itemcount;
 	public String contextlistpart_table_col_name;
+	
 	public String contextlistpart_table_col_store;
 	public String contextlistpart_table_col_type;
 
@@ -33,28 +26,38 @@ public class MatrosMessage {
 	public String createNewKategoryDialog_label_object;
 	public String createNewKategoryDialog_label_parent;
 	public String createNewKategoryDialog_title;
-	
 	public String datedialog_nolimit;
 	public String datedialog_timerange;
 	public String datedialog_timerange_from;
+
 	public String datedialog_timerange_to;
 	public String datedialog_year;
 	
 	public String ExportWizardFilterPage_filter;
 	public String ExportWizardFilterPage_groupelement_all_elements_in_contextlist;
 	public String ExportWizardFilterPage_groupelement_all_elements_in_database;
+	public String ExportWizardFilterPage_groupelement_fullBackup;
 	public String ExportWizardFilterPage_groupelement_selected_context;
-
+	
 	public String exportworker;
 	public String exportworker_file_export_itemerror;
 	public String exportworker_file_export_success;
-
+	
 	public String global_applicationname;
 	public String global_checksum;
 	public String global_col_name;
 	public String global_col_value;
+
 	public String global_job_calculate_checksum;
 	public String global_job_startjob;
+	public String InboxPart_icon;
+
+	public String InboxPart_justFourElements;
+	public String InboxPart_lastModified;
+	public String InboxPart_name;
+	public String InboxPart_noInboxSpecified;
+	public String InboxPart_size;
+	public String InboxPart_toMuchElements;
 
 	public String itemlistPart_colDate;
 	public String itemlistPart_colIcon;
