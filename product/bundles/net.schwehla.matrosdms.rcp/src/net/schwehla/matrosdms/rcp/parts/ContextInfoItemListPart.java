@@ -72,7 +72,7 @@ import net.schwehla.matrosdms.domain.core.InfoItem;
 import net.schwehla.matrosdms.domain.core.InfoItemList;
 import net.schwehla.matrosdms.domain.core.InfoOrginalstore;
 import net.schwehla.matrosdms.domain.core.tagcloud.InfoKategory;
-import net.schwehla.matrosdms.domain.util.Identifier;
+import net.schwehla.matrosdms.domain.core.Identifier;
 import net.schwehla.matrosdms.i18n.MatrosMessage;
 import net.schwehla.matrosdms.persistenceservice.IMatrosServiceService;
 import net.schwehla.matrosdms.rcp.MatrosServiceException;

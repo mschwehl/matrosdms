@@ -17,7 +17,7 @@ import org.eclipse.e4.ui.di.UIEventTopic;
 import net.schwehla.matrosdms.domain.core.InfoContext;
 import net.schwehla.matrosdms.domain.core.tagcloud.InfoKategory;
 import net.schwehla.matrosdms.domain.core.tagcloud.InfoKategoryList;
-import net.schwehla.matrosdms.domain.util.Identifier;
+import net.schwehla.matrosdms.domain.core.Identifier;
 import net.schwehla.matrosdms.persistenceservice.IMatrosServiceService;
 import net.schwehla.matrosdms.rcp.MatrosServiceException;
 import net.schwehla.matrosdms.rcp.MyEventConstants;

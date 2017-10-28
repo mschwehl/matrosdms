@@ -27,7 +27,7 @@ import org.eclipse.swt.widgets.Shell;
 import org.osgi.service.prefs.BackingStoreException;
 
 import net.schwehla.matrosdms.domain.admin.MatrosConnectionCredential;
-import net.schwehla.matrosdms.domain.admin.MatrosUser;
+import net.schwehla.matrosdms.domain.core.idm.MatrosUser;
 import net.schwehla.matrosdms.domain.core.InfoOrginalstore;
 import net.schwehla.matrosdms.i18n.MatrosMessage;
 import net.schwehla.matrosdms.persistenceservice.IMatrosServiceService;

@@ -28,7 +28,7 @@ import org.osgi.framework.FrameworkUtil;
 import net.schwehla.matrosdms.domain.admin.CloudSettings;
 import net.schwehla.matrosdms.domain.admin.E_CLOUDCRYPTION;
 import net.schwehla.matrosdms.domain.admin.MatrosConnectionCredential;
-import net.schwehla.matrosdms.domain.admin.MatrosUser;
+import net.schwehla.matrosdms.domain.core.idm.MatrosUser;
 import net.schwehla.matrosdms.domain.api.E_ATTRIBUTETYPE;
 import net.schwehla.matrosdms.domain.api.IIdentifiable;
 import net.schwehla.matrosdms.domain.api.ITagInterface;
@@ -49,7 +49,7 @@ import net.schwehla.matrosdms.domain.core.tagcloud.InfoKategory;
 import net.schwehla.matrosdms.domain.metadata.MatrosMetadata;
 import net.schwehla.matrosdms.domain.search.SearchItemInput;
 import net.schwehla.matrosdms.domain.search.SearchedInfoItemElement;
-import net.schwehla.matrosdms.domain.util.Identifier;
+import net.schwehla.matrosdms.domain.core.Identifier;
 import net.schwehla.matrosdms.domain.util.VerifyItem;
 import net.schwehla.matrosdms.domain.util.VerifyMessage;
 import net.schwehla.matrosdms.persistenceservice.IMatrosServiceService;
@@ -382,7 +382,7 @@ public class MatrosServiceImpl implements IMatrosServiceService {
 			             
 			 // extended Attributes
 			 beOrginalstore.setShortname(dbOrginalstore.getShortname());
-			 beOrginalstore.setOridinal(dbOrginalstore.getOrdinal());
+			 beOrginalstore.setOrdinal(dbOrginalstore.getOrdinal());
 			 
 			rv.add(beOrginalstore);
 		 }
@@ -468,7 +468,7 @@ public class MatrosServiceImpl implements IMatrosServiceService {
 		
 		// advanced attributes
 		dbStore.setShortname(store.getShortname());
-		dbStore.setOrdinal(store.getOridinal());
+		dbStore.setOrdinal(store.getOrdinal());
 		
 		em.persist(dbStore);
 		
@@ -1057,7 +1057,7 @@ public class MatrosServiceImpl implements IMatrosServiceService {
 		for (DBAttributeType dbType: em.createNamedQuery("DBAttributeType.findAll",DBAttributeType.class).getResultList() ) {
 			
 			AttributeType element = createAttributeTypeFromDatabase(dbType);
-			element.setOridinal(dbType.getOrdinal());
+			element.setOrdinal(dbType.getOrdinal());
 			result.add(element);
 		}
 		
@@ -1244,7 +1244,7 @@ public class MatrosServiceImpl implements IMatrosServiceService {
 		
 		mapBasicPropertiesFromDatabaseToModel(element, rootEntity);
 		element.setObject(rootEntity.isObject());
-		element.setOridinal(rootEntity.getOrdinal());
+		element.setOrdinal(rootEntity.getOrdinal());
 	
 		return element;
 		

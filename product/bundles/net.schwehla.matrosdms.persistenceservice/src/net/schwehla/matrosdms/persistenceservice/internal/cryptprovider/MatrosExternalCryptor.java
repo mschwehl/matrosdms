@@ -6,7 +6,7 @@ import java.io.FileOutputStream;
 import java.nio.file.Path;
 import java.util.Objects;
 
-import net.schwehla.matrosdms.domain.util.Identifier;
+import net.schwehla.matrosdms.domain.core.Identifier;
 import net.schwehla.matrosdms.persistenceservice.internal.StoreResult;
 import net.schwehla.matrosdms.persistenceservice.internal.cryptprovider.externalcommand.ExternalCommand;
 import net.schwehla.matrosdms.persistenceservice.internal.cryptprovider.externalcommand.ExternalCommandResult;

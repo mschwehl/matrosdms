@@ -3,9 +3,16 @@
 import java.util.HashMap;
 import java.util.Map;
 
+import javax.xml.bind.annotation.XmlAccessType;
+import javax.xml.bind.annotation.XmlAccessorType;
+import javax.xml.bind.annotation.XmlTransient;
+import javax.xml.bind.annotation.adapters.XmlJavaTypeAdapter;
+
 import net.schwehla.matrosdms.domain.core.tagcloud.InfoKategoryList;
-import net.schwehla.matrosdms.domain.util.Identifier;
+import net.schwehla.matrosdms.adapter.LinkingInfoBaseElementAdapter;
+import net.schwehla.matrosdms.domain.core.Identifier;
 import net.schwehla.matrosdms.rcp.MyGlobalConstants;
+
 
 
 
@@ -18,6 +25,7 @@ import net.schwehla.matrosdms.rcp.MyGlobalConstants;
  * @author Martin
  *
  */
+@XmlAccessorType(XmlAccessType.FIELD) 
 public class InfoContext extends InfoBaseElement {
 	
 
@@ -32,16 +40,10 @@ public class InfoContext extends InfoBaseElement {
 	 */
 	private static final long serialVersionUID = 1L;
 	
+	@XmlJavaTypeAdapter(LinkingInfoBaseElementAdapter.class) 
 	private Map <Identifier,InfoKategoryList> dictionary;
 	
 
-	// Flag showing that tagging is incomplete
-	private int stage;
-	
-	
-	// Filtered or not
-	transient boolean visible = true;
-	
 	private transient InfoItemListProxy  storableInfoItemContainerListProxy;
 	
 	private InfoContext() {
@@ -101,7 +103,7 @@ public class InfoContext extends InfoBaseElement {
 		return dictionary;
 	}
 
-
+	@XmlTransient
 	public InfoItemListProxy getStorableInfoItemContainerListProxy() {
 		return storableInfoItemContainerListProxy;
 	}
@@ -111,17 +113,15 @@ public class InfoContext extends InfoBaseElement {
 		this.storableInfoItemContainerListProxy = storableInfoItemContainerListProxy;
 	}
 
-
-	
-	public int getStage() {
-		return stage;
+	public void setName(String name) {
+		super.name = name;
+		
 	}
 
-	public void setStage(int stage) {
-		this.stage = stage;
-	}
-	
 
+	int stage;
+	
+	transient boolean visible = true;
 
 	public boolean isVisible() {
 		return visible;
@@ -130,6 +130,15 @@ public class InfoContext extends InfoBaseElement {
 	public void setVisible(boolean visible) {
 		this.visible = visible;
 	}
+	
+	public int getStage() {
+		return stage;
+	}
+
+	public void setStage(int stage) {
+		this.stage = stage;
+	}
+
 	
 	
 }

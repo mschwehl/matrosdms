@@ -43,7 +43,7 @@ import org.eclipse.swt.widgets.Menu;
 import org.eclipse.swt.widgets.TreeItem;
 
 import net.schwehla.matrosdms.domain.core.tagcloud.InfoKategory;
-import net.schwehla.matrosdms.domain.util.Identifier;
+import net.schwehla.matrosdms.domain.core.Identifier;
 import net.schwehla.matrosdms.domain.util.ObjectCloner;
 import net.schwehla.matrosdms.persistenceservice.IMatrosServiceService;
 import net.schwehla.matrosdms.rcp.MatrosServiceException;

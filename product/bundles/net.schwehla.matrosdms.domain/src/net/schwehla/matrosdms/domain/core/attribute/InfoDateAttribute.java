@@ -3,10 +3,16 @@ package net.schwehla.matrosdms.domain.core.attribute;
 import java.text.DateFormat;
 import java.util.Date;
 
-import net.schwehla.matrosdms.domain.util.Identifier;
+import javax.xml.bind.annotation.XmlAccessType;
+import javax.xml.bind.annotation.XmlAccessorType;
 
+import net.schwehla.matrosdms.domain.core.Identifier;
+
+@XmlAccessorType(XmlAccessType.FIELD)
 public class InfoDateAttribute extends AbstractInfoAttribute {
 
+	private static final long serialVersionUID = 1L;
+	
 	Date dateValue;
 	
 	public InfoDateAttribute(Identifier uuid, String Name) {

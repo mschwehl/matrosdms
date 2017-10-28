@@ -109,7 +109,7 @@ import net.schwehla.matrosdms.domain.core.attribute.InfoNumberAttribute;
 import net.schwehla.matrosdms.domain.core.attribute.InfoTextAttribute;
 import net.schwehla.matrosdms.domain.core.tagcloud.InfoKategory;
 import net.schwehla.matrosdms.domain.metadata.MatrosMetadata;
-import net.schwehla.matrosdms.domain.util.Identifier;
+import net.schwehla.matrosdms.domain.core.Identifier;
 import net.schwehla.matrosdms.i18n.MatrosMessage;
 import net.schwehla.matrosdms.lucene.ILuceneService;
 import net.schwehla.matrosdms.notification.INotificationService;

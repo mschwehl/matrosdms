@@ -30,7 +30,7 @@ import org.eclipse.swt.widgets.Text;
 import org.eclipse.swt.widgets.Tree;
 
 import net.schwehla.matrosdms.domain.core.tagcloud.InfoKategory;
-import net.schwehla.matrosdms.domain.util.Identifier;
+import net.schwehla.matrosdms.domain.core.Identifier;
 import net.schwehla.matrosdms.domain.util.ObjectCloner;
 import net.schwehla.matrosdms.rcp.MatrosServiceException;
 import net.schwehla.matrosdms.rcp.swt.contentprovider.TaggraphContentprovider;

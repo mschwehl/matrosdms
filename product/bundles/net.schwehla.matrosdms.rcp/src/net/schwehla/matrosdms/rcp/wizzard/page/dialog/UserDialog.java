@@ -1,12 +1,6 @@
 package net.schwehla.matrosdms.rcp.wizzard.page.dialog;
 
-import java.util.Locale;
-
-import javax.inject.Inject;
-import javax.inject.Named;
-
 import org.eclipse.e4.core.di.annotations.Creatable;
-import org.eclipse.e4.core.services.translation.TranslationService;
 import org.eclipse.jface.dialogs.IDialogConstants;
 import org.eclipse.jface.dialogs.IMessageProvider;
 import org.eclipse.jface.dialogs.TitleAreaDialog;
@@ -20,7 +14,7 @@ import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.swt.widgets.Text;
 
-import net.schwehla.matrosdms.domain.admin.MatrosUser;
+import net.schwehla.matrosdms.domain.core.idm.MatrosUser;
 import net.schwehla.matrosdms.domain.util.ObjectCloner;
 import net.schwehla.matrosdms.rcp.binding.MatrosBinder;
 

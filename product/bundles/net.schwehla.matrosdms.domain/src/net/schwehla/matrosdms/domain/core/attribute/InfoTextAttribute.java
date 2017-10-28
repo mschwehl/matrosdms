@@ -1,9 +1,14 @@
 package net.schwehla.matrosdms.domain.core.attribute;
 
-import net.schwehla.matrosdms.domain.util.Identifier;
+import javax.xml.bind.annotation.XmlAccessType;
+import javax.xml.bind.annotation.XmlAccessorType;
 
+import net.schwehla.matrosdms.domain.core.Identifier;
+
+@XmlAccessorType(XmlAccessType.PUBLIC_MEMBER)
 public class InfoTextAttribute extends AbstractInfoAttribute {
 
+	private static final long serialVersionUID = 1L;
 	
 	public String getStrValue() {
 		return strValue;

@@ -4,7 +4,7 @@ import javax.inject.Singleton;
 
 import org.eclipse.e4.core.di.annotations.Creatable;
 
-import net.schwehla.matrosdms.domain.util.Identifier;
+import net.schwehla.matrosdms.domain.core.Identifier;
 
 @Creatable
 @Singleton

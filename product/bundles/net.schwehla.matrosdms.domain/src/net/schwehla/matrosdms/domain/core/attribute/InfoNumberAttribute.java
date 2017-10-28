@@ -2,15 +2,21 @@ package net.schwehla.matrosdms.domain.core.attribute;
 
 import java.text.DecimalFormat;
 
-import net.schwehla.matrosdms.domain.util.Identifier;
+import javax.xml.bind.annotation.XmlAccessType;
+import javax.xml.bind.annotation.XmlAccessorType;
+import javax.xml.bind.annotation.XmlTransient;
 
+import net.schwehla.matrosdms.domain.core.Identifier;
+
+@XmlAccessorType(XmlAccessType.FIELD)
 public class InfoNumberAttribute extends AbstractInfoAttribute {
 
+	private static final long serialVersionUID = 1L;
+	
 	Double value;
 
+	@XmlTransient
 	DecimalFormat df2 = new DecimalFormat( "#,###,###,##0.00" );
-	
-	
 	
 	public InfoNumberAttribute(Identifier uuid, String Name) {
 		super(uuid, Name);

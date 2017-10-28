@@ -5,19 +5,30 @@ import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
 
+import javax.xml.bind.annotation.XmlAccessType;
+import javax.xml.bind.annotation.XmlAccessorType;
+import javax.xml.bind.annotation.XmlTransient;
+import javax.xml.bind.annotation.adapters.XmlJavaTypeAdapter;
+
+import net.schwehla.matrosdms.adapter.ParentArrayAdapter;
 import net.schwehla.matrosdms.domain.api.ITagInterface;
+import net.schwehla.matrosdms.domain.core.Identifier;
 import net.schwehla.matrosdms.domain.core.InfoBaseElementWithOrdinal;
-import net.schwehla.matrosdms.domain.util.Identifier;
 
 
-
+@XmlAccessorType(XmlAccessType.FIELD)
 public class InfoKategory extends InfoBaseElementWithOrdinal implements ITagInterface {
 	
+	// kann ich entsorgen ? 
 	public void setName(String name) {
 		this.name = name;
 	}
 
+	
+	@XmlJavaTypeAdapter(ParentArrayAdapter.class) 
 	private List<InfoKategory> parents;
+	
+	@XmlTransient
 	private List<InfoKategory> children;
 
 	private boolean object;
@@ -171,6 +182,7 @@ public class InfoKategory extends InfoBaseElementWithOrdinal implements ITagInte
 			
 	}
 	
+	// was ist das ?
 	boolean dropfieldKategory;
 
 	public boolean isDropfieldKategory() {

@@ -34,7 +34,7 @@ import org.eclipse.swt.widgets.Table;
 
 import net.schwehla.matrosdms.domain.core.tagcloud.InfoKategory;
 import net.schwehla.matrosdms.domain.core.tagcloud.InfoKategoryList;
-import net.schwehla.matrosdms.domain.util.Identifier;
+import net.schwehla.matrosdms.domain.core.Identifier;
 import net.schwehla.matrosdms.rcp.MyEventConstants;
 import net.schwehla.matrosdms.rcp.dnd.DomainClassTransfer;
 import net.schwehla.matrosdms.rcp.dnd.MyDropListener;

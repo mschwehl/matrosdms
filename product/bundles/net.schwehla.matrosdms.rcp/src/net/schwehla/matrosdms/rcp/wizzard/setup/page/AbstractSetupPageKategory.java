@@ -48,7 +48,7 @@ import org.eclipse.swt.widgets.Tree;
 import org.eclipse.swt.widgets.TreeItem;
 
 import net.schwehla.matrosdms.domain.core.tagcloud.InfoKategory;
-import net.schwehla.matrosdms.domain.util.Identifier;
+import net.schwehla.matrosdms.domain.core.Identifier;
 import net.schwehla.matrosdms.rcp.internal.KategoryContentProvider;
 import net.schwehla.matrosdms.rcp.internal.KategoryLabelProvider;
 
@@ -257,7 +257,7 @@ public abstract class AbstractSetupPageKategory extends WizardPage {
 
 				if (item != null) {
 
-					// Löschen über den Parent und in Child/Parent-Collection
+					// Lï¿½schen ï¿½ber den Parent und in Child/Parent-Collection
 					// entfernen
 
 				}
@@ -335,7 +335,7 @@ public abstract class AbstractSetupPageKategory extends WizardPage {
 		// ISWTObservableValue personFirstNameTextObservable =
 		// WidgetProperties.text(SWT.Modify).observe(swtIcon);
 
-		// Binding über die Observable
+		// Binding ï¿½ber die Observable
 
 
 

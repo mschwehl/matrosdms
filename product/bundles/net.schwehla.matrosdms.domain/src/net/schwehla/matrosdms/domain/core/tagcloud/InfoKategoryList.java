@@ -9,12 +9,14 @@ import java.util.ListIterator;
 import java.util.Set;
 
 import net.schwehla.matrosdms.domain.core.InfoBaseElement;
-import net.schwehla.matrosdms.domain.util.Identifier;
+import net.schwehla.matrosdms.domain.core.Identifier;
 
 
 
 public class InfoKategoryList extends InfoBaseElement implements List <InfoKategory> {
 	
+	private static final long serialVersionUID = 1L;
+
 	
 	private InfoKategoryList() {
 		
@@ -24,12 +26,6 @@ public class InfoKategoryList extends InfoBaseElement implements List <InfoKateg
 	public InfoKategoryList(Identifier key, String name) {
 		super(key, name);
 	}
-	
-	/**
-	 * 
-	 */
-	private static final long serialVersionUID = 1L;
-
 	
 	
 	List <InfoKategory> elements = new ArrayList <InfoKategory> ();

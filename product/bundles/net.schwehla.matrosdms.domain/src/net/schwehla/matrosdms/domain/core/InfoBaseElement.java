@@ -4,9 +4,13 @@ import java.io.Serializable;
 import java.util.Date;
 import java.util.Objects;
 
-import net.schwehla.matrosdms.domain.api.IIdentifiable;
-import net.schwehla.matrosdms.domain.util.Identifier;
+import javax.xml.bind.annotation.XmlAccessType;
+import javax.xml.bind.annotation.XmlAccessorType;
 
+import net.schwehla.matrosdms.domain.api.IIdentifiable;
+import net.schwehla.matrosdms.domain.core.Identifier;
+
+@XmlAccessorType(XmlAccessType.FIELD)
 public class InfoBaseElement implements IIdentifiable, Serializable {
 
 	protected Identifier identifier;

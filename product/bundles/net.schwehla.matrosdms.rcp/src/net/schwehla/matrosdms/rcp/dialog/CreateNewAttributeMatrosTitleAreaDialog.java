@@ -47,7 +47,7 @@ import org.eclipse.wb.swt.SWTResourceManager;
 
 import net.schwehla.matrosdms.domain.api.E_ATTRIBUTETYPE;
 import net.schwehla.matrosdms.domain.core.attribute.AttributeType;
-import net.schwehla.matrosdms.domain.util.Identifier;
+import net.schwehla.matrosdms.domain.core.Identifier;
 import net.schwehla.matrosdms.rcp.MatrosServiceException;
 
 @Creatable
