@@ -325,8 +325,14 @@ public class ContextInfoItemListPart {
 
 						public void run() {
 
-								swtItemlistTableViewer.setInput(storableItemList);
-								swtItemlistTableViewer.refresh(true);
+							// Speedup
+							swtItemlistTableViewer.getControl().setRedraw(false);
+							// update
+							swtItemlistTableViewer.setInput(storableItemList);
+							swtItemlistTableViewer.refresh(true);
+							
+							swtItemlistTableViewer.getControl().setRedraw(true);
+							
 
 								// viewer.getTree().setFocus();
 

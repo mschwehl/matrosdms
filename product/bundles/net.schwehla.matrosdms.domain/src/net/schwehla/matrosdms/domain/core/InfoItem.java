@@ -4,6 +4,8 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
+import javax.xml.bind.annotation.XmlTransient;
+
 import net.schwehla.matrosdms.domain.api.ITagInterface;
 import net.schwehla.matrosdms.domain.core.attribute.AbstractInfoAttribute;
 import net.schwehla.matrosdms.domain.core.tagcloud.InfoKategoryList;

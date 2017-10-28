@@ -39,6 +39,9 @@ public class VW_SEARCH  {
 	@Column(unique=true,nullable=false,updatable=false)
 	private String CON_UUID;
 	
+	@Column(unique=false,nullable=false,updatable=false)
+	private int CON_STAGE;
+	
 	@Id
 	@GeneratedValue(strategy=GenerationType.AUTO )
 	@Column(unique=true,nullable=false, name="ITEM_ID")

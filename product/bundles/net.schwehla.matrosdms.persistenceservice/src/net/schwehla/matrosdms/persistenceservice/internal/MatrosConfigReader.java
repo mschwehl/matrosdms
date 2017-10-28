@@ -8,10 +8,7 @@ import java.net.URL;
 import java.util.Date;
 import java.util.Properties;
 
-import javax.inject.Singleton;
-
 import org.eclipse.core.runtime.Platform;
-import org.eclipse.e4.core.di.annotations.Creatable;
 import org.eclipse.osgi.service.datalocation.Location;
 
 import net.schwehla.matrosdms.rcp.MyGlobalConstants;

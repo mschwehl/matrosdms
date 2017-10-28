@@ -27,15 +27,21 @@ import javax.persistence.Table;
 
 public class VW_CONTEXT extends AbstractDBInfoBaseEntity {
 	
-	
-	@Column
-	int sum;
-	
+
+
 	@Id
 	@GeneratedValue(strategy=GenerationType.AUTO )
 	@Column(unique=true,nullable=false, name="CONTEXT_ID")
 	private Long id;
 	
+	
+	@Column
+	int sum;
+
+	@Column
+	int stage;
+	
+
 
 	// need to copy from dbcontext
 	
@@ -73,6 +79,14 @@ public class VW_CONTEXT extends AbstractDBInfoBaseEntity {
 
 	public Long getPK() {
 		return id;
+	}
+	
+	public int getStage() {
+		return stage;
+	}
+
+	public void setStage(int stage) {
+		this.stage = stage;
 	}
 
 
