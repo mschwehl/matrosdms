@@ -9,7 +9,7 @@ import java.util.List;
 import java.util.logging.Logger;
 import java.util.stream.Collectors;
 
-import net.schwehla.matrosdms.domain.util.Identifier;
+import net.schwehla.matrosdms.domain.core.Identifier;
 import net.schwehla.matrosdms.persistenceservice.internal.cryptprovider.IMatrosStoreCryptor;
 import net.schwehla.matrosdms.rcp.MatrosServiceException;
 

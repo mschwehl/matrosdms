@@ -2,7 +2,7 @@ package net.schwehla.matrosdms.domain.core;
 
 import java.util.Date;
 
-import net.schwehla.matrosdms.domain.util.Identifier;
+import net.schwehla.matrosdms.domain.core.Identifier;
 
 public class InfoEvent extends InfoBaseElement {
 	

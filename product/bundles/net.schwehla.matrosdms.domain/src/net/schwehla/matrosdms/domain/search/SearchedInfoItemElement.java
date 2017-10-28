@@ -2,7 +2,7 @@ package net.schwehla.matrosdms.domain.search;
 
 import net.schwehla.matrosdms.domain.core.InfoContext;
 import net.schwehla.matrosdms.domain.core.InfoItem;
-import net.schwehla.matrosdms.domain.util.Identifier;
+import net.schwehla.matrosdms.domain.core.Identifier;
 
 public class SearchedInfoItemElement extends InfoItem {
 	

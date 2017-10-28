@@ -3,12 +3,21 @@ package net.schwehla.matrosdms.domain.core.attribute;
 import java.text.DateFormat;
 import java.util.Date;
 
+import javax.xml.bind.annotation.XmlAccessType;
+import javax.xml.bind.annotation.XmlAccessorType;
+import javax.xml.bind.annotation.XmlSeeAlso;
+import javax.xml.bind.annotation.XmlTransient;
+
 import net.schwehla.matrosdms.domain.core.InfoBaseElement;
-import net.schwehla.matrosdms.domain.util.Identifier;
+import net.schwehla.matrosdms.domain.core.Identifier;
 import net.schwehla.matrosdms.rcp.FixCalendar;
 
+@XmlAccessorType(XmlAccessType.FIELD)
+@XmlSeeAlso(value = {InfoTextAttribute.class, InfoNumberAttribute.class, InfoDateAttribute.class, InfoBooleanAttribute.class})
 public abstract class AbstractInfoAttribute extends InfoBaseElement {
 	
+	private static final long serialVersionUID = 1L;
+
 	private AttributeType type;
 	
 	private FixCalendar fixcalendar = new FixCalendar() ;
@@ -45,6 +54,7 @@ public abstract class AbstractInfoAttribute extends InfoBaseElement {
 	}
 	public abstract void init();
 	
+	@XmlTransient
 	DateFormat df = DateFormat.getDateInstance(DateFormat.SHORT);
 
 	

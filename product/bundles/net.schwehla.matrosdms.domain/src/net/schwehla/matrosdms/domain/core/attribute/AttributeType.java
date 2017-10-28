@@ -1,10 +1,16 @@
 package net.schwehla.matrosdms.domain.core.attribute;
 
+import javax.xml.bind.annotation.XmlAccessType;
+import javax.xml.bind.annotation.XmlAccessorType;
+
 import net.schwehla.matrosdms.domain.api.E_ATTRIBUTETYPE;
 import net.schwehla.matrosdms.domain.core.InfoBaseElementWithOrdinal;
-import net.schwehla.matrosdms.domain.util.Identifier;
+import net.schwehla.matrosdms.domain.core.Identifier;
 
+@XmlAccessorType(XmlAccessType.FIELD)
 public class AttributeType extends InfoBaseElementWithOrdinal {
+	
+	private static final long serialVersionUID = 1L;
 	
 	String key;
 	E_ATTRIBUTETYPE type;

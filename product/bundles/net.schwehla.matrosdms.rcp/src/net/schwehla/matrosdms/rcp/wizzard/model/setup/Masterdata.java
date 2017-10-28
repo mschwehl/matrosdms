@@ -12,11 +12,11 @@ import org.eclipse.e4.core.di.annotations.Creatable;
 import net.schwehla.matrosdms.domain.admin.AppSettings;
 import net.schwehla.matrosdms.domain.admin.CloudSettings;
 import net.schwehla.matrosdms.domain.admin.MatrosConnectionCredential;
-import net.schwehla.matrosdms.domain.admin.MatrosUser;
+import net.schwehla.matrosdms.domain.core.idm.MatrosUser;
+import net.schwehla.matrosdms.domain.core.Identifier;
 import net.schwehla.matrosdms.domain.core.InfoOrginalstore;
 import net.schwehla.matrosdms.domain.core.attribute.AbstractInfoAttribute;
 import net.schwehla.matrosdms.domain.core.tagcloud.InfoKategory;
-import net.schwehla.matrosdms.domain.util.Identifier;
 import net.schwehla.matrosdms.rcp.MyGlobalConstants;
 import net.schwehla.matrosdms.rcp.parts.helper.MatrosPreferenceInbox;
 

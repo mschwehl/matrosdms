@@ -21,7 +21,7 @@ import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Label;
 
-import net.schwehla.matrosdms.domain.admin.MatrosUser;
+import net.schwehla.matrosdms.domain.core.idm.MatrosUser;
 import net.schwehla.matrosdms.rcp.MyEventConstants;
 
 

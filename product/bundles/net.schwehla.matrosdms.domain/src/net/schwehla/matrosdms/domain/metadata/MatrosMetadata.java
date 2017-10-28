@@ -1,11 +1,18 @@
 package net.schwehla.matrosdms.domain.metadata;
 
+import javax.xml.bind.annotation.XmlAccessType;
+import javax.xml.bind.annotation.XmlAccessorType;
+
+@XmlAccessorType(XmlAccessType.FIELD)
 public class MatrosMetadata {
 	
 	String mimetype;
 	String filename;
 	String sha256;
 	Long   filesize;
+
+	transient String textLayer;
+	
 	
 	public Long getFilesize() {
 		return filesize;
@@ -14,8 +21,7 @@ public class MatrosMetadata {
 		this.filesize = filesize;
 	}
 
-	String textLayer;
-	
+
 	public String getTextLayer() {
 		return textLayer;
 	}

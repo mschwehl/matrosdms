@@ -2,19 +2,22 @@ package net.schwehla.matrosdms.domain.core;
 
 import java.util.Objects;
 
-import net.schwehla.matrosdms.domain.util.Identifier;
+import javax.xml.bind.annotation.XmlAccessType;
+import javax.xml.bind.annotation.XmlAccessorType;
 
+import net.schwehla.matrosdms.domain.core.Identifier;
+
+@XmlAccessorType(XmlAccessType.FIELD)
 public class InfoBaseElementWithOrdinal extends InfoBaseElement {
 
-	int oridinal;
+	int ordinal;
 	
-	public int getOridinal() {
-		return oridinal;
+	public int getOrdinal() {
+		return ordinal;
 	}
 
-
-	public void setOridinal(int oridinal) {
-		this.oridinal = oridinal;
+	public void setOrdinal(int oridinal) {
+		this.ordinal = oridinal;
 	}
 
 	private static final long serialVersionUID = 1L;
@@ -42,7 +45,7 @@ public class InfoBaseElementWithOrdinal extends InfoBaseElement {
 		
 		Objects.requireNonNull(other, "Called with null argument");
 		super.applyValues(other);
-		this.oridinal = other.oridinal;
+		this.ordinal = other.ordinal;
 		
 	}
 	

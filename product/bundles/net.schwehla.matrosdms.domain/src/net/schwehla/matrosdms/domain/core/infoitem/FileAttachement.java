@@ -1,5 +1,8 @@
 package net.schwehla.matrosdms.domain.core.infoitem;
 
+import javax.xml.bind.annotation.XmlAccessType;
+import javax.xml.bind.annotation.XmlAccessorType;
+
 import net.schwehla.matrosdms.domain.core.InfoBaseElement;
 
 /**
@@ -10,6 +13,7 @@ import net.schwehla.matrosdms.domain.core.InfoBaseElement;
 
 // TODO: Think about byte[] content -> Performance 
 
+@XmlAccessorType(XmlAccessType.FIELD)
 public class FileAttachement  extends InfoBaseElement {
 	
 	private String filename;

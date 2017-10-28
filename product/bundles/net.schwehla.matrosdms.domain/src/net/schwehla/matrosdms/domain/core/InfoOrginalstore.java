@@ -1,13 +1,15 @@
 package net.schwehla.matrosdms.domain.core;
 
-import net.schwehla.matrosdms.domain.util.Identifier;
+import javax.xml.bind.annotation.XmlAccessType;
+import javax.xml.bind.annotation.XmlAccessorType;
 
+@XmlAccessorType(XmlAccessType.FIELD)
 public class InfoOrginalstore extends InfoBaseElementWithOrdinal {
 	
+	private static final long serialVersionUID = 1L;
+
 	private InfoOrginalstore() {
-		
 	}
-	
 	
 	String shortname;
 	

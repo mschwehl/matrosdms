@@ -1,6 +1,6 @@
 package net.schwehla.matrosdms.rcp;
 
-import net.schwehla.matrosdms.domain.util.Identifier;
+import net.schwehla.matrosdms.domain.core.Identifier;
 
 public interface MyGlobalConstants {
 

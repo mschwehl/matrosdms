@@ -4,21 +4,28 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
-import javax.xml.bind.annotation.XmlTransient;
+import javax.xml.bind.annotation.XmlAccessType;
+import javax.xml.bind.annotation.XmlAccessorType;
+import javax.xml.bind.annotation.XmlElement;
+import javax.xml.bind.annotation.XmlElementWrapper;
+import javax.xml.bind.annotation.adapters.XmlJavaTypeAdapter;
 
+import net.schwehla.matrosdms.adapter.IDAdapter;
+import net.schwehla.matrosdms.adapter.ParentArrayAdapter;
 import net.schwehla.matrosdms.domain.api.ITagInterface;
 import net.schwehla.matrosdms.domain.core.attribute.AbstractInfoAttribute;
 import net.schwehla.matrosdms.domain.core.tagcloud.InfoKategoryList;
 import net.schwehla.matrosdms.domain.metadata.MatrosMetadata;
-import net.schwehla.matrosdms.domain.util.Identifier;
 import net.schwehla.matrosdms.rcp.MyGlobalConstants;
 
 
-
+@XmlAccessorType(XmlAccessType.FIELD)
 public class InfoItem extends InfoBaseElement {
 	
-	
-	private transient MatrosMetadata metadata ;
+
+	private static final long serialVersionUID = 1L;
+
+	private MatrosMetadata metadata ;
 
 
 	// auf optional umstellen
@@ -47,6 +54,7 @@ public class InfoItem extends InfoBaseElement {
 		this.attributeList = attributeList;
 	}
 
+	@XmlJavaTypeAdapter(IDAdapter.class) 
 	private InfoContext context;
 	
 	private Identifier storeIdentifier;
@@ -110,10 +118,12 @@ public class InfoItem extends InfoBaseElement {
 		this.storeIdentifier = storeIdentifier;
 	}
 
-	// Rechnung, 2015 und so weiter
+	@XmlJavaTypeAdapter(ParentArrayAdapter.class) 
 	private InfoKategoryList typList;
 	
 	
+	@XmlElementWrapper(name="attributeList")
+	@XmlElement(name="attribute")
 	private List<AbstractInfoAttribute> attributeList;
 	
 

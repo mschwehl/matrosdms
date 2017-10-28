@@ -5,7 +5,7 @@ import java.util.List;
 
 import net.schwehla.matrosdms.domain.core.InfoBaseElement;
 import net.schwehla.matrosdms.domain.core.InfoItem;
-import net.schwehla.matrosdms.domain.util.Identifier;
+import net.schwehla.matrosdms.domain.core.Identifier;
 
 /**
  *  An Info-Container with attachements

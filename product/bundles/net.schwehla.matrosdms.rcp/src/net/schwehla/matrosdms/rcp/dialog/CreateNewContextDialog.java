@@ -21,7 +21,7 @@ import org.eclipse.swt.widgets.Shell;
 import org.eclipse.swt.widgets.Text;
 
 import net.schwehla.matrosdms.domain.core.InfoBaseElement;
-import net.schwehla.matrosdms.domain.util.Identifier;
+import net.schwehla.matrosdms.domain.core.Identifier;
 
 @Creatable
 public class CreateNewContextDialog extends  AbstractMatrosTitleAreaDialog  {

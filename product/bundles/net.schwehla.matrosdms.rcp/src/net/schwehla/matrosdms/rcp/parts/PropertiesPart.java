@@ -42,7 +42,7 @@ import org.eclipse.wb.swt.SWTResourceManager;
 
 import net.schwehla.matrosdms.domain.core.InfoBaseElement;
 import net.schwehla.matrosdms.domain.core.InfoContext;
-import net.schwehla.matrosdms.domain.util.Identifier;
+import net.schwehla.matrosdms.domain.core.Identifier;
 import net.schwehla.matrosdms.notification.INotificationService;
 import net.schwehla.matrosdms.persistenceservice.IMatrosServiceService;
 

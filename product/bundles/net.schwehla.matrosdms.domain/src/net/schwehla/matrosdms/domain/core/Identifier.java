@@ -1,9 +1,24 @@
-package net.schwehla.matrosdms.domain.util;
+package net.schwehla.matrosdms.domain.core;
 
 import java.io.Serializable;
 import java.util.UUID;
 
+import javax.xml.bind.annotation.XmlAccessType;
+import javax.xml.bind.annotation.XmlAccessorType;
+import javax.xml.bind.annotation.XmlTransient;
+
+@XmlAccessorType(XmlAccessType.FIELD)
 public class Identifier implements Serializable {
+	
+
+	private static final long serialVersionUID = 1L;
+	
+	
+	Long pk;
+	String uuid;
+
+	@XmlTransient
+	private static final Identifier NONE = new Identifier(0L);
 	
 	public static Identifier createNEW() {
 		Identifier temp = new Identifier(NONE.getPk(), UUID.randomUUID().toString().toLowerCase());
@@ -15,10 +30,8 @@ public class Identifier implements Serializable {
 		return temp;
 	}
 	
-	private static final Identifier NONE = new Identifier(0L);
-	
-	Long pk;
-	String uuid;
+
+
 	
 	private Identifier(Long pk) {
 		

@@ -35,8 +35,8 @@ import org.eclipse.swt.widgets.TabFolder;
 import org.eclipse.swt.widgets.TabItem;
 import org.eclipse.swt.widgets.Table;
 
-import net.schwehla.matrosdms.domain.admin.MatrosUser;
-import net.schwehla.matrosdms.domain.util.Identifier;
+import net.schwehla.matrosdms.domain.core.idm.MatrosUser;
+import net.schwehla.matrosdms.domain.core.Identifier;
 import net.schwehla.matrosdms.i18n.MatrosMessage;
 import net.schwehla.matrosdms.rcp.wizzard.model.setup.Masterdata;
 import net.schwehla.matrosdms.rcp.wizzard.page.dialog.UserDialog;

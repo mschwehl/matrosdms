@@ -1,10 +1,24 @@
-package net.schwehla.matrosdms.domain.admin;
+package net.schwehla.matrosdms.domain.core.idm;
 
 import net.schwehla.matrosdms.domain.core.InfoBaseElement;
-import net.schwehla.matrosdms.domain.util.Identifier;
 
+import javax.xml.bind.annotation.XmlAccessType;
+import javax.xml.bind.annotation.XmlAccessorType;
+import javax.xml.bind.annotation.XmlTransient;
 
+import net.schwehla.matrosdms.domain.core.Identifier;
+
+@XmlAccessorType(XmlAccessType.FIELD) 
 public class MatrosUser extends InfoBaseElement {
+
+	private static final long serialVersionUID = 1L;
+
+	public String firstname;
+	public String secondname;
+	public String email;
+
+	@XmlTransient
+	public String password;
 	
 	public MatrosUser(Identifier key, String name) {
 		super(key, name);
@@ -22,11 +36,7 @@ public class MatrosUser extends InfoBaseElement {
 		return password;
 	}
 
-	public String firstname;
-	public String secondname;
-	public String password;
-	public String email;
-	
+
 	
 	public String getSecondname() {
 		return secondname;

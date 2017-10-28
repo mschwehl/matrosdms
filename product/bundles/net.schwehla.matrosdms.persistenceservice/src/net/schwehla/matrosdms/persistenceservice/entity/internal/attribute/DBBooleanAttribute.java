@@ -7,7 +7,7 @@ import javax.persistence.Entity;
 import net.schwehla.matrosdms.domain.core.attribute.AbstractInfoAttribute;
 import net.schwehla.matrosdms.domain.core.attribute.AttributeType;
 import net.schwehla.matrosdms.domain.core.attribute.InfoBooleanAttribute;
-import net.schwehla.matrosdms.domain.util.Identifier;
+import net.schwehla.matrosdms.domain.core.Identifier;
 
 /**
  * @author Martin

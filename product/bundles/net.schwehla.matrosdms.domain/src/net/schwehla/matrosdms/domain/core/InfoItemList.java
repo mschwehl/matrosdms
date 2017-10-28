@@ -5,7 +5,6 @@ import java.util.ArrayList;
 import net.schwehla.matrosdms.domain.api.IStorableInfoItemContainerInterface;
 
 
-
 public class InfoItemList extends ArrayList<InfoItem>
 		implements IStorableInfoItemContainerInterface {
 
