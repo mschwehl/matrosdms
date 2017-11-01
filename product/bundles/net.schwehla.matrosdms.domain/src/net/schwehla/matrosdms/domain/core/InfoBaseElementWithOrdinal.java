@@ -49,5 +49,26 @@ public class InfoBaseElementWithOrdinal extends InfoBaseElement {
 		
 	}
 	
+
+//	@Override
+	public int compareTo(InfoBaseElementWithOrdinal o) {
+		if (o == null || o.getOrdinal() == 0 || getOrdinal() == 0) {
+			return super.compareTo(o);
+		}
+		
+		if (o.getOrdinal() > getOrdinal()) {
+			return 1;
+		}
+		
+		if (o.getOrdinal() < getOrdinal()) {
+			return -1;
+		}
+		
+		
+		return 0;
+
+	}
+	
+	
 	
 }

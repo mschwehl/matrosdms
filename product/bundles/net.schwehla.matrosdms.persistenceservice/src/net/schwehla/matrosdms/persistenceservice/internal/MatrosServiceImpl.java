@@ -28,10 +28,10 @@ import org.osgi.framework.FrameworkUtil;
 import net.schwehla.matrosdms.domain.admin.CloudSettings;
 import net.schwehla.matrosdms.domain.admin.E_CLOUDCRYPTION;
 import net.schwehla.matrosdms.domain.admin.MatrosConnectionCredential;
-import net.schwehla.matrosdms.domain.core.idm.MatrosUser;
 import net.schwehla.matrosdms.domain.api.E_ATTRIBUTETYPE;
 import net.schwehla.matrosdms.domain.api.IIdentifiable;
 import net.schwehla.matrosdms.domain.api.ITagInterface;
+import net.schwehla.matrosdms.domain.core.Identifier;
 import net.schwehla.matrosdms.domain.core.InfoBaseElement;
 import net.schwehla.matrosdms.domain.core.InfoContext;
 import net.schwehla.matrosdms.domain.core.InfoEvent;
@@ -45,11 +45,11 @@ import net.schwehla.matrosdms.domain.core.attribute.InfoBooleanAttribute;
 import net.schwehla.matrosdms.domain.core.attribute.InfoDateAttribute;
 import net.schwehla.matrosdms.domain.core.attribute.InfoNumberAttribute;
 import net.schwehla.matrosdms.domain.core.attribute.InfoTextAttribute;
+import net.schwehla.matrosdms.domain.core.idm.MatrosUser;
 import net.schwehla.matrosdms.domain.core.tagcloud.InfoKategory;
 import net.schwehla.matrosdms.domain.metadata.MatrosMetadata;
 import net.schwehla.matrosdms.domain.search.SearchItemInput;
 import net.schwehla.matrosdms.domain.search.SearchedInfoItemElement;
-import net.schwehla.matrosdms.domain.core.Identifier;
 import net.schwehla.matrosdms.domain.util.VerifyItem;
 import net.schwehla.matrosdms.domain.util.VerifyMessage;
 import net.schwehla.matrosdms.persistenceservice.IMatrosServiceService;
@@ -60,7 +60,9 @@ import net.schwehla.matrosdms.persistenceservice.entity.internal.DBItemMetadata;
 import net.schwehla.matrosdms.persistenceservice.entity.internal.DBKategorie;
 import net.schwehla.matrosdms.persistenceservice.entity.internal.DBOriginalstore;
 import net.schwehla.matrosdms.persistenceservice.entity.internal.VW_CONTEXT;
+import net.schwehla.matrosdms.persistenceservice.entity.internal.VW_MASTERDATA_UUID;
 import net.schwehla.matrosdms.persistenceservice.entity.internal.VW_SEARCH;
+import net.schwehla.matrosdms.persistenceservice.entity.internal.VW_TRANSACTIONDATA_UUID;
 import net.schwehla.matrosdms.persistenceservice.entity.internal.attribute.AbstractDBInfoAttribute;
 import net.schwehla.matrosdms.persistenceservice.entity.internal.attribute.DBAttributeType;
 import net.schwehla.matrosdms.persistenceservice.entity.internal.attribute.DBBooleanAttribute;
@@ -71,6 +73,7 @@ import net.schwehla.matrosdms.persistenceservice.entity.internal.management.DBCo
 import net.schwehla.matrosdms.persistenceservice.entity.internal.management.DBUser;
 import net.schwehla.matrosdms.persistenceservice.internal.cryptprovider.MatrosExternalCryptor;
 import net.schwehla.matrosdms.persistenceservice.internal.cryptprovider.MatrosNoCryptor;
+import net.schwehla.matrosdms.persistenceservice.internal.export.MatrosMetadataGenerator;
 import net.schwehla.matrosdms.rcp.MatrosServiceException;
 import net.schwehla.matrosdms.rcp.MyEventConstants;
 import net.schwehla.matrosdms.rcp.MyGlobalConstants;
@@ -205,7 +208,7 @@ public class MatrosServiceImpl implements IMatrosServiceService {
 	
 	
 	@Override
-	public InfoKategory getInfoKategoryByIdentifier(Identifier identifier) {
+	public InfoKategory getInfoKategoryByIdentifier(Identifier identifier) throws MatrosServiceException  {
 		
 		if (fastAccess == null || fastAccess.get(identifier)  == null)  {
 			DBKategorie rootEntity = em.createNamedQuery("DBKategorie.findByUUID", DBKategorie.class).setParameter("uuid", MyGlobalConstants.ROOT_WER.getUuid()).getSingleResult();
@@ -225,6 +228,10 @@ public class MatrosServiceImpl implements IMatrosServiceService {
 		
 		InfoKategory i =  (InfoKategory) fastAccess.get(identifier);
 		
+		if (i == null) {
+			throw new MatrosServiceException("Cannot find Element: " + identifier.getUuid());
+		}
+		
 		if ( MyGlobalConstants.ROOT_ART.equals(identifier) ) {
 			i.setDropfieldKategory(false);
 		} else {
@@ -237,7 +244,7 @@ public class MatrosServiceImpl implements IMatrosServiceService {
 
 
 	@Override
-	public List<InfoContext> loadInfoContextList(boolean inclArchived) {
+	public List<InfoContext> loadInfoContextList(boolean inclArchived) throws MatrosServiceException {
 		
 		 List<InfoContext> resultList = new ArrayList();
 		 
@@ -277,7 +284,7 @@ public class MatrosServiceImpl implements IMatrosServiceService {
 
 
 
-	private InfoContext mapContext(VW_CONTEXT element) {
+	private InfoContext mapContext(VW_CONTEXT element) throws MatrosServiceException {
 		InfoContext c = new InfoContext(Identifier.create(element.getPK(), element.getUuid()), element.getName());
 		
 		mapBasicPropertiesFromDatabaseToModel(c, element);
@@ -1576,7 +1583,40 @@ public class MatrosServiceImpl implements IMatrosServiceService {
 		}
 
 
+		@Override
+		public String getMetadata() throws MatrosServiceException {
+			
+			try {
+				
+				MatrosMetadataGenerator g = new MatrosMetadataGenerator(this);				
+				return g.generate();
+				
+			} catch (Exception e) {
+				throw new MatrosServiceException(e, "cannot generate Metadata");
+			}
+		}
 
+		
+
+		@Override
+		public boolean existsInMasterdata() throws MatrosServiceException {
+	
+			 List <VW_MASTERDATA_UUID> dbResult =  em.createNamedQuery("VW_MASTERDATA_UUID.findAll", VW_MASTERDATA_UUID.class).getResultList(); 
+			 return  ! dbResult.isEmpty();
+			 
+			 
+			
+		}
+
+
+		@Override
+		public boolean existsInTransactiondata() throws MatrosServiceException {
+	
+			 List <VW_TRANSACTIONDATA_UUID> dbResult =  em.createNamedQuery("VW_TRANSACTIONDATA_UUID.findAll", VW_TRANSACTIONDATA_UUID.class).getResultList(); 
+			 return  ! dbResult.isEmpty();
+			
+		}
+		
 
 
 }

@@ -11,8 +11,9 @@ public class SearchedInfoItemElement extends InfoItem {
 		super(context, key, name);
 	}
 
-	String  contextName;
-	String  searchFilterString;
+	transient String  contextName;
+	transient String  searchFilterString;
+	transient boolean effectiveArchived;
 	
 	public String getSearchFilterString() {
 		return searchFilterString;
@@ -22,8 +23,6 @@ public class SearchedInfoItemElement extends InfoItem {
 		this.searchFilterString = searchFilterString;
 	}
 
-	boolean effectiveArchived;
-	
 
 	public String getContextName() {
 		return contextName;

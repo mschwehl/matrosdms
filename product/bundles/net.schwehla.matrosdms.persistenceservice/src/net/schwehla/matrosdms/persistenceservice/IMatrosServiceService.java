@@ -126,8 +126,15 @@ public interface IMatrosServiceService {
 	// rootTagsExistent
 	public boolean isDatabaseSetupComplete() throws MatrosServiceException;
 
-	public void backup()  throws MatrosServiceException;; 
+	public void backup()  throws MatrosServiceException;
+	
+// Exporting functions
+	
+	public String getMetadata() throws MatrosServiceException;
 
-    
+	public boolean existsInMasterdata() throws MatrosServiceException;
+
+	public boolean existsInTransactiondata() throws MatrosServiceException;
+
     
 }

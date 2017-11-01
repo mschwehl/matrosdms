@@ -8,7 +8,7 @@ import javax.xml.bind.annotation.XmlAccessorType;
 import javax.xml.bind.annotation.XmlTransient;
 
 @XmlAccessorType(XmlAccessType.FIELD)
-public class Identifier implements Serializable {
+public class Identifier implements Serializable, Comparable<Identifier> {
 	
 
 	private static final long serialVersionUID = 1L;
@@ -91,6 +91,15 @@ public class Identifier implements Serializable {
 	public void lastTest() {
 		uuid = UUID.randomUUID().toString();
 		pk = (long) (Math.random() * Long.MAX_VALUE);
+	}
+
+	@Override
+	public int compareTo(Identifier o) {
+		if (o == null || o.getPk() == null || getPk() == null) {
+			return 0;
+		}
+		
+		return o.getPk().compareTo(getPk());
 	}
 	
 }

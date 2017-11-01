@@ -3,6 +3,7 @@ package net.schwehla.matrosdms.rcp.wizzard;
 import java.io.File;
 import java.lang.reflect.InvocationTargetException;
 
+import javax.annotation.PostConstruct;
 import javax.inject.Inject;
 
 import org.eclipse.core.runtime.preferences.IEclipsePreferences;
@@ -55,14 +56,15 @@ public class OpenExistingWizzard extends Wizard   {
 	
 	@Inject
 	IMatrosServiceService service;
-	
-	;
+
 	
 	@Inject
 	OpenExistingWorker workClass ;
 	
 
 	@Inject Logger logger;
+	
+
 	
 	@Inject
 	public OpenExistingWizzard(@Translation MatrosMessage messages
@@ -98,6 +100,7 @@ public class OpenExistingWizzard extends Wizard   {
 			logger.error(e,"inbox " + inbox);
 		}
 		
+		
 
 		
 	}
@@ -122,7 +125,7 @@ public class OpenExistingWizzard extends Wizard   {
 		
 		// store the inbox
 		
-		// todo: Cancel soll modell nicht ändern -> listerner !?
+		// todo: Cancel soll modell nicht ï¿½ndern -> listerner !?
 		
 		
 		try {
