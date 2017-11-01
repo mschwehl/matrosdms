@@ -168,6 +168,13 @@ public class InfoItem extends InfoBaseElement {
 	}
 
 
+	public int compareTo(InfoItem o) {
+		if (o == null || o.getIssueDate() == null || getIssueDate() == null) {
+			return super.compareTo(o);
+		}
+		return getIssueDate().compareTo(o.getIssueDate());
 
+	}
+	
 
 }

@@ -124,16 +124,18 @@
         <children xsi:type="menu:HandledMenuItem" xmi:id="_6wlLjMgZEeSyMNYR5xypkQ" elementId="net.schwehla.matrosdms.rcp.handleditem.save" label="Save" iconURI="platform:/plugin/net.schwehla.matrosdms.rcp/icons/save_edit.png" command="_6wlLg8gZEeSyMNYR5xypkQ"/>
         <children xsi:type="menu:MenuSeparator" xmi:id="_J45o8Oy8EeaKvqgdV8VUDQ" elementId="net.schwehla.matrosdms.rcp.menuseparator.0"/>
         <children xsi:type="menu:HandledMenuItem" xmi:id="_1rXmYPaEEeaxBK29YmUz3g" elementId="net.schwehla.matrosdms.rcp.handledmenuitem.verifyitem" label="Verify Database..." mnemonics="v" command="_ldFZ4PaEEeaxBK29YmUz3g"/>
+        <children xsi:type="menu:HandledMenuItem" xmi:id="_9xWEoL7aEeetJaU2-ZupoQ" elementId="net.schwehla.matrosdms.rcp.handledmenuitem.import" label="Import.." mnemonics="i" command="_FWDMML7bEeetJaU2-ZupoQ"/>
         <children xsi:type="menu:HandledMenuItem" xmi:id="_e77bAOy1EeaKvqgdV8VUDQ" elementId="net.schwehla.matrosdms.rcp.handledmenuitem.export" label="Export..." mnemonics="e" command="_Q0MEQOy1EeaKvqgdV8VUDQ"/>
-        <children xsi:type="menu:MenuSeparator" xmi:id="_Mi1foOy8EeaKvqgdV8VUDQ" elementId="net.schwehla.matrosdms.rcp.menuseparator.1"/>
         <children xsi:type="menu:HandledMenuItem" xmi:id="_6wlLjcgZEeSyMNYR5xypkQ" elementId="net.schwehla.matrosdms.rcp.handleditem.quit" label="Quit" command="_6wlLfMgZEeSyMNYR5xypkQ"/>
+        <children xsi:type="menu:MenuSeparator" xmi:id="_Mi1foOy8EeaKvqgdV8VUDQ" elementId="net.schwehla.matrosdms.rcp.menuseparator.1"/>
       </children>
       <children xsi:type="menu:Menu" xmi:id="_c04NQOGkEeaSOewUjwalIw" elementId="net.schwehla.matrosdms.rcp.menu.navigate" label="Navigate" mnemonics="N"/>
       <children xsi:type="menu:Menu" xmi:id="_lBFZsOGkEeaSOewUjwalIw" elementId="net.schwehla.matrosdms.rcp.menu.window" label="Window" mnemonics="W">
         <children xsi:type="menu:HandledMenuItem" xmi:id="_ltAZ0OuPEeazh4UULF1NBQ" elementId="net.schwehla.matrosdms.rcp.handledmenuitem.preferences" label="Preferences" mnemonics="P" command="_jfTr0OuSEeaJdOc0MPml-Q"/>
         <children xsi:type="menu:MenuSeparator" xmi:id="_L9tI0PX9Eear-_X9ocRLzg" elementId="net.schwehla.matrosdms.rcp.menuseparator.2"/>
-        <children xsi:type="menu:Menu" xmi:id="_NPGfQPX9Eear-_X9ocRLzg" elementId="net.schwehla.matrosdms.rcp.menu.openview" label="v">
+        <children xsi:type="menu:Menu" xmi:id="_NPGfQPX9Eear-_X9ocRLzg" elementId="net.schwehla.matrosdms.rcp.menu.openview" label="View">
           <children xsi:type="menu:HandledMenuItem" xmi:id="_Po6PQPX9Eear-_X9ocRLzg" elementId="net.schwehla.matrosdms.rcp.handledmenuitem.openproperties" label="Properties" mnemonics="P"/>
+          <children xsi:type="menu:DirectMenuItem" xmi:id="_ZEFnoL7cEeetJaU2-ZupoQ" elementId="net.schwehla.matrosdms.rcp.directmenuitem.reset" label="reset" contributionURI="bundleclass://net.schwehla.matrosdms.rcp/net.schwehla.matrosdms.rcp.handlers.ResetViewHander"/>
         </children>
       </children>
       <children xsi:type="menu:Menu" xmi:id="_6wlLjsgZEeSyMNYR5xypkQ" elementId="help" label="Help" mnemonics="H">
@@ -179,6 +181,7 @@
   <handlers xmi:id="_pGLAcPaEEeaxBK29YmUz3g" elementId="net.schwehla.matrosdms.rcp.handler.verifyhandler" contributionURI="bundleclass://net.schwehla.matrosdms.rcp/net.schwehla.matrosdms.rcp.handlers.VerifyHandler" command="_ldFZ4PaEEeaxBK29YmUz3g"/>
   <handlers xmi:id="_oSuEUA5sEee9IP72GzVSBw" elementId="net.schwehla.matrosdms.rcp.handler.0" contributionURI="bundleclass://net.schwehla.matrosdms.rcp/net.schwehla.matrosdms.rcp.handlers.EditContextHandler" command="_jphroA5sEee9IP72GzVSBw"/>
   <handlers xmi:id="_AnvXsDD5EeeyhPzox7YnvQ" elementId="net.schwehla.matrosdms.rcp.handler.1" contributionURI="bundleclass://net.schwehla.matrosdms.rcp/net.schwehla.matrosdms.rcp.command.AddOriginalstoreCommand" command="_6JQRUDD4EeeyhPzox7YnvQ"/>
+  <handlers xmi:id="_TiPlIL7bEeetJaU2-ZupoQ" elementId="net.schwehla.matrosdms.rcp.handler.importCommandHandler" contributionURI="bundleclass://net.schwehla.matrosdms.rcp/net.schwehla.matrosdms.rcp.handlers.ImportHandler" command="_FWDMML7bEeetJaU2-ZupoQ"/>
   <bindingTables xmi:id="_6wlLfsgZEeSyMNYR5xypkQ" elementId="net.schwehla.matrosdms.rcp.bindingtable" bindingContext="_6wlLecgZEeSyMNYR5xypkQ">
     <bindings xmi:id="_6wlLf8gZEeSyMNYR5xypkQ" elementId="net.schwehla.matrosdms.rcp.keybinding.m1q" keySequence="M1+Q" command="_6wlLfMgZEeSyMNYR5xypkQ"/>
     <bindings xmi:id="_6wlLgsgZEeSyMNYR5xypkQ" elementId="net.schwehla.matrosdms.rcp.keybinding.m1o" keySequence="M1+O" command="_6wlLgMgZEeSyMNYR5xypkQ"/>
@@ -212,6 +215,7 @@
   <commands xmi:id="_ldFZ4PaEEeaxBK29YmUz3g" elementId="net.schwehla.matrosdms.rcp.command.verify" commandName="Verify"/>
   <commands xmi:id="_jphroA5sEee9IP72GzVSBw" elementId="net.schwehla.matrosdms.rcp.command.editContext" commandName="Edit Context" description="Edit Context" category="_FRfHsL-zEeamqcNwq4q69g"/>
   <commands xmi:id="_6JQRUDD4EeeyhPzox7YnvQ" elementId="net.schwehla.matrosdms.rcp.command.Add Originalstore" commandName="Add Originalstore" description="Add Originalstore"/>
+  <commands xmi:id="_FWDMML7bEeetJaU2-ZupoQ" elementId="net.schwehla.matrosdms.rcp.command.import" commandName="importCommand"/>
   <addons xmi:id="_6wlLcsgZEeSyMNYR5xypkQ" elementId="org.eclipse.e4.core.commands.service" contributionURI="bundleclass://org.eclipse.e4.core.commands/org.eclipse.e4.core.commands.CommandServiceAddon"/>
   <addons xmi:id="_6wlLc8gZEeSyMNYR5xypkQ" elementId="org.eclipse.e4.ui.contexts.service" contributionURI="bundleclass://org.eclipse.e4.ui.services/org.eclipse.e4.ui.services.ContextServiceAddon"/>
   <addons xmi:id="_6wlLdMgZEeSyMNYR5xypkQ" elementId="org.eclipse.e4.ui.bindings.service" contributionURI="bundleclass://org.eclipse.e4.ui.bindings/org.eclipse.e4.ui.bindings.BindingServiceAddon"/>

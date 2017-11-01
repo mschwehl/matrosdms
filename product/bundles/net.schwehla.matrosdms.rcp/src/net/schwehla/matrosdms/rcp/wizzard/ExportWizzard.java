@@ -176,6 +176,11 @@ public class ExportWizzard extends Wizard {
 				error = new StringBuffer();
 				
 				try {
+					
+					 // export
+					// XXX
+					System.out.println( service.getMetadata() );
+					
 					 contextList = service.loadInfoContextList(true);
 				} catch (MatrosServiceException e1) {
 					logger.error(e1, "Cannot load Contextlist");

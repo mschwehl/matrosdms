@@ -23,3 +23,34 @@ ON I.CONTEXT_ID = C.CONTEXT_ID
 LEFT OUTER JOIN ATTRIBUTE A
 ON I.ITEM_ID = A.ITEM_ID
 ORDER BY CONTEXT_ID, CON_NAME ;
+
+-- VW_MASTERDATA_UUID ------------------------------------------------------
+
+create or replace View VW_MASTERDATA_UUID as 
+select x.TAB_TYPE, x.ID, x.UUID from (
+  SELECT 'ATTRIBUTETYPE'  TAB_TYPE, ATTRIBUTETYPE_ID as ID,  UUID  
+  FROM ATTRIBUTETYPE 
+  union
+  SELECT 'KATEGORY'  TAB_TYPE, KATEGORY_ID as ID,  UUID  
+  FROM KATEGORY
+  union
+  SELECT 'STORE'  TAB_TYPE, STORE_ID as ID,  UUID  
+  FROM STORE
+  union
+  SELECT 'USER'  TAB_TYPE, USER_ID as ID,  UUID  
+  FROM USER ) x
+order by 1,2;
+
+
+-- VW_TRANSACTIONDATA_UUID ------------------------------------------------------
+create or replace View VW_TRANSACTIONDATA_UUID as 
+  select x.TAB_TYPE , x.ID, x.UUID from (
+  SELECT 'CONTEXT' as TAB_TYPE, CONTEXT_ID as ID,  UUID  
+  FROM CONTEXT
+  union 
+  SELECT 'EVENT' as TAB_TYPE, EVENT_ID as ID,  UUID  
+  FROM EVENT
+  union
+  SELECT 'ITEM' as TAB_TYPE , ITEM_ID as ID,  UUID  
+  FROM ITEM  ) x 
+ order by 1,2;

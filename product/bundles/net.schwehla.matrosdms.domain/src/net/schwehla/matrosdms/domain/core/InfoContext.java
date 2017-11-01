@@ -8,9 +8,8 @@ import javax.xml.bind.annotation.XmlAccessorType;
 import javax.xml.bind.annotation.XmlTransient;
 import javax.xml.bind.annotation.adapters.XmlJavaTypeAdapter;
 
-import net.schwehla.matrosdms.domain.core.tagcloud.InfoKategoryList;
 import net.schwehla.matrosdms.adapter.LinkingInfoBaseElementAdapter;
-import net.schwehla.matrosdms.domain.core.Identifier;
+import net.schwehla.matrosdms.domain.core.tagcloud.InfoKategoryList;
 import net.schwehla.matrosdms.rcp.MyGlobalConstants;
 
 

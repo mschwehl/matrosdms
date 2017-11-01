@@ -1,5 +1,9 @@
 package net.schwehla.matrosdms.adapter;
 
+import java.io.ByteArrayOutputStream;
+import java.io.IOException;
+import java.io.OutputStream;
+import java.io.StringReader;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
@@ -10,6 +14,17 @@ import javax.xml.bind.JAXBContext;
 import javax.xml.bind.JAXBElement;
 import javax.xml.bind.Marshaller;
 import javax.xml.namespace.QName;
+import javax.xml.parsers.DocumentBuilder;
+import javax.xml.parsers.DocumentBuilderFactory;
+import javax.xml.parsers.ParserConfigurationException;
+
+import org.w3c.dom.Document;
+import org.w3c.dom.bootstrap.DOMImplementationRegistry;
+import org.w3c.dom.ls.DOMImplementationLS;
+import org.w3c.dom.ls.LSOutput;
+import org.w3c.dom.ls.LSSerializer;
+import org.xml.sax.InputSource;
+import org.xml.sax.SAXException;
 
 import net.schwehla.matrosdms.domain.api.E_ATTRIBUTETYPE;
 import net.schwehla.matrosdms.domain.core.Identifier;
@@ -52,6 +67,7 @@ public class Exporter {
 		List <InfoKategory> allKategory = new ArrayList<>();
 		
 		InfoKategory k = b.nextKategory();
+		
 		InfoKategory k1= b.nextKategory();
 		InfoKategory k2= b.nextKategory();
 		
@@ -80,7 +96,6 @@ public class Exporter {
 		service.get(root).get(0).getAttributeList().add(b.nextInfoTextAttribute());
 		
 
-//		System.out.println(root);
 		// others with seeAlso
         JAXBContext jc = JAXBContext.newInstance(InfoContext.class , InfoItem.class, 
         		InfoKategory.class, AttributeType.class, AbstractInfoAttribute.class); 
@@ -88,15 +103,19 @@ public class Exporter {
         marshaller.setProperty(Marshaller.JAXB_FORMATTED_OUTPUT, true); 
         marshaller.setProperty(Marshaller.JAXB_FRAGMENT, Boolean.TRUE);
         
-		System.out.println("\nKategorie\n");
+        
+        OutputStream metadataOutputStream = new ByteArrayOutputStream();
+
+		metadataOutputStream.write("<Matros>".getBytes());
 		
+		metadataOutputStream.write("<InfoKategoryList>".getBytes());
         // kategorie
 		allKategory.stream().forEach( c -> {
 			
 			JAXBElement<InfoKategory> jaxbElement = new JAXBElement<InfoKategory>(
 					new QName("InfoKategory"), InfoKategory.class, c);   
 			try {
-				marshaller.marshal(jaxbElement, System.out);
+				marshaller.marshal(jaxbElement, metadataOutputStream);
 			} catch (Exception e1) {
 				// TODO Auto-generated catch block
 				e1.printStackTrace();
@@ -104,14 +123,17 @@ public class Exporter {
 			
 		});
 		
+		metadataOutputStream.write("</InfoKategoryList>".getBytes());
 		
-        // kategorie
+		metadataOutputStream.write("<AttributeTypeList>".getBytes());
+		
+        // AttributType
 		b.attList.stream().forEach( c -> {
 			
 			JAXBElement<AttributeType> jaxbElement = new JAXBElement<AttributeType>(
 					new QName("AttributeType"), AttributeType.class, c);   
 			try {
-				marshaller.marshal(jaxbElement, System.out);
+				marshaller.marshal(jaxbElement, metadataOutputStream);
 			} catch (Exception e1) {
 				// TODO Auto-generated catch block
 				e1.printStackTrace();
@@ -120,8 +142,10 @@ public class Exporter {
 		});
 		
 		
+		metadataOutputStream.write("</AttributeTypeList>".getBytes());
 		
 		
+		metadataOutputStream.write("<InfoContextList>".getBytes());
 		
 		// Contextliste
 		service.keySet().stream().forEach( c -> {
@@ -129,7 +153,7 @@ public class Exporter {
 			JAXBElement<InfoContext> jaxbElement = new JAXBElement<InfoContext>(
 					new QName("InfoContext"), InfoContext.class, c);   
 			try {
-				marshaller.marshal(jaxbElement, System.out);
+				marshaller.marshal(jaxbElement, metadataOutputStream);
 			} catch (Exception e1) {
 				// TODO Auto-generated catch block
 				e1.printStackTrace();
@@ -137,17 +161,21 @@ public class Exporter {
 			
 		});
 		
+		metadataOutputStream.write("</InfoContextList>".getBytes());
+		
+		
+		metadataOutputStream.write("<InfoItemList>".getBytes());
+
+		
 		List <InfoItem> allElements = new ArrayList<>();
-		service.values().forEach( e -> allElements.addAll(e));
+		service.values().stream().forEach( e -> allElements.addAll(e));
 		
-		System.out.println("\nItemlist\n");
-		
-		allElements.stream().forEach( c -> {
+		allElements.stream().sorted().forEach( c -> {
 			
 			JAXBElement<InfoItem> jaxbElement = new JAXBElement<InfoItem>(
 					new QName("InfoItem"), InfoItem.class, c);   
 			try {
-				marshaller.marshal(jaxbElement, System.out);
+				marshaller.marshal(jaxbElement, metadataOutputStream);
 			} catch (Exception e1) {
 				// TODO Auto-generated catch block
 				e1.printStackTrace();
@@ -155,6 +183,12 @@ public class Exporter {
 			
 		});
 		
+		metadataOutputStream.write("</InfoItemList>".getBytes());
+		
+		metadataOutputStream.write("</Matros>".getBytes());
+		
+	//	System.out.println(metadataOutputStream.toString());	
+		System.out.println(prettyFormat(metadataOutputStream.toString(),2));
 		
 		
 		
@@ -291,5 +325,43 @@ public class Exporter {
 		
 	}
 	
+	
+	 
+	public static String prettyFormat(String unformattedXml, int indent) {
+	
+		
+	    try {
+	        DOMImplementationRegistry registry = DOMImplementationRegistry.newInstance();
+	        DOMImplementationLS impl = (DOMImplementationLS) registry.getDOMImplementation("LS");
+	        LSSerializer writer = impl.createLSSerializer();
+	        writer.getDomConfig().setParameter("format-pretty-print", Boolean.TRUE);
+	        writer.getDomConfig().setParameter("xml-declaration", Boolean.FALSE);
+	        LSOutput output = impl.createLSOutput();
+	        ByteArrayOutputStream out = new ByteArrayOutputStream();
+	        output.setByteStream(out);
+	        writer.write(parseXmlFile(unformattedXml), output);
+	        String xmlStr = new String(out.toByteArray(), "UTF-8"); // Charset is extremely important
+	        return xmlStr;
+	    } catch (Exception e) {
+	        return unformattedXml;
+	}
+	    
+	}
+	
+	
+	private static Document parseXmlFile(String in) {
+	    try {
+	        DocumentBuilderFactory dbf = DocumentBuilderFactory.newInstance();
+	        DocumentBuilder db = dbf.newDocumentBuilder();
+	        InputSource is = new InputSource(new StringReader(in));
+	        return db.parse(is);
+	    } catch (ParserConfigurationException e) {
+	        throw new RuntimeException(e);
+	    } catch (SAXException e) {
+	        throw new RuntimeException(e);
+	    } catch (IOException e) {
+	        throw new RuntimeException(e);
+	    }
+	}
 
 }

@@ -1,7 +1,6 @@
 package net.schwehla.matrosdms.rcp.wizzard;
 
 import java.lang.reflect.InvocationTargetException;
-import java.util.stream.Collectors;
 
 import javax.inject.Inject;
 import javax.inject.Singleton;
@@ -19,13 +18,10 @@ import org.eclipse.e4.core.services.statusreporter.StatusReporter;
 import org.eclipse.e4.ui.di.UISynchronize;
 import org.eclipse.e4.ui.workbench.IWorkbench;
 import org.eclipse.jface.operation.IRunnableWithProgress;
-import org.osgi.service.prefs.BackingStoreException;
 
-import net.schwehla.matrosdms.domain.admin.MatrosConnectionCredential;
 import net.schwehla.matrosdms.i18n.MatrosMessage;
 import net.schwehla.matrosdms.persistenceservice.IMatrosServiceService;
 import net.schwehla.matrosdms.rcp.MyGlobalConstants;
-import net.schwehla.matrosdms.rcp.parts.helper.MatrosPreferenceInbox;
 import net.schwehla.matrosdms.rcp.wizzard.model.setup.Masterdata;
 
 @Creatable
@@ -63,42 +59,16 @@ public class OpenExistingWorker implements IRunnableWithProgress {
 	public void run(IProgressMonitor monitor) throws InvocationTargetException, InterruptedException {
 
 		
-		try {
-			preferences.put(FORCE_CLEAR_PERSISTED_STATE, Boolean.TRUE.toString());
-			preferences.flush();
-		} catch (BackingStoreException e1) {
-			logger.error(e1);
-		}
-	    
-		
 		// https://github.com/alblue/com.packtpub.e4/blob/master/com.packtpub.e4.clock.ui/src/com/packtpub/e4/clock/ui/handlers/HelloHandler.java
 	     SubMonitor subMonitor = SubMonitor.convert(monitor,3);
         
                  try {
                 	 
                      // sleep a second
-            		 subMonitor.subTask(messages.setupworker_saving_inbox);
+            		 subMonitor.subTask("Reading Metadata");
             	 	 Thread.sleep(500);
             	 	  	 
-            	     sync.syncExec(new Runnable() {
-                         @Override
-                         public void run() {
-                             
-                          	 String inboxPath = masterData.getInboxList().stream().map(MatrosPreferenceInbox::getPath)
-                          			 .collect(Collectors.joining(MyGlobalConstants.Preferences.DELIMITER));
-                          	 
-                          	preferences.put(MyGlobalConstants.Preferences.INBOX_PATH, inboxPath);
-                          	
-                       
-                          	try {
-								preferences.flush();
-							} catch (BackingStoreException e1) {
-								logger.error(e1);
-							}
-                       
-                        
-                         }
-            	     });
+            	 	 // parsing xml
             	     
             	  	subMonitor.worked(1);
              	 	 
@@ -107,19 +77,11 @@ public class OpenExistingWorker implements IRunnableWithProgress {
             	  // XXX check if database exists on this place	
             	  	
                     // sleep a second
-           		 subMonitor.subTask(messages.setupworker_create_database);
+           		 subMonitor.subTask("TASK2");
            		 
            		 
            	 	 Thread.sleep(500);
             	  	
-					MatrosConnectionCredential dbCredentials = new MatrosConnectionCredential();
-					
-//					dbCredentials.setDbPath(masterData.getDbConnection().getDbPath());
-					dbCredentials.setDbPasswd(masterData.getDbConnection().getDbPasswd());	
-					dbCredentials.setDbUser(masterData.getDbConnection().getDbUser());
-					
-			
-			//	 	((MatrosServerProxy) Proxy.getInvocationHandler(service)).registerNewProperties(dbCredentials);
 				
             	     
               
@@ -127,18 +89,14 @@ public class OpenExistingWorker implements IRunnableWithProgress {
             	     
             	  //--------------------------------------------------      
             	  	
-            	
-       	    	 logger.info("Database created ");
-            	   	subMonitor.worked(1);
-            	     
-            	  //--------------------------------------------------      
+     
             	  	
             	   	
             	  //--------------------------------------------------      
             	  	
             	  	
                     // sleep a second
-           		 subMonitor.subTask(messages.setupworker_create_documentstore_filesystem);
+           		 subMonitor.subTask("TASK 3");
            	 	 Thread.sleep(500);
            	 	 
            	 	 // XXX
@@ -164,7 +122,7 @@ public class OpenExistingWorker implements IRunnableWithProgress {
                 	 
                  } catch (Exception e) {
                 	 
-                		Status status = new Status(IStatus.ERROR, "SetupClass", "Programming bug?", e); //$NON-NLS-2$
+                		Status status = new Status(IStatus.ERROR, "SetupExisting", "Programming bug?", e); //$NON-NLS-2$
                 		statusReporter.report(status, StatusReporter.LOG );
                 		
                 		error = true;

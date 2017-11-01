@@ -11,7 +11,7 @@ import net.schwehla.matrosdms.domain.api.IIdentifiable;
 import net.schwehla.matrosdms.domain.core.Identifier;
 
 @XmlAccessorType(XmlAccessType.FIELD)
-public class InfoBaseElement implements IIdentifiable, Serializable {
+public class InfoBaseElement implements IIdentifiable, Serializable,Comparable< InfoBaseElement> {
 
 	protected Identifier identifier;
 	
@@ -163,6 +163,14 @@ public class InfoBaseElement implements IIdentifiable, Serializable {
 		setDateArchived(other.getDateArchived());
 		setDateCreated(other.getDateCreated());
 		
+	}
+
+	@Override
+	public int compareTo(InfoBaseElement o) {
+		if (o == null) {
+			return 1;
+		}
+		return - o.getIdentifier().getPk().compareTo(getIdentifier().getPk());
 	}
 	
 	

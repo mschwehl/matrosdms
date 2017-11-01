@@ -12,8 +12,6 @@
  		<class>net.schwehla.matrosdms.persistenceservice.entity.internal.DBItemMetadata</class> 
  		<class>net.schwehla.matrosdms.persistenceservice.entity.internal.DBItem</class> 
  		<class>net.schwehla.matrosdms.persistenceservice.entity.internal.DBKategorie</class> 
-	    <class>net.schwehla.matrosdms.persistenceservice.entity.internal.VW_CONTEXT</class>
-	    <class>net.schwehla.matrosdms.persistenceservice.entity.internal.VW_SEARCH</class>
 	    <class>net.schwehla.matrosdms.persistenceservice.entity.internal.DBOriginalstore</class> 
 	    <class>net.schwehla.matrosdms.persistenceservice.entity.internal.DBEvent</class> 
 	    
@@ -29,6 +27,11 @@
  		<class>net.schwehla.matrosdms.persistenceservice.entity.internal.management.DBUser</class> 
  		<class>net.schwehla.matrosdms.persistenceservice.entity.internal.management.DBPermission</class> 
  		<class>net.schwehla.matrosdms.persistenceservice.entity.internal.management.DBConfig</class> 
+ 		
+	    <class>net.schwehla.matrosdms.persistenceservice.entity.internal.VW_SEARCH</class>
+ 		<class>net.schwehla.matrosdms.persistenceservice.entity.internal.VW_CONTEXT</class>
+	    <class>net.schwehla.matrosdms.persistenceservice.entity.internal.VW_MASTERDATA_UUID</class>
+	    <class>net.schwehla.matrosdms.persistenceservice.entity.internal.VW_TRANSACTIONDATA_UUID</class>	    	    	    
  		 				 		
  		<properties> 
  			<property name="javax.persistence.jdbc.driver" value="org.h2.Driver" /> 

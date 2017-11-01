@@ -3,7 +3,9 @@
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.Iterator;
+import java.util.LinkedHashSet;
 import java.util.List;
+import java.util.Set;
 
 import javax.xml.bind.annotation.XmlAccessType;
 import javax.xml.bind.annotation.XmlAccessorType;
@@ -19,10 +21,11 @@ import net.schwehla.matrosdms.domain.core.InfoBaseElementWithOrdinal;
 @XmlAccessorType(XmlAccessType.FIELD)
 public class InfoKategory extends InfoBaseElementWithOrdinal implements ITagInterface {
 	
-	// kann ich entsorgen ? 
-	public void setName(String name) {
-		this.name = name;
-	}
+
+	private static final long serialVersionUID = 1L;
+
+	// Kategory from InfoItem  not from Context
+	boolean dropfieldKategory;
 
 	
 	@XmlJavaTypeAdapter(ParentArrayAdapter.class) 
@@ -133,11 +136,9 @@ public class InfoKategory extends InfoBaseElementWithOrdinal implements ITagInte
 		children.add(child);
 	}
 
-	/**
-	 * Liefert alle InfoKategorien als Set
-	 */
+
 	@Override
-	public HashSet<InfoKategory> getSelfAndAllTransitiveChildren() {
+	public Set<InfoKategory> getSelfAndAllTransitiveChildren() {
 		HashSet<InfoKategory> temp = new HashSet<InfoKategory>();
 
 		temp.add(this);
@@ -149,12 +150,23 @@ public class InfoKategory extends InfoBaseElementWithOrdinal implements ITagInte
 		return temp;
 	}
 
+	/**
+	 * Keeps the order
+	 */
+	public void appendOrderedTransitiveChildren( List <InfoKategory>  initialList) {
+		
+		initialList.addAll(children);
+		for (InfoKategory v : children) {
+			v.appendOrderedTransitiveChildren(initialList);
+		}
+		
+	}
 
 	/**
 	 * Liefert alle InfoKategorien als Set
 	 */
 	public HashSet<InfoKategory> getSelfAndTransitiveParents() {
-		HashSet<InfoKategory> temp = new HashSet<InfoKategory>();
+		HashSet<InfoKategory> temp = new LinkedHashSet<InfoKategory>();
 
 		temp.add(this);
 		for (InfoKategory v : parents) {
@@ -182,8 +194,7 @@ public class InfoKategory extends InfoBaseElementWithOrdinal implements ITagInte
 			
 	}
 	
-	// was ist das ?
-	boolean dropfieldKategory;
+
 
 	public boolean isDropfieldKategory() {
 		return dropfieldKategory;
