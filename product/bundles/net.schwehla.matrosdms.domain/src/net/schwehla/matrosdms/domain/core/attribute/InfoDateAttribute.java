@@ -5,7 +5,9 @@ import java.util.Date;
 
 import javax.xml.bind.annotation.XmlAccessType;
 import javax.xml.bind.annotation.XmlAccessorType;
+import javax.xml.bind.annotation.adapters.XmlJavaTypeAdapter;
 
+import net.schwehla.matrosdms.adapter.DateAdapter;
 import net.schwehla.matrosdms.domain.core.Identifier;
 
 @XmlAccessorType(XmlAccessType.FIELD)
@@ -13,6 +15,7 @@ public class InfoDateAttribute extends AbstractInfoAttribute {
 
 	private static final long serialVersionUID = 1L;
 	
+	@XmlJavaTypeAdapter(value = DateAdapter.class)
 	Date dateValue;
 	
 	public InfoDateAttribute(Identifier uuid, String Name) {

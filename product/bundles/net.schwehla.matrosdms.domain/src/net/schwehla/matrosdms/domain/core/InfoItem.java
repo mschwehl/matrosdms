@@ -10,6 +10,7 @@ import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlElementWrapper;
 import javax.xml.bind.annotation.adapters.XmlJavaTypeAdapter;
 
+import net.schwehla.matrosdms.adapter.DateAdapter;
 import net.schwehla.matrosdms.adapter.IDAdapter;
 import net.schwehla.matrosdms.adapter.ParentArrayAdapter;
 import net.schwehla.matrosdms.domain.api.ITagInterface;
@@ -71,9 +72,10 @@ public class InfoItem extends InfoBaseElement {
 	private int stage;
 	
 
-
+	@XmlJavaTypeAdapter(value = DateAdapter.class)
 	private Date lastIndexRun;
 	
+	@XmlJavaTypeAdapter(value = DateAdapter.class)
 	private Date issueDate;
 	
 

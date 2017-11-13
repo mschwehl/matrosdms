@@ -6,11 +6,9 @@ import org.eclipse.e4.core.services.nls.Message;
 public class MatrosMessage {
 
 	public String abouthandler_detail;
-
 	public String abouthandler_heading;
-	
 	public String common_edit;
-	// inbox
+
 	public String contexlistpart_col_map;
 	public String contexlistpart_searchfield_helptext;
 	public String contextlistpart_tab_newpart;

@@ -1,12 +1,7 @@
 package net.schwehla.matrosdms.rcp.parts;
 
 import java.io.File;
-import java.io.IOException;
 import java.net.URL;
-import java.nio.file.FileSystems;
-import java.nio.file.Files;
-import java.nio.file.Path;
-import java.nio.file.WatchService;
 import java.text.DateFormat;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -15,9 +10,6 @@ import java.util.List;
 import javax.annotation.PostConstruct;
 import javax.inject.Inject;
 
-import org.eclipse.core.databinding.observable.value.IObservableValue;
-import org.eclipse.core.runtime.IProgressMonitor;
-import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.preferences.IEclipsePreferences;
 import org.eclipse.e4.core.contexts.Active;
 import org.eclipse.e4.core.di.annotations.Optional;
@@ -78,8 +70,6 @@ import net.schwehla.matrosdms.lucene.ILuceneService;
 import net.schwehla.matrosdms.notification.INotificationService;
 import net.schwehla.matrosdms.notification.NotificationNote;
 import net.schwehla.matrosdms.persistenceservice.IMatrosServiceService;
-import net.schwehla.matrosdms.progress.IProgressConstants;
-import net.schwehla.matrosdms.progress.IProgressService;
 import net.schwehla.matrosdms.rcp.MatrosServiceException;
 import net.schwehla.matrosdms.rcp.MyEventConstants;
 import net.schwehla.matrosdms.rcp.MyGlobalConstants;

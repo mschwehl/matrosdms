@@ -2,6 +2,9 @@ package net.schwehla.matrosdms.domain.core;
 
 import java.util.Date;
 
+import javax.xml.bind.annotation.adapters.XmlJavaTypeAdapter;
+
+import net.schwehla.matrosdms.adapter.DateAdapter;
 import net.schwehla.matrosdms.domain.core.Identifier;
 
 public class InfoEvent extends InfoBaseElement {
@@ -17,7 +20,10 @@ public class InfoEvent extends InfoBaseElement {
 	private Identifier userIdentifier ;
 	private InfoItem  item;
 	
+	@XmlJavaTypeAdapter(value = DateAdapter.class)
 	private Date dateScheduled;
+	
+	@XmlJavaTypeAdapter(value = DateAdapter.class)
 	private Date dateCompleted;
 	
 	public Identifier getUserIdentifier() {

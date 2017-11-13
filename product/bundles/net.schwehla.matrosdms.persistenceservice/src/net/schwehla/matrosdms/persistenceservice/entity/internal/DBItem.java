@@ -31,7 +31,7 @@ import net.schwehla.matrosdms.persistenceservice.entity.internal.management.DBUs
 
 @NamedQueries ( {
 @NamedQuery(name="DBItem.findByID", query="SELECT c FROM DBItem c where c.id = :id "),
-@NamedQuery(name="DBItem.findAll", query="SELECT c FROM DBItem c"),
+@NamedQuery(name="DBItem.findAll", query="SELECT c FROM DBItem c order by c.issueDate desc"),
 @NamedQuery(name="DBItem.findAllForVerify", query="SELECT c FROM DBItem c"),
 @NamedQuery(name="DBItem.countOriginals", query="SELECT count(c) FROM DBItem c where c.store = :id "),
 @NamedQuery(name="DBItem.findByMetadataId", query="SELECT c FROM DBItem c where c.file.id = :id "),

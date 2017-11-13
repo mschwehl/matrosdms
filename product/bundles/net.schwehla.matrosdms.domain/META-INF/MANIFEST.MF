@@ -18,3 +18,4 @@ Export-Package: net.schwehla.matrosdms.domain.admin,
  net.schwehla.matrosdms.domain.search,
  net.schwehla.matrosdms.domain.util,
  net.schwehla.matrosdms.rcp
+Import-Package: org.eclipse.persistence.internal.oxm

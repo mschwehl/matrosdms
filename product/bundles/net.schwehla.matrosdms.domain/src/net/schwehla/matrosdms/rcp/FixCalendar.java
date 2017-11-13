@@ -4,13 +4,21 @@ import java.util.Calendar;
 import java.util.Date;
 import java.util.GregorianCalendar;
 
+import javax.xml.bind.annotation.XmlAccessType;
+import javax.xml.bind.annotation.XmlAccessorType;
+import javax.xml.bind.annotation.adapters.XmlJavaTypeAdapter;
+
+import net.schwehla.matrosdms.adapter.DateAdapter;
+
+@XmlAccessorType(XmlAccessType.FIELD)
 public class FixCalendar {
 
 
-
+	@XmlJavaTypeAdapter(value = DateAdapter.class)
     private Date relevancefrom;
+	
+	@XmlJavaTypeAdapter(value = DateAdapter.class)
     private Date relevanceto;
-
     
     
     public Date getRelevancefrom() {

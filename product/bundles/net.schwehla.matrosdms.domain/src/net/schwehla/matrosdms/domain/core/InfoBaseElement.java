@@ -6,7 +6,9 @@ import java.util.Objects;
 
 import javax.xml.bind.annotation.XmlAccessType;
 import javax.xml.bind.annotation.XmlAccessorType;
+import javax.xml.bind.annotation.adapters.XmlJavaTypeAdapter;
 
+import net.schwehla.matrosdms.adapter.DateAdapter;
 import net.schwehla.matrosdms.domain.api.IIdentifiable;
 import net.schwehla.matrosdms.domain.core.Identifier;
 
@@ -27,8 +29,11 @@ public class InfoBaseElement implements IIdentifiable, Serializable,Comparable< 
 	protected String icon;
 	protected String description;
 	
+	@XmlJavaTypeAdapter(value = DateAdapter.class)
 	protected Date dateCreated;
 	
+	@XmlJavaTypeAdapter(value = DateAdapter.class)
+	protected Date dateArchived;
 	
 	public Date getDateCreated() {
 		return dateCreated;
@@ -39,7 +44,7 @@ public class InfoBaseElement implements IIdentifiable, Serializable,Comparable< 
 	}
 
 
-	protected Date dateArchived;
+
 	
 	public String getDescription() {
 		return description;
