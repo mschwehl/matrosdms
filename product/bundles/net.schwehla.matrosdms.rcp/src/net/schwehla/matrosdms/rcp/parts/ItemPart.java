@@ -99,6 +99,7 @@ import org.eclipse.swt.widgets.Shell;
 import org.eclipse.swt.widgets.TableItem;
 import org.eclipse.swt.widgets.Text;
 
+import net.schwehla.matrosdms.domain.core.Identifier;
 import net.schwehla.matrosdms.domain.core.InfoItem;
 import net.schwehla.matrosdms.domain.core.InfoOrginalstore;
 import net.schwehla.matrosdms.domain.core.attribute.AbstractInfoAttribute;
@@ -109,7 +110,6 @@ import net.schwehla.matrosdms.domain.core.attribute.InfoNumberAttribute;
 import net.schwehla.matrosdms.domain.core.attribute.InfoTextAttribute;
 import net.schwehla.matrosdms.domain.core.tagcloud.InfoKategory;
 import net.schwehla.matrosdms.domain.metadata.MatrosMetadata;
-import net.schwehla.matrosdms.domain.core.Identifier;
 import net.schwehla.matrosdms.i18n.MatrosMessage;
 import net.schwehla.matrosdms.lucene.ILuceneService;
 import net.schwehla.matrosdms.notification.INotificationService;

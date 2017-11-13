@@ -30,7 +30,11 @@ public class Identifier implements Serializable, Comparable<Identifier> {
 		return temp;
 	}
 	
-
+	public static Identifier createImport(String uuid) {
+		Identifier temp = new Identifier(NONE.getPk(),uuid);
+		return temp;
+	}
+	
 
 	
 	private Identifier(Long pk) {

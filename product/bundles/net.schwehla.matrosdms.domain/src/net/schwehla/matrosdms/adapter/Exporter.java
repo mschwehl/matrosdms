@@ -1,24 +1,41 @@
 package net.schwehla.matrosdms.adapter;
 
+import java.beans.BeanInfo;
+import java.beans.Introspector;
 import java.io.ByteArrayOutputStream;
+import java.io.File;
 import java.io.IOException;
 import java.io.OutputStream;
 import java.io.StringReader;
+import java.lang.reflect.Field;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Date;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 import javax.xml.bind.JAXBContext;
 import javax.xml.bind.JAXBElement;
+import javax.xml.bind.JAXBException;
 import javax.xml.bind.Marshaller;
+import javax.xml.bind.Unmarshaller;
 import javax.xml.namespace.QName;
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.ParserConfigurationException;
+import javax.xml.stream.XMLInputFactory;
+import javax.xml.transform.Source;
+import javax.xml.transform.dom.DOMSource;
+import javax.xml.xpath.XPath;
+import javax.xml.xpath.XPathConstants;
+import javax.xml.xpath.XPathFactory;
 
 import org.w3c.dom.Document;
+import org.w3c.dom.Node;
+import org.w3c.dom.NodeList;
 import org.w3c.dom.bootstrap.DOMImplementationRegistry;
 import org.w3c.dom.ls.DOMImplementationLS;
 import org.w3c.dom.ls.LSOutput;
@@ -45,10 +62,148 @@ public class Exporter {
 	
 	public static void main(String[] args) throws Exception {
 
-		new Exporter().execute();
+		new Exporter().xpath();
 		
 	}
 
+
+	private void xpath() throws Exception {
+		
+		// others with seeAlso
+        JAXBContext jc = JAXBContext.newInstance(InfoContext.class , InfoItem.class, 
+        		InfoKategory.class, AttributeType.class, AbstractInfoAttribute.class); 
+        Marshaller marshaller = jc.createMarshaller(); 
+        marshaller.setProperty(Marshaller.JAXB_FORMATTED_OUTPUT, true); 
+        marshaller.setProperty(Marshaller.JAXB_FRAGMENT, Boolean.TRUE);
+        
+        
+		
+		// parse the XML as a W3C Document
+		DocumentBuilder builder = DocumentBuilderFactory.newInstance().newDocumentBuilder();
+		Document document = builder.parse(new File("C:\\Users\\Martin\\Desktop\\export.xml"));
+
+		XPath xpath = XPathFactory.newInstance().newXPath();
+		String expression = "//InfoItemListElement";
+		NodeList infoKategoryNodes = (NodeList) xpath.evaluate(expression,document, XPathConstants.NODESET);
+		
+		for (int i=0; i < infoKategoryNodes.getLength(); i++) {
+
+			Node root = (Node) xpath.evaluate("ROOT",  infoKategoryNodes.item(i), XPathConstants.NODE);
+			
+		
+			List<Field> infoFields = getAllFields(new ArrayList<Field>(),InfoKategory.class);
+			
+			Map <Field,String> valMap = new HashMap<>();
+			
+			for (Field f : infoFields) {
+				
+				String val = (String) xpath.evaluate("./" + f.getName(), root, XPathConstants.STRING);
+				valMap.put(f, val);
+			}
+		
+			String uuid = (String) xpath.evaluate("./identifier/uuid", root, XPathConstants.STRING);
+			
+			InfoKategory k = new InfoKategory(Identifier.createImport( uuid  ), "xx");
+			
+			for (Field x : infoFields) {
+				x.setAccessible(true);
+				
+				String val = valMap.get(x);
+				
+				if (val == null || val.trim().length() == 0) {
+					continue;
+				}
+				
+				String type = x.getType().getSimpleName();
+				
+				
+				System.out.println(type);
+				
+				
+				switch(type) {
+				
+					case "boolean":
+						
+						x.set(k, Boolean.parseBoolean(val) );
+						
+						break;
+						
+					case "int":
+						
+						x.set(k, Integer.parseInt(val) );
+						
+						break;
+						
+					case "Date":
+						
+						// xxx
+						x.set(k, new Date() );
+						
+						break;
+						
+						
+						
+						
+						
+					default:
+						
+						x.set(k,val);
+				}
+			
+				
+				
+			}
+			
+ 			System.out.println(k);
+
+			
+			
+			
+		/*	
+			String pk = (String) xpath.evaluate(".//pk", root, XPathConstants.STRING);
+			String uuid = (String) xpath.evaluate("./identifier/uuid", root, XPathConstants.STRING);
+			String uuid = (String) xpath.evaluate(".//dateCreated", root, XPathConstants.STRING);
+			String uuid = (String) xpath.evaluate(".//uuid", root, XPathConstants.STRING);
+			String uuid = (String) xpath.evaluate(".//uuid", root, XPathConstants.STRING);
+			String uuid = (String) xpath.evaluate(".//uuid", root, XPathConstants.STRING);
+		*/
+		
+	
+			
+			
+		}
+		
+		
+		
+		
+
+		
+		
+	}
+
+	
+	public static List<Field> getAllFields(List<Field> fields, Class<?> type) {
+		
+		for (Field f : type.getDeclaredFields()) {
+			if (f.getType().getName().equals(Identifier.class.getName())) {
+				continue;
+			}
+			
+		    if (java.lang.reflect.Modifier.isStatic(f.getModifiers())) {
+		        continue;
+		    }
+			
+			fields.add(f);
+			
+		}
+			
+	    if (type.getSuperclass() != null) {
+	    	getAllFields(fields, type.getSuperclass());
+	    }
+
+	    return fields;
+	}
+	
 
 	static Map<InfoContext,List<InfoItem>> service = new HashMap<>();
 	
@@ -102,7 +257,7 @@ public class Exporter {
         Marshaller marshaller = jc.createMarshaller(); 
         marshaller.setProperty(Marshaller.JAXB_FORMATTED_OUTPUT, true); 
         marshaller.setProperty(Marshaller.JAXB_FRAGMENT, Boolean.TRUE);
-        
+
         
         OutputStream metadataOutputStream = new ByteArrayOutputStream();
 
