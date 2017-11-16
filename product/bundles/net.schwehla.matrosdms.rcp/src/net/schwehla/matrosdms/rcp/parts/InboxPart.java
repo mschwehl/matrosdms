@@ -625,7 +625,7 @@ public class InboxPart {
 		public Image getImage(Object element) {
 			if (element instanceof File) {
 				if (((File) element).isDirectory()) {
-					return getResourceManager().createImage(directoryImage);
+		//			return getResourceManager().createImage(directoryImage);
 				}
 			}
 
