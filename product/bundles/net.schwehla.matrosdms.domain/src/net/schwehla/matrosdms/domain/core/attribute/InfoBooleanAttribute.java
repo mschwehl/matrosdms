@@ -9,6 +9,7 @@ import net.schwehla.matrosdms.domain.core.Identifier;
 public class InfoBooleanAttribute extends AbstractInfoAttribute {
 
 	private static final long serialVersionUID = 1L;
+	private Boolean boolValue;
 	
 	public Boolean getBooleanValue() {
 		return boolValue;
@@ -17,8 +18,6 @@ public class InfoBooleanAttribute extends AbstractInfoAttribute {
 	public void setBooleanValue(Boolean boolValue) {
 		this.boolValue = boolValue;
 	}
-
-	private Boolean boolValue;
 	
 	public InfoBooleanAttribute(Identifier uuid, String Name) {
 		super(uuid, Name);
@@ -42,7 +41,7 @@ public class InfoBooleanAttribute extends AbstractInfoAttribute {
 
 	@Override
 	public void init() {
-		boolValue = false;
+		boolValue = true;
 		
 	}
 

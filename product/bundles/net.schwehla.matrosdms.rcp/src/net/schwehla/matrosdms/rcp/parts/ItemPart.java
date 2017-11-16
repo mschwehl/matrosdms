@@ -872,6 +872,7 @@ public class ItemPart {
 			  			
 			  				AbstractInfoAttribute newObject = (AbstractInfoAttribute) c.newInstance( Identifier.createNEW(), "" + fdata.getType().name() );
 			  				
+			  				// set initial values (boolean: true as default)
 			  				newObject.init();
 			  				newObject.setType(fdata);
 			  				
