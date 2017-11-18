@@ -3,6 +3,7 @@ package net.schwehla.matrosdms.rcp.parts;
 import java.io.File;
 import java.text.DateFormat;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Locale;
@@ -67,12 +68,11 @@ import org.eclipse.swt.widgets.Shell;
 import org.eclipse.swt.widgets.Text;
 import org.eclipse.swt.widgets.TreeItem;
 
+import net.schwehla.matrosdms.domain.core.Identifier;
 import net.schwehla.matrosdms.domain.core.InfoContext;
 import net.schwehla.matrosdms.domain.core.InfoItem;
 import net.schwehla.matrosdms.domain.core.InfoItemList;
-import net.schwehla.matrosdms.domain.core.InfoOrginalstore;
 import net.schwehla.matrosdms.domain.core.tagcloud.InfoKategory;
-import net.schwehla.matrosdms.domain.core.Identifier;
 import net.schwehla.matrosdms.i18n.MatrosMessage;
 import net.schwehla.matrosdms.persistenceservice.IMatrosServiceService;
 import net.schwehla.matrosdms.rcp.MatrosServiceException;
@@ -591,25 +591,13 @@ public class ContextInfoItemListPart {
 					
 					
 					// is it from the desktop ? 
-					
-			
-					
 					if (fileTransfer.isSupportedType(event.currentDataType)) {
 	                    String[] files = (String[]) event.data;
-	                    
-	                    System.out.println("dropped"); //$NON-NLS-1$
+	                    Arrays.stream(files).forEach( e -> tryOpen(new File(e)));
 	                    return;
 	                  
-	                } else {
-	                	
-	                	
-	                	
-	                }
-	                		
+	                } 
 	               
-					
-					
-					
 					
 					final StructuredSelection droppedObj =  (StructuredSelection) event.data;
 					
@@ -617,57 +605,23 @@ public class ContextInfoItemListPart {
 						
 						try {
 							
+							
 							Iterator <TreeItem> it = droppedObj.iterator();
 							
 							while (it.hasNext()) {
 								
 								TreeItem ti = (TreeItem) it.next();
-						
+								File file = (File) ti.getData();
 								
-								MPart itemPart = partService.createPart("net.schwehla.matrosdms.rcp.partdescriptor.ItemPart");
-								
-								ItemPartElementWrapper wrapper = new ItemPartElementWrapper(Type.NEW);
-								wrapper.setInboxFile( (File) ti.getData() );
-
-								String fileName = wrapper.getInboxFile().getName();
-								
-								if (fileName.contains(".")) {
-									fileName = fileName.split("\\.")[0];
-								}
-								
-								InfoItem infoItem = new InfoItem( _infoContext , Identifier.createNEW(),fileName );
-								wrapper.setInfoItem(infoItem);
-								
-								itemPart.setObject(wrapper);
-								
-								itemPart.setLabel(messages.contextlistpart_tab_newpart);
-
-								 java.util.Optional <MPart> existing = isExisting(infoItem);
-								
-								if (existing.isPresent()) {
-									
-									MPart part = existing.get();
-									
-									partService.showPart(part, PartState.ACTIVATE);
-									
-									continue;
-								} 
-								
-								
-								
-								
-								// XXX not allow double open
-								partService.showPart(itemPart, PartState.ACTIVATE);
+								tryOpen(file);
 								
 							}
 							
-						
 							
 						} catch (Exception e) {
 							logger.error(e);
 						}
 		
-								
 					}
 				
 				}
@@ -677,6 +631,49 @@ public class ContextInfoItemListPart {
 
 
 		});
+	}
+	
+	
+	
+
+	protected void tryOpen(File file) {
+
+		MPart itemPart = partService.createPart("net.schwehla.matrosdms.rcp.partdescriptor.ItemPart");
+		
+		ItemPartElementWrapper wrapper = new ItemPartElementWrapper(Type.NEW);
+		wrapper.setInboxFile(file );
+
+		String fileName = wrapper.getInboxFile().getName();
+		
+		if (fileName.contains(".")) {
+			fileName = fileName.split("\\.")[0];
+		}
+		
+		InfoItem infoItem = new InfoItem( _infoContext , Identifier.createNEW(),fileName );
+		wrapper.setInfoItem(infoItem);
+		
+		itemPart.setObject(wrapper);
+		
+		itemPart.setLabel(messages.contextlistpart_tab_newpart);
+
+		 java.util.Optional <MPart> existing = isExisting(infoItem);
+		
+		if (existing.isPresent()) {
+			
+			MPart part = existing.get();
+			
+			partService.showPart(part, PartState.ACTIVATE);
+			
+			return;
+		} 
+		
+		
+		// XXX not allow double open
+		partService.showPart(itemPart, PartState.ACTIVATE);
+		
+	
+		
+		
 	}
 
 	private java.util.Optional <MPart>  isExisting(InfoItem infoItem ) {
