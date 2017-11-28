@@ -54,3 +54,22 @@ create or replace View VW_TRANSACTIONDATA_UUID as
   SELECT 'ITEM' as TAB_TYPE , ITEM_ID as ID,  UUID  
   FROM ITEM  ) x 
  order by 1,2;
+
+ 
+ 
+ -- VW_SEARCH_ATTRIBUTES ------------------------------------------------------
+create or replace view VW_SEARCH_ATTRIBUTES AS 
+
+select distinct v.CONTEXT_ID, v.CON_NAME, v.CON_UUID, 
+v.CON_STAGE, v.ITEM_ID, v.ITEM_NAME, v.ITEM_UUID, 
+v.CON_DATEARCHIVED, v.ITEM_DATEARCHIVED, v.ELEMENT_ARCHIVED, v.STORE_STORE_ID, v.STORAGEITEMIDENTIFIER , count (ATTRIBUTE.item_id  > 0) as ATT_COUNT
+from VW_SEARCH v left outer join ATTRIBUTE 
+on v.item_id = ATTRIBUTE.item_id 
+--where ATTRIBUTE.ATTRIBUTETYPE_ATTRIBUTETYPE_ID = 1104 
+group by v.CONTEXT_ID, v.CON_NAME, v.CON_UUID, 
+v.CON_STAGE, v.ITEM_ID, v.ITEM_NAME, v.ITEM_UUID, 
+v.CON_DATEARCHIVED, v.ITEM_DATEARCHIVED, v.ELEMENT_ARCHIVED, v.STORE_STORE_ID, v.STORAGEITEMIDENTIFIER
+order by CONTEXT_ID, item_id;
+
+
+

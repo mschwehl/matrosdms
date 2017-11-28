@@ -1553,6 +1553,8 @@ public class MatrosServiceImpl implements IMatrosServiceService {
 			
 			 List<SearchedInfoItemElement> resultList = new ArrayList<>();
 			 
+			 if (input.getSearchAttributes()== null);
+			 
 			 List <VW_SEARCH> dbResult =  em.createNamedQuery("VW_SEARCH.findAll", VW_SEARCH.class).getResultList(); 
 
 			 InfoContext context = null;

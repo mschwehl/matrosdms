@@ -8,7 +8,7 @@ public class SearchItemInput {
 	String querystring;
 	List <String> seachAttributes = new ArrayList<>();
 	
-	public List<String> getSeachAttributes() {
+	public List<String> getSearchAttributes() {
 		return seachAttributes;
 	}
 
