@@ -637,12 +637,29 @@ public class ContextInfoItemListPart {
 	
 
 	protected void tryOpen(File file) {
-
-		MPart itemPart = partService.createPart("net.schwehla.matrosdms.rcp.partdescriptor.ItemPart");
 		
 		ItemPartElementWrapper wrapper = new ItemPartElementWrapper(Type.NEW);
 		wrapper.setInboxFile(file );
+		
+		// No directory allowed
+		if (wrapper.getInboxFile().exists() && wrapper.getInboxFile().isDirectory()) {
+			
+			// create a dialog with ok and cancel buttons and a question icon
+			MessageBox dialog =
+			        new MessageBox(shell, SWT.ICON_QUESTION | SWT.OK );
+			dialog.setText("Directory");
+			dialog.setMessage("Select a file and not a folder");
 
+			// open dialog and await originalstore selection
+			dialog.open();
+			
+			return;
+			
+		}
+			
+		
+		
+		MPart itemPart = partService.createPart("net.schwehla.matrosdms.rcp.partdescriptor.ItemPart");
 		String fileName = wrapper.getInboxFile().getName();
 		
 		if (fileName.contains(".")) {
