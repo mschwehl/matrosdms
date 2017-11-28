@@ -477,6 +477,12 @@ public class InboxPart {
 										
 										
 									} catch (Exception e) {
+										
+								  		NotificationNote note = new NotificationNote();
+								  		note.setHeading("Exception occured"  );
+								  		note.setBody( e.getMessage() );
+										notificationService.openPopup(note);
+										
 										throw new RuntimeException(e);
 									}
 										

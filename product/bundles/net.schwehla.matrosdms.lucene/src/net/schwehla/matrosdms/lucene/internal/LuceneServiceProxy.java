@@ -173,6 +173,10 @@ public class LuceneServiceProxy implements ILuceneService {
 	@Override
 	public MatrosMetadata parseMetadata(File inboxElement) throws MatrosServiceException {
 		
+		if (inboxElement.isDirectory()) {
+			throw new MatrosServiceException("File is direcory: " + inboxElement.getAbsolutePath()); 
+		}
+		
 		// http://stackoverflow.com/questions/21163108/custom-thread-pool-in-java-8-parallel-stream
 		
 		synchronized (tika) {  
