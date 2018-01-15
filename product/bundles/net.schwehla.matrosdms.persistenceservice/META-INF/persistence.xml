@@ -29,6 +29,7 @@
  		<class>net.schwehla.matrosdms.persistenceservice.entity.internal.management.DBConfig</class> 
  		
 	    <class>net.schwehla.matrosdms.persistenceservice.entity.internal.VW_SEARCH</class>
+	    <class>net.schwehla.matrosdms.persistenceservice.entity.internal.VW_SEARCH_ATTRIBUTES</class>
  		<class>net.schwehla.matrosdms.persistenceservice.entity.internal.VW_CONTEXT</class>
 	    <class>net.schwehla.matrosdms.persistenceservice.entity.internal.VW_MASTERDATA_UUID</class>
 	    <class>net.schwehla.matrosdms.persistenceservice.entity.internal.VW_TRANSACTIONDATA_UUID</class>	    	    	    

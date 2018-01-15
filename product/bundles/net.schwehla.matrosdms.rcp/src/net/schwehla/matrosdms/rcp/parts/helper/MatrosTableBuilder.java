@@ -1,6 +1,9 @@
 package net.schwehla.matrosdms.rcp.parts.helper;
 
+import java.text.DateFormat;
 import java.util.Comparator;
+import java.util.Date;
+import java.util.Locale;
 import java.util.function.Function;
 
 import org.eclipse.jface.viewers.ColumnLabelProvider;
@@ -55,6 +58,14 @@ public class MatrosTableBuilder<X> {
 	            if (comparator != null && ((Table)viewer.getControl()).getSortDirection() == SWT.UP) {
 	                comparator = comparator.reversed();
 	            }
+	            
+	            if (e1 == null) {
+	            	return 1;
+	            }
+	            if (e2 == null) {
+	            	return -1;
+	            }
+	            
 	            return comparator == null ? 0 : comparator.compare(e1, e2);
 	            
 	    	}
@@ -104,6 +115,9 @@ public class MatrosTableBuilder<X> {
 		}
 
 
+		  private DateFormat df =  DateFormat.getDateInstance(DateFormat.SHORT, Locale.getDefault());
+			 
+			
 
 		public  TableViewerColumn append(int weight) {
 			
@@ -113,7 +127,20 @@ public class MatrosTableBuilder<X> {
 		        public String getText(Object element) {
 		        	
 		        	if (function != null && element != null) {
-			            return "" + function.apply((X) element);
+		        		
+		        	    Object o = function.apply((X) element);
+		        	    
+		        	    if (o == null) {
+		        	    	return "";
+		        	    }
+		        	    
+		        	    if (o instanceof Date) {
+		        	    	
+		        	    	return df.format(o);
+		        	    	
+		        	    }
+		        		
+			            return "" + o ;
 		        	}
 		        	
 		        	
@@ -125,7 +152,23 @@ public class MatrosTableBuilder<X> {
 		    TableColumn column = viewerColumn.getColumn();
 		    column.setText(colName);
 		    column.setWidth(100);
-		    column.setData(DATA_COMPARATOR, (Comparator) (v1, v2) -> function.apply( (X) v1).compareTo(function.apply(  (X) v2)));
+		    column.setData(DATA_COMPARATOR, (Comparator) (v1, v2) -> {
+		    
+		    	Comparable oeins = function.apply( (X) v1);
+		    	Comparable oZwei = function.apply( (X) v2);
+		    	
+		    	if (oeins == null) {
+		    		return -1;
+		    	}
+		    	if (oZwei == null) {
+		    		return 1;
+		    	}
+		    	
+		    	return oeins.compareTo(oZwei);
+		    	
+		    
+		    	
+		    });
 		    
 		    column.setResizable(true);
 		    column.setMoveable(true);

@@ -27,6 +27,7 @@ import net.schwehla.matrosdms.rcp.binding.MatrosBinder;
 import net.schwehla.matrosdms.rcp.controller.SerachResultListController;
 import net.schwehla.matrosdms.rcp.parts.helper.InfoKategoryListWrapper;
 import net.schwehla.matrosdms.rcp.swt.popupshell.widgets.notifications.PopOverComposite;
+import org.eclipse.swt.widgets.Label;
 
 
 
@@ -39,7 +40,7 @@ public class SearchElementPart {
 	private IMatrosServiceService service;
 	
 	@Inject
-	SerachResultListController serachController;
+	SerachResultListController searchController;
 	
 	@Inject
 	InfoKategoryListWrapper art;
@@ -73,20 +74,21 @@ public class SearchElementPart {
 		
 		Composite compositeSearcharea = new Composite(composite, SWT.NONE);
 		compositeSearcharea.setLayout(new GridLayout(2, false));
-		compositeSearcharea.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, false, 1, 1));
+		compositeSearcharea.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true, 1, 1));
 		
 		text = new Text(compositeSearcharea, SWT.BORDER);
-		text.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1));
+		text.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true, 1, 1));
 
 		
 		btnSearch = new Button(compositeSearcharea, SWT.NONE);
+		btnSearch.setLayoutData(new GridData(SWT.LEFT, SWT.TOP, false, false, 1, 1));
 		
 		
 		btnSearch.addSelectionListener(new SelectionAdapter() {
 			@Override
 			public void widgetSelected(SelectionEvent e) {
 				
-				serachController.reload(input);
+				searchController.reload(input);
 			}
 		});
 
@@ -97,7 +99,7 @@ public class SearchElementPart {
 		
 		Composite compositeAttributes = new Composite(composite, SWT.NONE);
 		compositeAttributes.setLayout(new GridLayout(5, false));
-		compositeAttributes.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true, 1, 1));
+		compositeAttributes.setLayoutData(new GridData(SWT.FILL, SWT.BOTTOM, true, false, 1, 1));
 		
 		Button btnWer = new Button(compositeAttributes, SWT.NONE);
 		btnWer.setText("Wer");
@@ -115,6 +117,7 @@ public class SearchElementPart {
 		Button btnArt = new Button(compositeAttributes, SWT.NONE);
 		btnArt.setText("Art");
 		addPopupToControl(btnArt, MyGlobalConstants.ROOT_ART);
+		new Label(compositeAttributes, SWT.NONE);
 		
   	   btnArt.toDisplay(btnArt.getLocation());
 		

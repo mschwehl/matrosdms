@@ -11,6 +11,9 @@ public class MultilineLabelProvider <T> extends OwnerDrawLabelProvider {
 	
 	Table table;
 	Function <T,StringBuffer> suplier;
+	
+	String toString = null;
+	
 	 
 	public MultilineLabelProvider(Table table, Function <T,StringBuffer> suplier) {
 		this.table = table;
@@ -40,10 +43,14 @@ public class MultilineLabelProvider <T> extends OwnerDrawLabelProvider {
 		}
 
 		T entry = (T) element;
+		
+
 
 		StringBuffer sb = suplier.apply(entry);
 		
-		Point size = event.gc.textExtent(sb.toString().trim());
+		toString = sb.toString().trim();
+		
+		Point size = event.gc.textExtent(toString);
 
 		event.height = size.y;
 
@@ -67,6 +74,14 @@ public class MultilineLabelProvider <T> extends OwnerDrawLabelProvider {
 		
 		event.gc.drawText(sb.toString().trim(), event.x, event.y, true);
 
+	}
+	
+	@Override
+	public String toString() {
+		if (toString != null) {
+			return toString;
+		}
+		return super.toString();
 	}
 
 }

@@ -441,7 +441,14 @@ public class InfoKategoryListWrapper {
 	public void setExpanded(boolean bool) {
 		
 		// http://stackoverflow.com/questions/40417487/java-swt-tree-expand-all-collapse-all
-		_treeviewer.expandAll();
+		
+		if (bool) {
+			_treeviewer.expandAll();
+		} else {
+			_treeviewer.expandToLevel(1);
+		}
+		
+		_treeviewer.getTree().pack();
 		_treeviewer.getTree().layout(true);
 		
 	}

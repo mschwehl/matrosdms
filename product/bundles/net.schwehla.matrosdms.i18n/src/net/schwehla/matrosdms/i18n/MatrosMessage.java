@@ -162,6 +162,8 @@ public class MatrosMessage {
 	public String wizzard_verify_control_description;
 	public String wizzard_verify_description;
 	public String wizzard_verify_title;
+	public String itemstackpart_colMetadata;
+	public String itemstackpart_colContext;
 
 	
 }
