@@ -55,9 +55,11 @@ import org.eclipse.swt.widgets.Text;
 
 import net.schwehla.matrosdms.domain.core.InfoContext;
 import net.schwehla.matrosdms.domain.core.InfoItem;
+import net.schwehla.matrosdms.domain.core.InfoOrginalstore;
 import net.schwehla.matrosdms.domain.core.tagcloud.InfoKategory;
 import net.schwehla.matrosdms.i18n.MatrosMessage;
 import net.schwehla.matrosdms.persistenceservice.IMatrosServiceService;
+import net.schwehla.matrosdms.rcp.MatrosServiceException;
 import net.schwehla.matrosdms.rcp.MyEventConstants;
 import net.schwehla.matrosdms.rcp.dnd.DomainClassTransfer;
 import net.schwehla.matrosdms.rcp.dnd.MyDragListener;
@@ -66,14 +68,16 @@ import net.schwehla.matrosdms.rcp.parts.filter.ItemFilter;
 import net.schwehla.matrosdms.rcp.parts.helper.AutoResizeTableLayout;
 import net.schwehla.matrosdms.rcp.parts.helper.DesktopHelper;
 import net.schwehla.matrosdms.rcp.parts.helper.ItemPartElementWrapper;
+import net.schwehla.matrosdms.rcp.parts.helper.MatrosTableBuilder;
 import net.schwehla.matrosdms.rcp.parts.helper.ItemPartElementWrapper.Type;
 import net.schwehla.matrosdms.rcp.swt.labelprovider.LinkLabelProvider;
 import net.schwehla.matrosdms.rcp.swt.labelprovider.LinkOpener;
+import net.schwehla.matrosdms.rcp.swt.labelprovider.MultilineLabelProvider;
 
 public class ItemStackPart {
 	
-    private DateFormat df;
-    
+
+	DateFormat df ;
 	
 	private TableViewer swtItemlistTableViewer;
 	
@@ -174,6 +178,9 @@ public class ItemStackPart {
 	@PostConstruct
 	public void postConstruct(Composite parent) {
 		
+		df = DateFormat.getDateInstance(DateFormat.SHORT, locale);
+		
+		
 // register-problem...
 		
 		
@@ -204,8 +211,6 @@ public class ItemStackPart {
 //		
 		
 
-		df = DateFormat.getDateInstance(DateFormat.SHORT, locale);
-		 
 		parent.setLayout(new GridLayout(1, false));
 
 		swtTxtSerarchfield = new Text(parent, SWT.BORDER);
@@ -289,27 +294,148 @@ public class ItemStackPart {
 
 		swtItemlistTableViewer.setContentProvider(ArrayContentProvider.getInstance());
 		swtItemlistTableViewer.setInput(new ArrayList<>());
+		
+		
 
-		AutoResizeTableLayout layout = new AutoResizeTableLayout(swtItemlistTableViewer.getTable());
+	//	AutoResizeTableLayout layout = new AutoResizeTableLayout(swtItemlistTableViewer.getTable());
 
-		createColumns(layout);
+	//	createColumns(layout);
+		
+		
+        MatrosTableBuilder <InfoItem> builder = new MatrosTableBuilder<InfoItem>(swtItemlistTableViewer);
+        TableViewerColumn colContext = builder.makeColumn(messages.itemstackpart_colContext).setFunction(e -> e.getContext().getName() ).append(20);
+		
 
-		// Stetch the Table itself to maximum
+		
 
-		GridData gridData = new GridData();
+	  	
+        TableViewerColumn colIcon = builder.makeColumn(messages.itemstackpart_colMetadata).setFunction(e -> "" ).append(15);
+		
+        
+		LinkOpener <InfoItem> linkHandler = new LinkOpener<InfoItem>() {
+			@Override
+			public void openLink(InfoItem rowObject) {
+				
+	        	try {
+            	 	String local = desktopHelper.getLocallink(rowObject);
+                	desktopHelper.openUrl(local);
+            	}catch(Exception ex) {
+            		logger.error(ex);
+            	}
+           
+			}
+		};
+		
+		
+		
+		
+		// OVERRIDE LABELPROVIDER FROM ABOVE
+		
+		colIcon.setLabelProvider(new LinkLabelProvider(new ColumnLabelProvider() {
+			
+			@Override
 
-		gridData.grabExcessHorizontalSpace = true;
+			public String getText(Object element) {
 
-		gridData.grabExcessVerticalSpace = true;
+				InfoItem item = (InfoItem) element;
+				return  item.getMetadata().getMimetype() ;
 
-		gridData.horizontalAlignment = GridData.FILL;
+			}
+			
+		}, linkHandler));
+		
+	
+		
+    	builder.makeColumn(messages.itemlistPart_colDate).setFunction(e -> {
+    		
+    		if (e.getIssueDate() != null) {
+				return df.format(e.getIssueDate());
+			} else {
+				return "" ; // df.format(item.getDateCreated());
+			}
+    		
+    		
+    		
+    	}).append(20);
+    	
 
-		gridData.verticalAlignment = GridData.FILL;
+        TableViewerColumn colType = builder.makeColumn(messages.contextlistpart_table_col_type).setFunction(e -> "" ).append(25);
+		
+	// OVERWRITTEN
+	
+	
+	MultilineLabelProvider <InfoItem> artprovider = new MultilineLabelProvider<>(swtItemlistTableViewer.getTable() ,
+			
+			 e -> {
+				 	StringBuffer sb = new StringBuffer();
+				 	
+					Iterator<InfoKategory> itwas =  e.getTypList().iterator();
+					
+					while (itwas.hasNext()) {
+						sb.append(itwas.next().getName());
+						if (itwas.hasNext()) {
+							sb.append("\n");
+						}
+					}
+			
+				 	return sb;
+				 	
+				 	}
+			 
+			);
+	
+	
+	colType.setLabelProvider( artprovider );
 
-		swtItemlistTableViewer.getTable().setLayoutData(gridData);
 
-		swtItemlistTableViewer.addFilter(filter);
 
+     builder.makeColumn(messages.contextlistpart_table_col_name).setFunction(e -> e.getName() ).append(25);
+
+    
+    TableViewerColumn sumAttributes = builder.makeColumn(messages.contextlistpart_table_col_name).setFunction(e ->"").append(25);
+    
+    
+	MultilineLabelProvider <InfoItem> provider = new MultilineLabelProvider<>(swtItemlistTableViewer.getTable() ,
+			
+			 e -> {
+				 	StringBuffer sb = new StringBuffer();
+				 	
+				 	if (e.getStoreIdentifier() != null) {
+				 		try { // cached, should not be so bad
+							sb.append(service.getOriginalStoreByIdentifer(e.getStoreIdentifier()).getName());
+						} catch (MatrosServiceException e1) {
+							logger.error(e1);
+						}
+				 	}
+				 	
+				 	if (e.getStoreItemNumber() != null) {
+					 	sb.append( "\n").append(e.getStoreItemNumber());					 
+				 	}
+				 	return sb;
+				 	
+			 	}
+			 
+			);
+	
+	
+	sumAttributes.setLabelProvider( provider );
+	
+			
+		
+		
+
+        builder.build();
+   
+        
+        
+        GridData gridData = new GridData();
+        gridData.grabExcessHorizontalSpace = true;
+        gridData.grabExcessVerticalSpace = true;
+        gridData.horizontalAlignment = GridData.FILL;
+        gridData.verticalAlignment = GridData.FILL;
+        swtItemlistTableViewer.getTable().setLayoutData(gridData);
+        
+        swtItemlistTableViewer.addFilter(filter);
 		swtItemlistTableViewer.getTable().addMouseListener(new MouseAdapter() {
 
 			@Override
@@ -407,241 +533,9 @@ public class ItemStackPart {
 	
 
   		
-
-	private void createColumns(AutoResizeTableLayout layout) {
-
-		swtItemlistTableViewer.getTable().setLayout(layout);
-
-		swtItemlistTableViewer.getTable().setHeaderVisible(true);
-
-		swtItemlistTableViewer.getTable().setLinesVisible(true);
-
-		TableViewerColumn colIcon = new TableViewerColumn(swtItemlistTableViewer, SWT.NONE);
-
-		colIcon.getColumn().setText(messages.itemstackpart_colIcon);
-
-		colIcon.getColumn().setMoveable(true);
-
-		layout.addColumnData(new ColumnWeightData(15));
-
-		
-		
-		LinkOpener <InfoItem> linkHandler = new LinkOpener<InfoItem>() {
-			@Override
-			public void openLink(InfoItem rowObject) {
-				
-	        	try {
-            	 	String local = desktopHelper.getLocallink(rowObject);
-                	desktopHelper.openUrl(local);
-            	}catch(Exception ex) {
-            		logger.error(ex);
-            	}
-           
-			}
-		};
-		
-		colIcon.setLabelProvider(new LinkLabelProvider(new ColumnLabelProvider() {
-			
-			@Override
-
-			public String getText(Object element) {
-
-				InfoItem item = (InfoItem) element;
-				
-				return item.getMetadata().getMimetype();
-
-			}
-			
-		}, linkHandler));
-		
-		/*
-		
-		colIcon.setLabelProvider(new ColumnLabelProvider() {
-
-			@Override
-
-			public String getText(Object element) {
-
-				InfoItem item = (InfoItem) element;
-				
-				return item.getMetadata().getMimetype();
-
-			}
-			
-		});
-
-		*/
-		
-		
-		TableViewerColumn colContext = new TableViewerColumn(swtItemlistTableViewer, SWT.LEFT);
-
-		colContext.getColumn().setText(messages.contextlistpart_table_col_context);
-
-		colContext.getColumn().setMoveable(true);
-
-		colContext.setLabelProvider(new ColumnLabelProvider() {
-
-			@Override
-
-			public String getText(Object element) {
-
-				InfoItem c = (InfoItem) element;
-
-				return c.getContext().getName();
-
-			}
-
-		});
-
-		layout.addColumnData(new ColumnWeightData(10));
 	
-		
-		
-		TableViewerColumn colDate = new TableViewerColumn(swtItemlistTableViewer, SWT.NONE);
-
-		colDate.getColumn().setText(messages.itemstackpart_colDate);
-
-		colDate.getColumn().setMoveable(true);
-
-		layout.addColumnData(new ColumnWeightData(20));
-
-		colDate.setLabelProvider(new ColumnLabelProvider() {
-
-			@Override
-
-			public String getText(Object element) {
-
-				InfoItem item = (InfoItem) element;
-				
-				return df.format(item.getDateCreated());
-
-			}
-			
-		});
-		
-		
-		
-		TableViewerColumn colType = new TableViewerColumn(swtItemlistTableViewer, SWT.LEFT);
-
-		colType.getColumn().setText(messages.contextlistpart_table_col_type);
-
-		colType.getColumn().setMoveable(true);
-
-		layout.addColumnData(new ColumnWeightData(40));
-
-		colType.setLabelProvider(new OwnerDrawLabelProvider() {
-
-			// http://stackoverflow.com/questions/26463520/eclipse-ownerdrawlabelprovider-makes-selection-background-dark-blue
-
-			@Override
-
-			protected void erase(Event event, Object element)
-
-			{
-
-				// Don't call super to avoid selection draw
-
-				// Elswise the Background-Color is wrong
-
-			}
-
-			@Override
-
-			protected void measure(Event event, Object element) {
-
-				// Element is filtered
-
-				if (element == null) {
-
-					return;
-
-				}
-
-				event.width = swtItemlistTableViewer.getTable().getColumn(event.index).getWidth();
-
-				if (event.width == 0) {
-
-					return;
-
-				}
-
-				InfoItem entry = (InfoItem) element;
-
-				StringBuffer sb = new StringBuffer();
-
-				buildContent(entry, sb);
-				
-				Point size = event.gc.textExtent(sb.toString());
-
-				event.height = size.y;
-
-			}
-
-			@Override
-
-			protected void paint(Event event, Object element) {
-
-				// Element is filtered
-
-				if (element == null) {
-
-					return;
-
-				}
-
-				InfoItem entry = (InfoItem) element;
-
-				StringBuffer sb = new StringBuffer();
-				
-				
-				buildContent(entry, sb);
-				
-				
-
-
-				event.gc.drawText(sb.toString(), event.x, event.y, true);
-
-			}
-
-			private void buildContent(InfoItem entry, StringBuffer sb) {
-				Iterator<InfoKategory> itwas =  entry.getTypList().iterator();
-				
-				while (itwas.hasNext()) {
-					sb.append(itwas.next().getName());
-					if (itwas.hasNext()) {
-						sb.append("+");
-					}
-				}
-				
-				sb.append("\n");
-			}
-		}
-
-		);
-
-		TableViewerColumn colName = new TableViewerColumn(swtItemlistTableViewer, SWT.NONE);
-
-		colName.getColumn().setText(messages.contextlistpart_table_col_name);
-
-		colName.getColumn().setMoveable(true);
-
-		layout.addColumnData(new ColumnWeightData(30));
-
-		colName.setLabelProvider(new ColumnLabelProvider() {
-
-			@Override
-
-			public String getText(Object element) {
-
-				InfoItem c = (InfoItem) element;
-				return  c.getName(); 
-			}
-
-		});
-
-
-
-	}
+	
+	
 	
 	
 }
