@@ -1553,14 +1553,48 @@ public class MatrosServiceImpl implements IMatrosServiceService {
 			
 			 List<SearchedInfoItemElement> resultList = new ArrayList<>();
 			 
-			 if (input.getSearchAttributes()== null);
-			 
-			 List <VW_SEARCH> dbResult =  em.createNamedQuery("VW_SEARCH.findAll", VW_SEARCH.class).getResultList(); 
+			
+						 
 
-			 InfoContext context = null;
+				String query = 						 
+
+						"select distinct  v.* " + 
+						"from VW_SEARCH v left outer join ATTRIBUTE " +
+						"on v.item_id = ATTRIBUTE.item_id " +
+						
+			//			" where ATTRIBUTE.ATTRIBUTETYPE_ATTRIBUTETYPE_ID = 1104 " + 
+
+						
+						"group by CONTEXT_ID,CON_NAME,CON_UUID,CON_STAGE,v.ITEM_ID,ITEM_NAME,ITEM_UUID,CON_DATEARCHIVED,ITEM_DATEARCHIVED,ELEMENT_ARCHIVED,STORE_STORE_ID,STORAGEITEMIDENTIFIER " +
+						"order by context_id, item_id ";
+
+
+				 List <VW_SEARCH> dbResult = em.createNativeQuery(query, VW_SEARCH.class).getResultList(); ;
+				 
+				 addToResult(resultList, dbResult);
+				 
+				 
+				 
+
+				 
+//				 List <VW_SEARCH> dbResult =  em.createNamedQuery("VW_SEARCH.findAll", VW_SEARCH.class).getResultList(); 
+
+				 //addToResult(resultList, dbResult);
+					 
+			 
+	
+
+		
+			return resultList;
+			
+		}
+
+
+		private void addToResult(List<SearchedInfoItemElement> resultList, List<VW_SEARCH> dbResult) {
+			InfoContext context = null;
 			 
 			 for (VW_SEARCH element : dbResult) {
-		
+
 				 	if (context == null || context.getIdentifier().getPk() != element.getCONTEXT_ID()) {
 				 		context = new InfoContext(Identifier.create(element.getCONTEXT_ID(), element.getCON_UUID()), element.getCON_NAME());
 				 	}
@@ -1579,9 +1613,6 @@ public class MatrosServiceImpl implements IMatrosServiceService {
 					resultList.add(i);
 					
 			 }
-		
-			return resultList;
-			
 		}
 
 

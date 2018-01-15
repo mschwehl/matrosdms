@@ -90,7 +90,10 @@ public abstract class PopOverShell extends Widget implements Fadeable {
     backgroundColor = ColorFactory.getColor(getDisplay(), BACKGROUND_COLOR);
 
     // SWT.TOOL adds a drop shadow on supported platforms
-    popOverShell = new Shell(parentShell, SWT.RESIZE | SWT.BORDER  );
+    popOverShell = new Shell(parentShell, SWT.RESIZE | SWT.BORDER  | SWT.ON_TOP | SWT.TITLE & ~SWT.CLOSE );
+
+    
+    
     popOverShell.setBackground(backgroundColor);
     popOverShell.setLayout(new FillLayout());
     
@@ -102,6 +105,8 @@ public abstract class PopOverShell extends Widget implements Fadeable {
   
   }
   
+  Point oldSize ;
+  Point oldLocation ;
 
 /**
    * Shows the PopOverShell in a suitable location relative to the parent component. Classes extending PopOverShell will
@@ -111,16 +116,34 @@ public abstract class PopOverShell extends Widget implements Fadeable {
     runBeforeShowPopOverShell();
 
     Point popOverShellSize = getAppropriatePopOverSize();
-    popOverRegion = new Region();
-    popOverRegion.add(new Rectangle(0, 0, popOverShellSize.x, popOverShellSize.y));
 
-    Point location = getPopOverShellLocation(parentShell, poppedOverItem, popOverRegion);
+    
+    if (oldSize != null) {
+    	popOverShell.setSize(oldSize);
+    } else {
+    	
+        popOverRegion = new Region();
+        popOverRegion.add(new Rectangle(0, 0, popOverShellSize.x, popOverShellSize.y));
 
-    popOverShell.setRegion(popOverRegion);
-    popOverShell.setSize(popOverRegion.getBounds().width, popOverRegion.getBounds().height);
-    popOverShell.setLocation(location);
+        popOverShell.setRegion(popOverRegion);
+        
+    	popOverShell.setSize(popOverRegion.getBounds().width, popOverRegion.getBounds().height);
+    }
+    
+    if (oldLocation != null) {
+    	popOverShell.setLocation(oldLocation);
+    } else {
+        Point location = getPopOverShellLocation(parentShell, poppedOverItem, popOverRegion);
+        
+        popOverShell.setLocation(location);
+    }
+    
+
     popOverShell.setAlpha(FULLY_VISIBLE_ALPHA);
     popOverShell.setVisible(true);
+    
+
+    
   }
 
   /**
@@ -130,6 +153,9 @@ public abstract class PopOverShell extends Widget implements Fadeable {
   public void toggle() {
     if (isVisible() && !getIsFadeEffectInProgress()) {
       fadeOut();
+      
+      oldSize = popOverShell.getSize();
+      oldLocation = popOverShell.getLocation();
     } else {
       show();
     }
