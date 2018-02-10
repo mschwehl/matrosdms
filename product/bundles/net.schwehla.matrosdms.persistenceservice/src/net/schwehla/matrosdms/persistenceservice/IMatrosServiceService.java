@@ -6,7 +6,6 @@ import java.util.List;
 
 import net.schwehla.matrosdms.domain.admin.CloudSettings;
 import net.schwehla.matrosdms.domain.admin.MatrosConnectionCredential;
-import net.schwehla.matrosdms.domain.core.idm.MatrosUser;
 import net.schwehla.matrosdms.domain.core.Identifier;
 import net.schwehla.matrosdms.domain.core.InfoContext;
 import net.schwehla.matrosdms.domain.core.InfoEvent;
@@ -14,11 +13,13 @@ import net.schwehla.matrosdms.domain.core.InfoItem;
 import net.schwehla.matrosdms.domain.core.InfoItemList;
 import net.schwehla.matrosdms.domain.core.InfoOrginalstore;
 import net.schwehla.matrosdms.domain.core.attribute.AttributeType;
+import net.schwehla.matrosdms.domain.core.idm.MatrosUser;
 import net.schwehla.matrosdms.domain.core.tagcloud.InfoKategory;
 import net.schwehla.matrosdms.domain.metadata.MatrosMetadata;
 import net.schwehla.matrosdms.domain.search.SearchItemInput;
 import net.schwehla.matrosdms.domain.search.SearchedInfoItemElement;
 import net.schwehla.matrosdms.domain.util.VerifyMessage;
+import net.schwehla.matrosdms.persistenceservice.internal.cache.MatrosTransactional;
 import net.schwehla.matrosdms.persistenceservice.internal.cache.Matroscache;
 import net.schwehla.matrosdms.rcp.MatrosServiceException;
 
@@ -112,7 +113,8 @@ public interface IMatrosServiceService {
 	public void updateCloudSettings(CloudSettings settings)  throws MatrosServiceException;
 
 	public AttributeType loadAttributeTypeByIdentifier(Identifier identifier) throws MatrosServiceException;
-
+	
+	@MatrosTransactional(Transaction=false)
 	public List <SearchedInfoItemElement> searchInfoContextItems(SearchItemInput input) throws MatrosServiceException;
 
 	@Matroscache(evictAll=true)

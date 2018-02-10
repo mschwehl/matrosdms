@@ -34,7 +34,7 @@ public class MatrosNoCryptor extends AbstractMatrosCryptor implements IMatrosSto
      
             
 		} catch (Exception e) {
-			throw new MatrosServiceException(e, "Error packing: " + e);
+			throw new MatrosServiceException("Error packing: " + e ,e);
 		}
           
 	

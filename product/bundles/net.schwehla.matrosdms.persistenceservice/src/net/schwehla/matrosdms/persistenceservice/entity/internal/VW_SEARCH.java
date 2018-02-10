@@ -19,6 +19,9 @@ import javax.persistence.TemporalType;
 @NamedQueries ({
 @NamedQuery(name="VW_SEARCH.findAll", query="SELECT c FROM VW_SEARCH c") ,
 @NamedQuery(name="VW_SEARCH.findAllNotArchived", query="SELECT c FROM VW_SEARCH c where c.ELEMENT_ARCHIVED = true") 
+
+
+
 })
 
 
