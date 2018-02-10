@@ -23,7 +23,7 @@ public class ObjectCloner<T extends Serializable> {
 				return (T) ois.readObject();
 			}
 		} catch(Exception e) {
-			throw new MatrosServiceException(e,"Cannot serialize");
+			throw new MatrosServiceException("Cannot serialize",e);
 		}
 		
 			

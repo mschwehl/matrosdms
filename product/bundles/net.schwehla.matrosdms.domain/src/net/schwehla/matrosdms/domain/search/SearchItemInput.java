@@ -1,27 +1,41 @@
 package net.schwehla.matrosdms.domain.search;
 
-import java.util.ArrayList;
-import java.util.List;
-
 public class SearchItemInput {
 
-	String querystring;
-	List <String> seachAttributes = new ArrayList<>();
 	
-	public List<String> getSearchAttributes() {
-		return seachAttributes;
+	String queryString;
+
+	public String getQueryString() {
+		return queryString;
 	}
 
-	public void setSeachAttributes(List<String> seachAttributes) {
-		this.seachAttributes = seachAttributes;
+	public void setQueryString(String queryString) {
+		this.queryString = queryString;
 	}
+	
+	// where item.name like xxx 
+	
+	
+	// type
+	// and wer=martin
+	
+	// art=kdw
+	
+	// attr=kdw[value=2000]
+	
+//	IExpressionNode node;
+//
+//	public IExpressionNode getNode() {
+//		return node;
+//	}
+//
+//	public void setNode(IExpressionNode node) {
+//		this.node = node;
+//	}
+//	
+//    
+	
+	
 
-	public String getQuerystring() {
-		return querystring;
-	}
-
-	public void setQuerystring(String querystring) {
-		this.querystring = querystring;
-	}
 	
 }

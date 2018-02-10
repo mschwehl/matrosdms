@@ -46,6 +46,7 @@ import net.schwehla.matrosdms.domain.api.IIdentifiable;
 import net.schwehla.matrosdms.domain.core.idm.MatrosUser;
 import net.schwehla.matrosdms.persistenceservice.CacheConstants;
 import net.schwehla.matrosdms.persistenceservice.entity.internal.management.DBConfig;
+import net.schwehla.matrosdms.persistenceservice.internal.cache.MatrosTransactional;
 import net.schwehla.matrosdms.persistenceservice.internal.cache.Matroscache;
 import net.schwehla.matrosdms.rcp.MatrosNoServerconfigServiceException;
 import net.schwehla.matrosdms.rcp.MatrosServiceException;
@@ -160,6 +161,10 @@ public class MatrosServerProxy 	implements InvocationHandler,  Serializable  {
 		public Object invoke(Object proxy, Method method, Object[] args) throws Exception {
 			
 			Matroscache cached = method.getAnnotation(Matroscache.class);
+			MatrosTransactional transactional = method.getAnnotation(MatrosTransactional.class);
+			
+			boolean startTransaction = transactional != null 
+					? transactional.Transaction() : true; 
 			
 			String identifier = null;
 
@@ -194,7 +199,11 @@ public class MatrosServerProxy 	implements InvocationHandler,  Serializable  {
 			
 			try {
 
-				em.getTransaction().begin();
+				if (startTransaction) {
+					em.getTransaction().begin();
+				}
+				
+
 				serviceImpl.setEntityManager(em);
 				serviceImpl.setUser(user);
 				serviceImpl.setEventBroker(eventBroker);
@@ -213,11 +222,9 @@ public class MatrosServerProxy 	implements InvocationHandler,  Serializable  {
 				return result;
 				
 				
-			} catch (Exception e) {
+			} catch (InvocationTargetException ite) {
 				
-				if (e instanceof InvocationTargetException ) {
-					((InvocationTargetException) e).getTargetException().printStackTrace(System.err);
-				}
+				Exception cause = (Exception) ite.getTargetException();
 				
 				StringBuffer sb = new StringBuffer("Parameter -> ");
 				
@@ -227,39 +234,40 @@ public class MatrosServerProxy 	implements InvocationHandler,  Serializable  {
 							sb.append( ((IIdentifiable) obj).getName() + "|" +  ((IIdentifiable) obj).getIdentifier().toDebug() );
 						}
 					}
-					
 				}
 				
-				
-				serviceImpl.log(e,  sb.toString() );
-				localException = e;
-				
-				
-				if (e instanceof MatrosServiceException) {
-					throw (MatrosServiceException) e;
+				serviceImpl.log(cause,  sb.toString() );
+		
+				if (cause instanceof MatrosServiceException) {
+					throw cause;
+				} else {
+					throw new MatrosServiceException("UNKNOWN ERROR " , cause);
 				}
 				
-				throw e;
+			}
+			
+			catch (Exception e) {
+				serviceImpl.log(e );
+				throw new MatrosServiceException("UNKNOWN ERROR " , e);
 				
 			} finally {
 				
 				if (em != null && em.isOpen() ) {
 					
-					if (localException == null) {
+					if (startTransaction) {
 						
-						if (em.getTransaction().isActive()) {
-							em.getTransaction().commit();
+						if (localException == null) {
+							if (em.getTransaction().isActive()) {
+								em.getTransaction().commit();
+							}
+						} else {
+							if (em.getTransaction().isActive()) {
+								em.getTransaction().rollback();
+								logger.debug("Transaction rollback");
+							}
 						}
-						
-					} else {
-						
-						if (em.getTransaction().isActive()) {
-							em.getTransaction().rollback();
-							
-							logger.debug("Transaction rollback");
-						}
-						
 					}
+					
 					
 					em.close();
 				}
@@ -328,7 +336,9 @@ public class MatrosServerProxy 	implements InvocationHandler,  Serializable  {
 			if (emf != null) {
 				
 				try {
-						return  emf.createEntityManager();
+					
+					return  emf.createEntityManager();
+				
 				} catch(Exception e) {
 					
 					String error = null;
@@ -347,7 +357,7 @@ public class MatrosServerProxy 	implements InvocationHandler,  Serializable  {
 						logger.error(e1, "cannot attach trace :" + (error != null ? error : "no trace available"));
 					}
 					
-					MatrosServiceException mse = new MatrosServiceException(e, "cannot create entity manager: " + (error != null ? error : "no trace available"));
+					MatrosServiceException mse = new MatrosServiceException( "cannot create entity manager: " + (error != null ? error : "no trace available") , e);
 					throw mse;
 				}
 				

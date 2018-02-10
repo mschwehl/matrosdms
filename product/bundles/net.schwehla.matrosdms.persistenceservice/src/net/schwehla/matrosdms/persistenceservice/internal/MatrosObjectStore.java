@@ -87,7 +87,7 @@ class MatrosObjectStore {
 			
 			
 		} catch(Exception e) {
-			throw new MatrosServiceException(e, "Cannot retrieve all files");
+			throw new MatrosServiceException("Cannot retrieve all files",e);
 		}
 		
 

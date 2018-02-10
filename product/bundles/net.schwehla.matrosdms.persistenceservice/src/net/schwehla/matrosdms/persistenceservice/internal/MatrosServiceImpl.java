@@ -1544,51 +1544,50 @@ public class MatrosServiceImpl implements IMatrosServiceService {
 		
 			
 		}
-
-
-		@Override
-		public List<SearchedInfoItemElement> searchInfoContextItems(SearchItemInput input)
-				throws MatrosServiceException {
-			
-			
-			 List<SearchedInfoItemElement> resultList = new ArrayList<>();
-			 
-			
-						 
-
-				String query = 						 
-
-						"select distinct  v.* " + 
-						"from VW_SEARCH v left outer join ATTRIBUTE " +
-						"on v.item_id = ATTRIBUTE.item_id " +
-						
-			//			" where ATTRIBUTE.ATTRIBUTETYPE_ATTRIBUTETYPE_ID = 1104 " + 
-
-						
-						"group by CONTEXT_ID,CON_NAME,CON_UUID,CON_STAGE,v.ITEM_ID,ITEM_NAME,ITEM_UUID,CON_DATEARCHIVED,ITEM_DATEARCHIVED,ELEMENT_ARCHIVED,STORE_STORE_ID,STORAGEITEMIDENTIFIER " +
-						"order by context_id, item_id ";
-
-
-				 List <VW_SEARCH> dbResult = em.createNativeQuery(query, VW_SEARCH.class).getResultList(); ;
-				 
-				 addToResult(resultList, dbResult);
-				 
-				 
-				 
-
-				 
-//				 List <VW_SEARCH> dbResult =  em.createNamedQuery("VW_SEARCH.findAll", VW_SEARCH.class).getResultList(); 
-
-				 //addToResult(resultList, dbResult);
-					 
-			 
 	
+		@Override
+		public List<SearchedInfoItemElement> searchInfoContextItems(SearchItemInput input) throws MatrosServiceException {
+	
+			List<SearchedInfoItemElement> resultList = new ArrayList<>();
+	
+			String query =
+	
+			"SELECT DISTINCT " +
 
-		
-			return resultList;
+			"  c.CONTEXT_ID as CONTEXT_ID " + ", c.NAME as CON_NAME " + ", c.UUID as CON_UUID "
+			+ ", c.STAGE as CON_STAGE " + ", I.ITEM_ID " + ", I.NAME as ITEM_NAME "
+			+ ", I.UUID as ITEM_UUID " + ", c.DATEARCHIVED as CON_DATEARCHIVED "
+			+ ", I.DATEARCHIVED as ITEM_DATEARCHIVED "
+			+ ", I.DATEARCHIVED is not null or c.DATEARCHIVED is not null as ELEMENT_ARCHIVED "
+			+ ",I.STORE_STORE_ID " + ",I.STORAGEITEMIDENTIFIER " +
+
+			"FROM CONTEXT C LEFT OUTER JOIN ITEM I ON I.CONTEXT_ID = C.CONTEXT_ID "
+			+ "  LEFT OUTER JOIN ATTRIBUTE A ON I.ITEM_ID = A.ITEM_ID "
+			+ "  LEFT OUTER JOIN item_kategorie ON I.item_id = item_kategorie.item_id "
+			+ "  LEFT OUTER JOIN context_kategorie ON I.context_id = context_kategorie.context_id " +
+
+			// keine leeren Contexte
+			"where I.name is not null " ;
 			
-		}
+			if (input.getQueryString() != null) {
+				query += input.getQueryString();
+			}
+			
+			query += " ORDER BY CONTEXT_ID,  CON_NAME ";
 
+			try {
+				
+				List<VW_SEARCH> dbResult = em.createNativeQuery(query, VW_SEARCH.class).getResultList();
+				addToResult(resultList, dbResult);
+				
+			} catch(Exception e) {
+				MatrosServiceException mse = new MatrosServiceException(e.getMessage(), e);
+				throw mse;
+			}
+			
+			return resultList;
+	
+		}
 
 		private void addToResult(List<SearchedInfoItemElement> resultList, List<VW_SEARCH> dbResult) {
 			InfoContext context = null;
@@ -1625,7 +1624,7 @@ public class MatrosServiceImpl implements IMatrosServiceService {
 				return g.generate();
 				
 			} catch (Exception e) {
-				throw new MatrosServiceException(e, "cannot generate Metadata");
+				throw new MatrosServiceException("cannot generate Metadata",e );
 			}
 		}
 

@@ -96,7 +96,7 @@ public class MatrosExternalCryptor extends AbstractMatrosCryptor implements IMat
 
             
 		} catch (Exception e) {
-			throw new MatrosServiceException(e, "Error packing: " + e);
+			throw new MatrosServiceException("Error packing: " + e , e);
 		}
           
 	
