@@ -28,6 +28,8 @@
  		<class>net.schwehla.matrosdms.persistenceservice.entity.internal.management.DBPermission</class> 
  		<class>net.schwehla.matrosdms.persistenceservice.entity.internal.management.DBConfig</class> 
  		
+ 		<class>net.schwehla.matrosdms.persistenceservice.entity.internal.search.DBSearchHistory</class> 
+ 		
 	    <class>net.schwehla.matrosdms.persistenceservice.entity.internal.VW_SEARCH</class>
 	    <class>net.schwehla.matrosdms.persistenceservice.entity.internal.VW_SEARCH_ATTRIBUTES</class>
  		<class>net.schwehla.matrosdms.persistenceservice.entity.internal.VW_CONTEXT</class>

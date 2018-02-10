@@ -311,39 +311,7 @@ public class ItemStackPart {
 	  	
         TableViewerColumn colIcon = builder.makeColumn(messages.itemstackpart_colMetadata).setFunction(e -> "" ).append(15);
 		
-        
-		LinkOpener <InfoItem> linkHandler = new LinkOpener<InfoItem>() {
-			@Override
-			public void openLink(InfoItem rowObject) {
-				
-	        	try {
-            	 	String local = desktopHelper.getLocallink(rowObject);
-                	desktopHelper.openUrl(local);
-            	}catch(Exception ex) {
-            		logger.error(ex);
-            	}
-           
-			}
-		};
-		
-		
-		
-		
-		// OVERRIDE LABELPROVIDER FROM ABOVE
-		
-		colIcon.setLabelProvider(new LinkLabelProvider(new ColumnLabelProvider() {
-			
-			@Override
-
-			public String getText(Object element) {
-
-				InfoItem item = (InfoItem) element;
-				return  item.getMetadata().getMimetype() ;
-
-			}
-			
-		}, linkHandler));
-		
+  
 	
 		
     	builder.makeColumn(messages.itemlistPart_colDate).setFunction(e -> {
@@ -388,11 +356,52 @@ public class ItemStackPart {
 	colType.setLabelProvider( artprovider );
 
 
+	
+	TableViewerColumn colName = builder.makeColumn(messages.contextlistpart_table_col_name).setFunction(e -> "" ).append(25);
+     
+     
+		LinkOpener <InfoItem> linkHandler = new LinkOpener<InfoItem>() {
+			@Override
+			public void openLink(InfoItem rowObject) {
+				
+	        	try {
+           	 	String local = desktopHelper.getLocallink(rowObject);
+               	desktopHelper.openUrl(local);
+           	}catch(Exception ex) {
+           		logger.error(ex);
+           	}
+          
+			}
+		};
+		
+		
+		
+		
+		// OVERRIDE LABELPROVIDER FROM ABOVE
+		
+		colName.setLabelProvider(new LinkLabelProvider(new ColumnLabelProvider() {
+			
+			@Override
 
-     builder.makeColumn(messages.contextlistpart_table_col_name).setFunction(e -> e.getName() ).append(25);
+			public String getText(Object element) {
+
+				InfoItem item = (InfoItem) element;
+				return  item.getName() ;
+
+			}
+			
+		}, linkHandler));
+		
+		
+		
+		
+     
+     
+     
+     
 
     
-    TableViewerColumn sumAttributes = builder.makeColumn(messages.contextlistpart_table_col_name).setFunction(e ->"").append(25);
+    TableViewerColumn sumAttributes = builder.makeColumn(messages.contextlistpart_table_col_store).setFunction(e ->"").append(25);
     
     
 	MultilineLabelProvider <InfoItem> provider = new MultilineLabelProvider<>(swtItemlistTableViewer.getTable() ,

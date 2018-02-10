@@ -16,18 +16,20 @@ import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Composite;
+import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.swt.widgets.Text;
 
-import net.schwehla.matrosdms.domain.search.SearchItemInput;
 import net.schwehla.matrosdms.domain.core.Identifier;
+import net.schwehla.matrosdms.domain.search.SearchItemInput;
 import net.schwehla.matrosdms.persistenceservice.IMatrosServiceService;
+import net.schwehla.matrosdms.rcp.MatrosServiceException;
 import net.schwehla.matrosdms.rcp.MyGlobalConstants;
 import net.schwehla.matrosdms.rcp.binding.MatrosBinder;
 import net.schwehla.matrosdms.rcp.controller.SerachResultListController;
+import net.schwehla.matrosdms.rcp.dialog.MatrosDisplayTextDialog;
 import net.schwehla.matrosdms.rcp.parts.helper.InfoKategoryListWrapper;
 import net.schwehla.matrosdms.rcp.swt.popupshell.widgets.notifications.PopOverComposite;
-import org.eclipse.swt.widgets.Label;
 
 
 
@@ -53,6 +55,8 @@ public class SearchElementPart {
 	public SearchElementPart() {
 		
 	}
+	
+	
 	
 	SearchItemInput input;
 	private Button btnSearch;
@@ -88,14 +92,25 @@ public class SearchElementPart {
 			@Override
 			public void widgetSelected(SelectionEvent e) {
 				
-				searchController.reload(input);
+				if (input == null) {
+					input = new SearchItemInput();
+				}
+				
+				try {
+					searchController.reload(input);
+				} catch(MatrosServiceException mse) {
+					
+					MatrosDisplayTextDialog dialog = new MatrosDisplayTextDialog(shell, mse.getMessage() );
+				    dialog.open();
+
+					// logger.info("Suche nicht erfolgreich " + mse.getMessage() );
+					
+				}
 			}
 		});
 
 		btnSearch.setText("Search");
-	
-
-		
+			
 		
 		Composite compositeAttributes = new Composite(composite, SWT.NONE);
 		compositeAttributes.setLayout(new GridLayout(5, false));
@@ -205,12 +220,10 @@ public class SearchElementPart {
 	
 		// Search always visible
 		
-		/*
 		MatrosBinder.Twoway firstName =  bindingNewStype.bindComposite(text, true)
-			.toModelTwoWay(input, "querystring", (x) -> { input.setQuerystring( (String) x); } ).build();
+			.toModelTwoWay(input, "querystring", (x) -> { input.setQueryString( (String) x); } ).build();
 		
 		bindingNewStype.setButtonVisible(btnSearch,firstName);
-		*/
 		
 	}
 }

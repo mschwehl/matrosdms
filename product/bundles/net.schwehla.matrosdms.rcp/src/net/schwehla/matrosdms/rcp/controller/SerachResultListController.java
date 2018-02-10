@@ -8,7 +8,6 @@ import javax.inject.Singleton;
 
 import org.eclipse.e4.core.di.annotations.Creatable;
 import org.eclipse.e4.core.services.events.IEventBroker;
-import org.eclipse.e4.core.services.log.Logger;
 
 import net.schwehla.matrosdms.domain.search.SearchItemInput;
 import net.schwehla.matrosdms.domain.search.SearchedInfoItemElement;
@@ -26,8 +25,7 @@ public class SerachResultListController   {
     @Inject
     private IMatrosServiceService service;
     
-	@Inject 
-	Logger logger;
+
 	
 	@Inject
 	private IEventBroker eventBroker;
@@ -35,19 +33,20 @@ public class SerachResultListController   {
 
 
 
-	public void reload(SearchItemInput input)  {
+	public void reload(SearchItemInput input) throws MatrosServiceException {
     	
     	try {
     		
         	_allElements.clear();
         	_allElements.addAll( service.searchInfoContextItems(input) );
         	
-
-        	
     	} catch (MatrosServiceException e1) {
-			  logger.error(e1);
+//			  logger.error(e1);
+    		
     		_allElements.clear();
 
+    		throw e1;
+    		
     	} finally {
 	    	eventBroker.post(MyEventConstants.TOPIC_REFRESH_SEARCHRESULT , input);
 	    }

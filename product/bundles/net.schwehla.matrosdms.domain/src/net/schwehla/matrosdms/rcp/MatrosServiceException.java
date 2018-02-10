@@ -3,7 +3,7 @@ package net.schwehla.matrosdms.rcp;
 public class MatrosServiceException extends Exception {
 
 
-	public MatrosServiceException(Exception e,  String text) {
+	public MatrosServiceException( String text, Exception e ) {
 		super(text,e);
 	}
 
