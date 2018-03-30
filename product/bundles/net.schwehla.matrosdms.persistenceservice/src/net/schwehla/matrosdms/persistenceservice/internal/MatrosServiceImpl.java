@@ -13,6 +13,7 @@ import java.util.Objects;
 import java.util.function.Consumer;
 import java.util.function.Function;
 import java.util.logging.Logger;
+import java.util.stream.Collectors;
 
 import javax.persistence.EntityManager;
 
@@ -50,6 +51,9 @@ import net.schwehla.matrosdms.domain.core.tagcloud.InfoKategory;
 import net.schwehla.matrosdms.domain.metadata.MatrosMetadata;
 import net.schwehla.matrosdms.domain.search.SearchItemInput;
 import net.schwehla.matrosdms.domain.search.SearchedInfoItemElement;
+import net.schwehla.matrosdms.domain.search.parameter.EMatrosQueryFeature;
+import net.schwehla.matrosdms.domain.search.parameter.EMatrosQueryType;
+import net.schwehla.matrosdms.domain.search.parameter.MatrosQueryParameter;
 import net.schwehla.matrosdms.domain.util.VerifyItem;
 import net.schwehla.matrosdms.domain.util.VerifyMessage;
 import net.schwehla.matrosdms.persistenceservice.IMatrosServiceService;
@@ -302,26 +306,16 @@ public class MatrosServiceImpl implements IMatrosServiceService {
 		return c;
 	}
 	
-	
-
-
-
 
 	
 	
 	@Override
 	public InfoContext loadInfoContextByIdentifier(Identifier identifier) throws MatrosServiceException {
 	
+		VW_CONTEXT element = em.createNamedQuery("VW_CONTEXT.findByUUID", VW_CONTEXT.class).setParameter("uuid",identifier.getUuid()).getSingleResult();
+		InfoContext c = mapContext(element);
 		
-				 
-		 VW_CONTEXT element = em.createNamedQuery("VW_CONTEXT.findByUUID", VW_CONTEXT.class).setParameter("uuid",identifier.getUuid()).getSingleResult();
-
-			InfoContext c = mapContext(element);
-
-	        
-	        return c;
-	
-		
+		return c;
 		
 	}
 	
@@ -1555,7 +1549,7 @@ public class MatrosServiceImpl implements IMatrosServiceService {
 			"SELECT DISTINCT " +
 
 			"  c.CONTEXT_ID as CONTEXT_ID " + ", c.NAME as CON_NAME " + ", c.UUID as CON_UUID "
-			+ ", c.STAGE as CON_STAGE " + ", I.ITEM_ID " + ", I.NAME as ITEM_NAME "
+			+ ", c.STAGE as CON_STAGE " + ", I.ITEM_ID " + ", I.NAME as ITEM_NAME " + ", i.ISSUEDATE as ITEM_ISSUEDATE "
 			+ ", I.UUID as ITEM_UUID " + ", c.DATEARCHIVED as CON_DATEARCHIVED "
 			+ ", I.DATEARCHIVED as ITEM_DATEARCHIVED "
 			+ ", I.DATEARCHIVED is not null or c.DATEARCHIVED is not null as ELEMENT_ARCHIVED "
@@ -1569,11 +1563,85 @@ public class MatrosServiceImpl implements IMatrosServiceService {
 			// keine leeren Contexte
 			"where I.name is not null " ;
 			
-			if (input.getQueryString() != null) {
-				query += input.getQueryString();
+			if (input.getQueryString() != null && ! input.getQueryString().trim().isEmpty()) {
+			
+	
+	
+				
+				String subQuery = input.getQueryString();
+				
+				  
+				
+				for (MatrosQueryParameter queryParameter : input.getQueryParameter()) {
+					
+					   if (EMatrosQueryType.INFO_KATEGORY == queryParameter.getType() ) {
+						   
+							List<String> ids = new ArrayList<>();
+							
+							InfoKategory infoKategory = getInfoKategoryByIdentifier(queryParameter.getIdentifier());
+							
+							ids.add("" + infoKategory.getIdentifier().getPk());
+							
+							boolean recursive = queryParameter.getFeature().stream().filter( e -> e == EMatrosQueryFeature.Recursive).count() > 0;
+							if (recursive) {
+								infoKategory.getChildren().forEach(e -> ids.add(""+ e.getIdentifier().getPk()));
+							}
+							
+							String h = ids.stream().collect( Collectors.joining( "," )) ;
+							String in = "   " +  h + "  ";
+							
+							    
+							if (infoKategory.getRoot().equals(MyGlobalConstants.ROOT_ART)) {
+								
+			
+				
+								String sub = "item_kategorie.KATEGORY_ID in (" + in + ") " ;
+								
+								subQuery = subQuery.replaceFirst("\\$", sub);
+								
+								
+							} else {
+								
+					
+								String sub = "context_kategorie.KATEGORY_ID in (" + in + ") " ;
+								
+								subQuery = subQuery.replaceFirst("\\$", sub);
+								
+								
+								
+							}
+							
+						   
+					   }
+
+					   if (EMatrosQueryType.ATTRIBUTE == queryParameter.getType() ) {
+						   
+						   String sub = "";
+				
+						   
+						   sub = sub + " a.ATTRIBUTETYPE_ATTRIBUTETYPE_ID = " + queryParameter.getIdentifier().getPk() + " ";
+								   
+							subQuery = subQuery.replaceFirst("\\$", sub);
+							
+				
+					   }
+					   
+						
+					
+					}
+					
+				
+				if (! subQuery.toUpperCase().trim().startsWith("AND")) {
+					
+					subQuery = " and " + subQuery;
+					
+				}
+		
+				
+				query +=  subQuery;
 			}
 			
-			query += " ORDER BY CONTEXT_ID,  CON_NAME ";
+			query += "  ORDER BY CONTEXT_ID,  ITEM_ISSUEDATE ";
 
 			try {
 				
@@ -1606,6 +1674,9 @@ public class MatrosServiceImpl implements IMatrosServiceService {
 					i.setName(element.getITEM_NAME());
 					i.setDateArchived(element.getITEM_DATEARCHIVED());
 					i.setEffectiveArchived( element.isELEMENT_ARCHIVED() );
+					i.setIssueDate( element.getITEM_ISSUEDATE());
+					i.setStoreIdentifier( Identifier.create(element.getSTORE_STORE_ID(), ""));
+					i.setStoreItemNumber(element.getSTORAGEITEMIDENTIFIER());
 					
 					i.setSearchFilterString(element.getCON_NAME() + "|" + element.getITEM_NAME());
 					

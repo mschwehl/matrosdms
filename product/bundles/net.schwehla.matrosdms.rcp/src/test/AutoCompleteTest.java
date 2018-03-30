@@ -24,6 +24,8 @@ import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Shell;
 
+import net.schwehla.matrosdms.rcp.swt.search.SearchItemEditor;
+
 public class AutoCompleteTest {
 
 	protected Shell shell;
@@ -66,7 +68,7 @@ public class AutoCompleteTest {
 		shell.setLayout(new FillLayout());
 		
 		
-		Ch5CompletionEditor e = new Ch5CompletionEditor(shell);
+		SearchItemEditor e = new SearchItemEditor(shell);
 		
 		if (true)
 			return; 
