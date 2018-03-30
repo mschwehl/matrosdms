@@ -5,10 +5,11 @@ import javax.annotation.PostConstruct;
 import javax.inject.Inject;
 
 import org.eclipse.e4.core.contexts.Active;
+import org.eclipse.e4.core.contexts.ContextInjectionFactory;
+import org.eclipse.e4.core.contexts.EclipseContextFactory;
+import org.eclipse.e4.core.contexts.IEclipseContext;
 import org.eclipse.e4.core.services.log.Logger;
 import org.eclipse.swt.SWT;
-import org.eclipse.swt.events.ControlEvent;
-import org.eclipse.swt.events.ControlListener;
 import org.eclipse.swt.events.SelectionAdapter;
 import org.eclipse.swt.events.SelectionEvent;
 import org.eclipse.swt.layout.FillLayout;
@@ -16,25 +17,27 @@ import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Composite;
-import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Shell;
-import org.eclipse.swt.widgets.Text;
 
 import net.schwehla.matrosdms.domain.core.Identifier;
 import net.schwehla.matrosdms.domain.search.SearchItemInput;
 import net.schwehla.matrosdms.persistenceservice.IMatrosServiceService;
 import net.schwehla.matrosdms.rcp.MatrosServiceException;
 import net.schwehla.matrosdms.rcp.MyGlobalConstants;
-import net.schwehla.matrosdms.rcp.binding.MatrosBinder;
 import net.schwehla.matrosdms.rcp.controller.SerachResultListController;
 import net.schwehla.matrosdms.rcp.dialog.MatrosDisplayTextDialog;
+import net.schwehla.matrosdms.rcp.dialog.SearchAttributeDialog;
+import net.schwehla.matrosdms.rcp.dialog.SearchInfoTypeTreeDialog;
 import net.schwehla.matrosdms.rcp.parts.helper.InfoKategoryListWrapper;
-import net.schwehla.matrosdms.rcp.swt.popupshell.widgets.notifications.PopOverComposite;
+import net.schwehla.matrosdms.rcp.swt.search.SearchItemEditor;
 
 
 
 
 public class SearchElementPart {
+	
+	@Inject
+	IEclipseContext context;
 	
 	@Inject @Active Shell shell;
 	
@@ -49,7 +52,7 @@ public class SearchElementPart {
 	
 	@Inject Logger logger;
 	
-	private Text text;
+	private SearchItemEditor swtQueryWidget;
 	
 	@Inject
 	public SearchElementPart() {
@@ -80,8 +83,8 @@ public class SearchElementPart {
 		compositeSearcharea.setLayout(new GridLayout(2, false));
 		compositeSearcharea.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true, 1, 1));
 		
-		text = new Text(compositeSearcharea, SWT.BORDER);
-		text.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true, 1, 1));
+		swtQueryWidget = new SearchItemEditor(compositeSearcharea);
+		swtQueryWidget.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true, 1, 1));
 
 		
 		btnSearch = new Button(compositeSearcharea, SWT.NONE);
@@ -95,6 +98,10 @@ public class SearchElementPart {
 				if (input == null) {
 					input = new SearchItemInput();
 				}
+				
+				
+				input = swtQueryWidget.getSearchItemInput();
+				
 				
 				try {
 					searchController.reload(input);
@@ -132,9 +139,45 @@ public class SearchElementPart {
 		Button btnArt = new Button(compositeAttributes, SWT.NONE);
 		btnArt.setText("Art");
 		addPopupToControl(btnArt, MyGlobalConstants.ROOT_ART);
-		new Label(compositeAttributes, SWT.NONE);
+		btnArt.toDisplay(btnArt.getLocation());
 		
-  	   btnArt.toDisplay(btnArt.getLocation());
+		
+		Button btnAttribute = new Button(compositeAttributes, SWT.NONE);
+		btnAttribute.setText("Attribute");
+		
+		btnAttribute.addSelectionListener(new SelectionAdapter() {
+			
+			@Override
+			public void widgetSelected(SelectionEvent e) {
+				
+
+				if (btnAttribute.getData() == null) {
+					
+					
+					IEclipseContext tempContext = EclipseContextFactory.create();
+			        
+			        // Composite parent, String text,  List<InfoKategory> supplier 
+					
+					SearchAttributeDialog  dialog = ContextInjectionFactory.make(SearchAttributeDialog.class, context, tempContext);
+					btnAttribute.setData(dialog);
+					
+					dialog.open();
+					
+					
+				} else {
+					SearchAttributeDialog dialog = (SearchAttributeDialog) btnAttribute.getData(); 
+					dialog.getShell().setVisible(!dialog.getShell().getVisible());
+				}
+				
+				
+				
+			}
+			
+		} );
+
+		btnAttribute.toDisplay(btnAttribute.getLocation());
+		
+		
 		
 		
 		input = new SearchItemInput();
@@ -144,44 +187,42 @@ public class SearchElementPart {
 	}
 	
 	private void addPopupToControl(Button btnType, Identifier identifier) {
-		
-	    PopOverComposite popOverComposite = PopOverComposite.createPopOverComposite(btnType);
-	    popOverComposite.setPositionRelativeParent(true);
-	    
-		
-	    ControlListener resizeListener = new ControlListener() {
-			public void controlResized(ControlEvent e) {
-				popOverComposite.relocate();
-				
-// If needed				
-//				popOverComposite.getPopOverCompositeShell().moveAbove(shell);
-			}
-			
-			public void controlMoved(ControlEvent e) {
-				popOverComposite.relocate();
-
-// If needed					
-//				popOverComposite.getPopOverCompositeShell().moveAbove(shell);		
-			}
-			
-		};
-		
-		shell.addControlListener( resizeListener);
-//		shell.addListener(SWT.Dispose, resizeListener);
 
 		
-	
+		
+		
 		btnType.addSelectionListener(new SelectionAdapter() {
 			@Override
 			public void widgetSelected(SelectionEvent e) {
-				popOverComposite.toggle();
+				
+				if (btnType.getData() == null) {
+					
+					
+					IEclipseContext tempContext = EclipseContextFactory.create();
+			        
+			        // Composite parent, String text,  List<InfoKategory> supplier 
+			        
+			        tempContext.set(Identifier.class, identifier);
+			        
+					
+					SearchInfoTypeTreeDialog dialog = ContextInjectionFactory.make(SearchInfoTypeTreeDialog.class, context, tempContext);
+					btnType.setData(dialog);
+					
+					dialog.open();
+					
+					
+				} else {
+					SearchInfoTypeTreeDialog dialog = (SearchInfoTypeTreeDialog) btnType.getData(); 
+					dialog.getShell().setVisible(!dialog.getShell().getVisible());
+				}
+
 			}
 		});
 		
 		
 		// Control
 
-		
+		/*
 	    Composite compositeTopShell = new Composite(popOverComposite.getPopOverCompositeShell(), SWT.NONE);
 	    
 	    compositeTopShell.setLayout(new GridLayout(1, false));
@@ -209,21 +250,17 @@ public class SearchElementPart {
 	    
 	    
 	    popOverComposite.setComposite(compositeTopShell);
-	    
+	    */
 	    
 		
 	}
 
 	private void createBinding() {
 	
-		MatrosBinder bindingNewStype = new MatrosBinder(btnSearch);
 	
-		// Search always visible
+
 		
-		MatrosBinder.Twoway firstName =  bindingNewStype.bindComposite(text, true)
-			.toModelTwoWay(input, "querystring", (x) -> { input.setQueryString( (String) x); } ).build();
-		
-		bindingNewStype.setButtonVisible(btnSearch,firstName);
+//		bindingNewStype.setButtonVisible(btnSearch,firstName);
 		
 	}
 }

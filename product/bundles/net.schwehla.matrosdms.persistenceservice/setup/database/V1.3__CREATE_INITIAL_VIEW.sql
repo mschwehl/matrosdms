@@ -3,7 +3,7 @@ create or replace view VW_CONTEXT as select c.* ,
  where c.datearchived is null and i.datearchived is null group by c.CONTEXT_ID order by c.CONTEXT_ID;
 
  
-create or replace view vw_search as
+create or replace  view vw_search as
 SELECT DISTINCT
 c.CONTEXT_ID as CONTEXT_ID
 , c.NAME as CON_NAME
@@ -12,6 +12,7 @@ c.CONTEXT_ID as CONTEXT_ID
 , I.ITEM_ID
 , I.NAME as ITEM_NAME
 , I.UUID as ITEM_UUID
+, I.ISSUEDATE as ITEM_ISSUEDATE
 , c.DATEARCHIVED as CON_DATEARCHIVED
 , I.DATEARCHIVED as ITEM_DATEARCHIVED
 , I.DATEARCHIVED is not null or c.DATEARCHIVED is not null as ELEMENT_ARCHIVED
@@ -20,7 +21,7 @@ c.CONTEXT_ID as CONTEXT_ID
 FROM CONTEXT C
 JOIN ITEM I
 ON I.CONTEXT_ID = C.CONTEXT_ID
-ORDER BY CONTEXT_ID, CON_NAME ;
+ORDER BY CONTEXT_ID, ITEM_ISSUEDATE ;
 
 -- VW_MASTERDATA_UUID ------------------------------------------------------
 
@@ -59,7 +60,7 @@ create or replace View VW_TRANSACTIONDATA_UUID as
 create or replace view VW_SEARCH_ATTRIBUTES AS 
 
 select distinct v.CONTEXT_ID, v.CON_NAME, v.CON_UUID, 
-v.CON_STAGE, v.ITEM_ID, v.ITEM_NAME, v.ITEM_UUID, 
+v.CON_STAGE, v.ITEM_ID, v.ITEM_NAME, v.ITEM_UUID, v.ITEM_ISSUEDATE, 
 v.CON_DATEARCHIVED, v.ITEM_DATEARCHIVED, v.ELEMENT_ARCHIVED, v.STORE_STORE_ID, v.STORAGEITEMIDENTIFIER , count (ATTRIBUTE.item_id  > 0) as ATT_COUNT
 from VW_SEARCH v left outer join ATTRIBUTE 
 on v.item_id = ATTRIBUTE.item_id 
@@ -67,7 +68,7 @@ on v.item_id = ATTRIBUTE.item_id
 group by v.CONTEXT_ID, v.CON_NAME, v.CON_UUID, 
 v.CON_STAGE, v.ITEM_ID, v.ITEM_NAME, v.ITEM_UUID, 
 v.CON_DATEARCHIVED, v.ITEM_DATEARCHIVED, v.ELEMENT_ARCHIVED, v.STORE_STORE_ID, v.STORAGEITEMIDENTIFIER
-order by CONTEXT_ID, item_id;
+order by CONTEXT_ID, ITEM_ISSUEDATE;;
 
 --- 
 

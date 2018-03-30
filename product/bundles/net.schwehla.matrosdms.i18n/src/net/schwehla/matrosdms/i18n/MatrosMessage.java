@@ -165,6 +165,7 @@ public class MatrosMessage {
 	public String itemstackpart_colMetadata;
 	public String itemstackpart_colContext;
 	public String contextlistpart_table_col_sum_attributes;
+	public String searchlistpart_col_issuedate;
 
 	
 }
