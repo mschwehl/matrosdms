@@ -12,6 +12,9 @@ import javax.persistence.NamedQuery;
 import javax.persistence.Table;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
+import javax.xml.bind.annotation.adapters.XmlJavaTypeAdapter;
+
+import net.schwehla.matrosdms.adapter.DateAdapter;
 
 @Entity
 @Table(name="VW_SEARCH")
@@ -31,7 +34,7 @@ public class VW_SEARCH  {
 	public String getITEM_UUID() {
 		return ITEM_UUID;
 	}
-
+	
 
 	@Column(unique=true,nullable=false,updatable=false)
 	private Long CONTEXT_ID;
@@ -39,6 +42,13 @@ public class VW_SEARCH  {
 	@Column(unique=true,nullable=false,updatable=false)
 	private String CON_NAME;
 	
+	
+	@Column(unique=false,nullable=false,updatable=false)
+	private String STORAGEITEMIDENTIFIER;
+	
+	@Column(unique=false,nullable=false,updatable=false)
+	private long STORE_STORE_ID;
+
 	@Column(unique=true,nullable=false,updatable=false)
 	private String CON_UUID;
 	
@@ -62,6 +72,9 @@ public class VW_SEARCH  {
 	@Temporal(TemporalType.TIMESTAMP)
 	private Date ITEM_DATEARCHIVED;
 	
+	@Temporal(TemporalType.TIMESTAMP)
+	private Date ITEM_ISSUEDATE;
+
 
 	@Column(unique=true,nullable=false,updatable=false)
 	private boolean ELEMENT_ARCHIVED;
@@ -105,6 +118,32 @@ public class VW_SEARCH  {
 	public String getCON_UUID() {
 		return CON_UUID;
 	}
+	
+
+	public Date getITEM_ISSUEDATE() {
+		return ITEM_ISSUEDATE;
+	}
+
+	public String getSTORAGEITEMIDENTIFIER() {
+		return STORAGEITEMIDENTIFIER;
+	}
+
+
+	public void setSTORAGEITEMIDENTIFIER(String sTORAGEITEMIDENTIFIER) {
+		STORAGEITEMIDENTIFIER = sTORAGEITEMIDENTIFIER;
+	}
+	
+
+	public long getSTORE_STORE_ID() {
+		return STORE_STORE_ID;
+	}
+
+
+	public void setSTORE_STORE_ID(long sTORE_STORE_ID) {
+		STORE_STORE_ID = sTORE_STORE_ID;
+	}
+
+	
 	
 
 }

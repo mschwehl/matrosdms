@@ -226,7 +226,7 @@ public class InfoKategoryListWrapper {
 		
 		Transfer[] transferTypes = { DomainClassTransfer.getTransfer(InfoKategory.class)};
 			
-		_treeviewer.addDragSupport( DND.DROP_MOVE | DND.DROP_LINK | DND.DROP_COPY,transferTypes
+		_treeviewer.addDragSupport( DND.DROP_DEFAULT  | DND.DROP_MOVE | DND.DROP_LINK | DND.DROP_COPY,transferTypes
 				, new MyDragListener(_treeviewer,InfoKategory.class)   {
 			
 			@Override
