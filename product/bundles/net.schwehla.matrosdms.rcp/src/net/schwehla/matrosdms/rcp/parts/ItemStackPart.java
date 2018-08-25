@@ -433,7 +433,7 @@ public class ItemStackPart {
 		
 		
 
-        builder.build();
+        builder.addSorter();
    
         
         

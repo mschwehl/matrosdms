@@ -217,7 +217,7 @@ public class SearchResultPart {
 
         
         
-        builder.build();
+        builder.addSorter();
         
 		
         

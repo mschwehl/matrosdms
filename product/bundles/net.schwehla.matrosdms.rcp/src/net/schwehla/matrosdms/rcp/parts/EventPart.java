@@ -118,7 +118,7 @@ public class EventPart {
           builder.makeColumn("Scheduled").setFunction(e -> e.getDateScheduled() ).append(30);
           builder.makeColumn("Target").setFunction(e -> (e.getItem() != null ? e.getItem().getName() : "")  ).append(30);
 
-          builder.build();
+          builder.addSorter();
      
           
           
