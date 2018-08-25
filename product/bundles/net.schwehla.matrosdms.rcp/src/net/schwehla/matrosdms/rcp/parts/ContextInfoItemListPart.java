@@ -549,7 +549,7 @@ public class ContextInfoItemListPart {
 	
 		
 
-        builder.build();
+        builder.addSorter();
    
         
         
