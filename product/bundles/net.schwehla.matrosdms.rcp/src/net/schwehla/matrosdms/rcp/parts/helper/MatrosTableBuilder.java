@@ -45,7 +45,7 @@ public class MatrosTableBuilder<X> {
 
 
 	
-	public void build() {
+	public void addSorter() {
 		
 
 	    viewer.setComparator( new ViewerComparator() {

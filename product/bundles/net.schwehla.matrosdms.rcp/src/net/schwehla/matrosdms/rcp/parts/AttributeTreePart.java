@@ -137,7 +137,7 @@ public class AttributeTreePart {
           MatrosTableBuilder <AttributeType> builder = new MatrosTableBuilder<AttributeType>(tableViewer);
           builder.makeColumn("Name").setFunction(e -> e.getName()).append(50);
           builder.makeColumn("Type").setFunction(e -> e.getType().name()).append(50);
-          builder.build();
+          builder.addSorter();
      
           
           
