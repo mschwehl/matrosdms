@@ -1,5 +1,6 @@
 package net.schwehla.matrosdms.resourcepool;
 
+import org.eclipse.swt.graphics.Color;
 import org.eclipse.swt.graphics.Font;
 import org.eclipse.swt.graphics.Image;
 
@@ -29,16 +30,11 @@ public interface IMatrosResource {
 		FONT_BIG;
 	}
 	
-	
-	public enum Color {
-		
-		COLOR_GREEN;
-	}
-	
+
 
 	
 	public Image getImage(Images image);
 	public Font getFont(Fonts font);
-    public Color getColor(Color color);
+    public Color getColor(String name);
 
 }

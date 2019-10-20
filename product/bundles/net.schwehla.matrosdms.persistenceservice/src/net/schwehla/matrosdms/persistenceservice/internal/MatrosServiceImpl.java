@@ -557,6 +557,7 @@ public class MatrosServiceImpl implements IMatrosServiceService {
 
 		  mapBasicPropertiesFromModelToDatabase(dbContext, infoContext);
 		  
+		  dbContext.setStage(infoContext.getStage() == null ? 0 : infoContext.getStage());
 		  
 			List <IIdentifiable> current = new ArrayList<>();
 		  
@@ -1212,7 +1213,7 @@ public class MatrosServiceImpl implements IMatrosServiceService {
 			fastAccess = new HashMap<>();
 		}
 		
-		if (fastAccess.containsKey(rootEntity.getUuid())) {
+		if (fastAccess.containsKey( Identifier.createImport( rootEntity.getUuid()))) {
 			throw new IllegalStateException("Zyklus found " + rootEntity.getUuid());
 		}
 		
@@ -1225,8 +1226,12 @@ public class MatrosServiceImpl implements IMatrosServiceService {
 			
 			for (DBKategorie kid : rootEntity.getChildren()) {
 				
-				InfoKategory beKid  = 	mapRecurive(kid);
-				element.connectWithChild(beKid);
+				try {
+					InfoKategory beKid  = 	mapRecurive(kid);
+					element.connectWithChild(beKid);
+				} catch (Exception e) {
+					logger.severe("Child-Mapping-Error: " + kid + "Parent: " + rootEntity);
+				}
 	
 			}
 			
