@@ -118,7 +118,7 @@ public class InfoContext extends InfoBaseElement {
 	}
 
 
-	int stage;
+	Integer stage;
 	
 	transient boolean visible = true;
 
@@ -130,11 +130,11 @@ public class InfoContext extends InfoBaseElement {
 		this.visible = visible;
 	}
 	
-	public int getStage() {
+	public Integer getStage() {
 		return stage;
 	}
 
-	public void setStage(int stage) {
+	public void setStage(Integer stage) {
 		this.stage = stage;
 	}
 

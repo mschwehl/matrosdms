@@ -18,6 +18,7 @@ import org.eclipse.e4.core.services.log.Logger;
 import org.eclipse.e4.core.services.translation.TranslationService;
 import org.eclipse.e4.ui.model.application.ui.basic.MPart;
 import org.eclipse.e4.ui.workbench.modeling.EPartService;
+import org.eclipse.jface.databinding.swt.ISWTObservableValue;
 import org.eclipse.jface.databinding.swt.WidgetProperties;
 import org.eclipse.jface.databinding.swt.WidgetSideEffects;
 import org.eclipse.swt.SWT;
@@ -52,8 +53,8 @@ public class ContextPart {
 	private Text txtName;
 	private Text txtDescription;
 	private Text txtIcon;
-	private Text textUUID;
-	
+	private Text textUUID;	
+	private Text textStage;
 	
 	@Inject
 	IEclipseContext context;
@@ -78,6 +79,7 @@ public class ContextPart {
 	EPartService partService;
 	
 	@Inject INotificationService notificationService;
+
 	
 	@Inject
 	public ContextPart() {
@@ -156,9 +158,13 @@ public class ContextPart {
 
 		txtDescription = new Text(grpProperties, SWT.BORDER | SWT.MULTI);
 		txtDescription.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, false, false, 1, 1));
-
-		new Label(grpProperties, SWT.NONE);
-		new Label(grpProperties, SWT.NONE);
+		
+		Label lblStage = new Label(grpProperties, SWT.NONE);
+		lblStage.setLayoutData(new GridData(SWT.RIGHT, SWT.CENTER, false, false, 1, 1));
+		lblStage.setText("stage");
+		
+		textStage = new Text(grpProperties, SWT.BORDER);
+		textStage.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1));
 
 		Composite composite = new Composite(parent, SWT.NONE);
 		composite.setLayout(new FillLayout(SWT.HORIZONTAL));
@@ -199,7 +205,7 @@ public class ContextPart {
 						dialog.open();
 						 
 						NotificationNote note = new NotificationNote();
-						note.setHeading("Element nicht gespeichert, bitte Logfile überprüfen");
+						note.setHeading("Element nicht gespeichert, bitte Logfile ï¿½berprï¿½fen");
 					
 						notificationService.openPopup(note);
 						
@@ -237,6 +243,8 @@ public class ContextPart {
 		txtDescription.setText( _contextClone.getDescription() != null ? _contextClone.getDescription() : "" );
 		txtIcon.setText( _contextClone.getIcon() != null ? _contextClone.getIcon() : "" );
 		textUUID.setText( _contextClone.getIdentifier().getUuid() != null ? _contextClone.getIdentifier().getUuid() : "" );
+
+		textStage.setText( _contextClone.getStage() != null ? ""+_contextClone.getStage() : "" );
 		
 		
 		// Bind Gui to Model, oneway
@@ -244,10 +252,19 @@ public class ContextPart {
 		IObservableValue <String> swttxtNameBinding = WidgetProperties.text(SWT.Modify).observe(txtName);
         IObservableValue <String> swttxtDescriptionBinding = WidgetProperties.text(SWT.Modify).observe(txtDescription);
         IObservableValue <String> swttxtIconBinding = WidgetProperties.text(SWT.Modify).observe(txtIcon);
+		IObservableValue <String> swttxtStageBinding = WidgetProperties.text(SWT.Modify).observe(textStage);
+		
         
         IObservableValue <String> pojoObserverName = PojoProperties.value("name").observe(_contextClone);
         IObservableValue <String> pojoObserverDescription = PojoProperties.value("description").observe(_contextClone);
         IObservableValue <String> pojoObserverIcon = PojoProperties.value("icon").observe(_contextClone);
+        
+        ISWTObservableValue xxx = WidgetProperties.text(SWT.Modify)
+        	    .observe(textStage);
+        
+        
+        IObservableValue <Integer> pojoObserverStage = PojoProperties.value("stage").observe(_contextClone);
+        
         
         ISideEffectFactory sideEffectFactory = WidgetSideEffects.createFactory(txtName);
         
@@ -255,7 +272,17 @@ public class ContextPart {
         sideEffectFactory.create(swttxtDescriptionBinding::getValue, pojoObserverDescription::setValue);
         sideEffectFactory.create(swttxtIconBinding::getValue, pojoObserverIcon::setValue);
         
-    	
+        sideEffectFactory.create(xxx::getValue, e -> {
+        	
+        	if (e == null || e.toString().trim().length() == 0) {
+        		_contextClone.setStage(null);
+        	} else {
+        		_contextClone.setStage(Integer.parseInt("" + e));	
+        	}
+        	
+        	
+        });
+        
 		
 		
 	}

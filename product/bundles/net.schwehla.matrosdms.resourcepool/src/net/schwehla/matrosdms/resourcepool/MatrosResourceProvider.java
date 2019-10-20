@@ -5,17 +5,24 @@ import java.net.URL;
 import org.eclipse.core.runtime.FileLocator;
 import org.eclipse.core.runtime.IPath;
 import org.eclipse.core.runtime.Path;
+import org.eclipse.jface.resource.ColorRegistry;
 import org.eclipse.jface.resource.FontRegistry;
 import org.eclipse.jface.resource.ImageDescriptor;
 import org.eclipse.jface.resource.ImageRegistry;
+import org.eclipse.jface.resource.JFaceResources;
+import org.eclipse.swt.graphics.Color;
 import org.eclipse.swt.graphics.Font;
 import org.eclipse.swt.graphics.Image;
+import org.eclipse.swt.widgets.Display;
 import org.osgi.framework.Bundle;
 import org.osgi.framework.FrameworkUtil;
 
 public class MatrosResourceProvider  implements IMatrosResource {
 	
     private static ImageRegistry imageRegistry = new ImageRegistry();
+    
+    private static ColorRegistry colorRegistry = JFaceResources.getColorRegistry();
+    
 	    
     private static FontRegistry  fontRegistry = new FontRegistry();
 	@Override
@@ -33,14 +40,13 @@ public class MatrosResourceProvider  implements IMatrosResource {
 
 	@Override
 	public Font getFont(Fonts font) {
-		// TODO Auto-generated method stub
-		return null;
+		throw new IllegalStateException("not implemented");
 	}
 
 	@Override
-	public Color getColor(Color color) {
-		// TODO Auto-generated method stub
-		return null;
+	public Color getColor(String colorName) {
+		
+		throw new IllegalStateException("not implemented");
 	}
 	
 	

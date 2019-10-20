@@ -1,8 +1,10 @@
 package net.schwehla.matrosdms.rcp.parts;
 
 import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.Iterator;
 import java.util.List;
+import java.util.function.Function;
 
 import javax.annotation.PostConstruct;
 import javax.inject.Inject;
@@ -28,19 +30,28 @@ import org.eclipse.jface.viewers.SelectionChangedEvent;
 import org.eclipse.jface.viewers.StructuredSelection;
 import org.eclipse.jface.viewers.TableViewer;
 import org.eclipse.jface.viewers.TableViewerColumn;
+import org.eclipse.jface.viewers.Viewer;
+import org.eclipse.jface.viewers.ViewerCell;
+import org.eclipse.jface.viewers.ViewerComparator;
 import org.eclipse.jface.window.Window;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.dnd.DND;
 import org.eclipse.swt.dnd.DropTargetEvent;
 import org.eclipse.swt.dnd.FileTransfer;
 import org.eclipse.swt.dnd.Transfer;
+import org.eclipse.swt.graphics.Color;
+import org.eclipse.swt.graphics.GC;
 import org.eclipse.swt.graphics.Point;
 import org.eclipse.swt.graphics.Rectangle;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Event;
+import org.eclipse.swt.widgets.Item;
+import org.eclipse.swt.widgets.Listener;
+import org.eclipse.swt.widgets.Shell;
 import org.eclipse.swt.widgets.Table;
+import org.eclipse.swt.widgets.TableColumn;
 import org.eclipse.swt.widgets.TableItem;
 import org.eclipse.swt.widgets.Text;
 
@@ -59,6 +70,7 @@ import net.schwehla.matrosdms.rcp.dnd.MyDropListener;
 import net.schwehla.matrosdms.rcp.parts.filter.InfoContextAndVisibleFilter;
 import net.schwehla.matrosdms.rcp.parts.helper.AutoResizeTableLayout;
 import net.schwehla.matrosdms.rcp.swt.filteredcomposite.FilteredTable;
+import net.schwehla.matrosdms.resourcepool.IMatrosResource;
 
 
 /**
@@ -67,6 +79,8 @@ import net.schwehla.matrosdms.rcp.swt.filteredcomposite.FilteredTable;
  */
 
 public class ContextListPart {
+	
+	private static final String DATA_COMPARATOR = "comparator";
 
     private Text swtTxtSerarchfield;
     private TableViewer swtTableViewer;
@@ -106,7 +120,12 @@ public class ContextListPart {
 	ItemDropper itemDropper;
 	
 	
+	 @Inject
+	 IMatrosResource poolOfResources;    
 	
+		
+		@Inject Shell activeShell;
+		
 	
 	@Inject
 	@Optional
@@ -258,7 +277,51 @@ public class ContextListPart {
           gridData.verticalAlignment = GridData.FILL;
           swtTableViewer.getTable().setLayoutData(gridData);
           
+    // sorting
           
+          swtTableViewer.setComparator( new ViewerComparator() {
+	    	
+	    	@Override
+	    	public int compare(Viewer viewer, Object e1, Object e2) {
+
+	            TableColumn sortColumn = ((Table)viewer.getControl()).getSortColumn();
+	            Comparator comparator = sortColumn == null ? null : (Comparator) sortColumn.getData(DATA_COMPARATOR);
+	            if (comparator != null && ((Table)viewer.getControl()).getSortDirection() == SWT.UP) {
+	                comparator = comparator.reversed();
+	            }
+	            
+	            if (e1 == null) {
+	            	return 1;
+	            }
+	            if (e2 == null) {
+	            	return -1;
+	            }
+	            
+	            return comparator == null ? 0 : comparator.compare(e1, e2);
+	            
+	    	}
+	    	
+	    	
+	    });
+	    
+
+	    for (TableColumn column : ((Table)swtTableViewer.getControl()).getColumns()) {
+	        column.addListener(SWT.Selection, e -> {
+	            final Item sortColumn = ((Table)swtTableViewer.getControl()).getSortColumn();
+	            int direction = ((Table)swtTableViewer.getControl()).getSortDirection();
+
+	            if (column.equals(sortColumn)) {
+	                direction = direction == SWT.UP ? SWT.DOWN : SWT.UP;
+	            } else {
+	            	((Table)swtTableViewer.getControl()).setSortColumn(column);
+	                direction = SWT.UP;
+	            }
+	            ((Table)swtTableViewer.getControl()).setSortDirection(direction);
+	            swtTableViewer.refresh();
+	        });
+	    }
+          
+	    
 
 	      swtTableViewer.setInput(listController.getList());
 	      listController.reload();
@@ -455,6 +518,8 @@ public class ContextListPart {
           swtTableViewer.getTable().setHeaderVisible(true);
           swtTableViewer.getTable().setLinesVisible(true);
           
+
+          
      
           TableViewerColumn colTagging = new TableViewerColumn(swtTableViewer, SWT.LEFT);
           colTagging.getColumn().setText(messages.contexlistpart_col_map);
@@ -508,8 +573,37 @@ public class ContextListPart {
 		    	  @Override
 		    	  protected void erase(Event event, Object element) 
 		    	  {
-		    	    // Don't call super to avoid selection draw
-		    		// Elswise the Background-Color is wrong  
+		    		  
+		    		  if (element instanceof InfoContext) {
+	                    	 
+	                    	 InfoContext entry = (InfoContext) element;
+	                    	 if (entry.getStage() != null && entry.getStage() > 0) {
+	                          	
+	                    		 
+	                    		    Table table =(Table)event.widget;
+	                    	        TableItem item =(TableItem)event.item;
+	                    	        int clientWidth = table.getClientArea().width;
+
+	                    	        GC gc = event.gc;               
+	                    	        Color oldForeground = gc.getForeground();
+	                    	        Color oldBackground = gc.getBackground();
+
+	                    	        gc.setBackground(activeShell.getDisplay().getSystemColor(SWT.COLOR_RED));
+//	                    	        gc.setForeground(colorForeground);              
+	                    	        gc.fillRectangle(0, event.y, clientWidth, event.height);
+
+	                    	        gc.setForeground(oldForeground);
+	                    	        gc.setBackground(oldBackground);
+	                    	        event.detail &= ~SWT.SELECTED;
+	                    	        
+	                    	        
+	                          	return ; 
+	                             
+	                          	
+	                          }
+	                     }
+		    		  
+		    
 		    	  }
 
                  @Override
@@ -555,9 +649,16 @@ public class ContextListPart {
                         
                         buildContent(entry, sb);
                         
+                       
                         
                         event.gc.drawText(sb.toString() , event.x, event.y, true);
-                 }}
+                 }
+                 
+          
+               
+                 
+          
+          	}
                         
           );
 
@@ -579,7 +680,46 @@ public class ContextListPart {
                    return c.getName();  // no string representation, we only want to display the image
                  }
                  
+                 @Override
+                 public Color getBackground(final Object element) {
+                     if (element instanceof InfoContext) {
+                    	 
+                    	 InfoContext entry = (InfoContext) element;
+                    	 if (entry.getStage() != null && entry.getStage() > 0) {
+                          	
+                          	return activeShell.getDisplay().getSystemColor(SWT.COLOR_RED); 
+                             
+                          	
+                          }
+                     }
+
+                     return super.getBackground(element);
+                 }
+                 
+                 
+                 
+                 
           });    
+          
+          Function<InfoContext, Comparable> function = e -> e.getName();
+          
+          colName.getColumn().setData(DATA_COMPARATOR, (Comparator) (v1, v2) -> {
+		    
+	    	Comparable oeins = function.apply((InfoContext) v1);
+	    	Comparable oZwei = function.apply((InfoContext) v2);
+	    	
+	    	if (oeins == null) {
+	    		return -1;
+	    	}
+	    	if (oZwei == null) {
+	    		return 1;
+	    	}
+	    	
+	    	return oeins.compareTo(oZwei);
+	    	
+	    
+	    	
+	    });
                  
                  
           TableViewerColumn sum = new TableViewerColumn(swtTableViewer, SWT.LEFT);
