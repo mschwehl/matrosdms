@@ -17,8 +17,8 @@
    <splash
       location="net.schwehla.matrosdms.rcp" />
    <launcher>
-      <solaris/>
-      <win useIco="false">
+      <win useIco="true">
+         <ico path="/net.schwehla.matrosdms.product/icons/matros.ico"/>
          <bmp/>
       </win>
    </launcher>
