@@ -503,7 +503,7 @@ public class MatrosServiceImpl implements IMatrosServiceService {
 		DBContext dbContext = new DBContext();
 		
 		mapBasicPropertiesFromModelToDatabase(dbContext, beInfoContext);
-		dbContext.setStage(beInfoContext.getStage());
+		dbContext.setStage(beInfoContext.getStage() == null ? 0 : beInfoContext.getStage());
 
 
 		for (Identifier rootUUID : beInfoContext.getDictionary().keySet()) {
