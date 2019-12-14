@@ -431,9 +431,16 @@ public class ItemPart {
 		 						// todo: service 
 		 						
 		 						NotificationNote note = new NotificationNote();
-		 						note.setHeading("Dokument gespeichert");
+		 						
+		 						String store = ": no store";
+		 						if (box.getSelection() != null) {
+		 							store = ": " + box.getSelection().getName() + "@" +	_wrapper.getInfoItem().getStoreItemNumber();
+		 						}
+		 						
+		 						note.setHeading("Dokument gespeichert "+ store);
+		 						
+		 						logger.info( "Dokument gespeichert "+ store);
 		 				
-	
 		 						
 		 						// try move file to the processedfolder
 		 						
