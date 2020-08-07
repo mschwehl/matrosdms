@@ -39,7 +39,11 @@ public interface IMatrosServiceService {
     public InfoContext  loadInfoContextByIdentifier(Identifier identifier) throws MatrosServiceException;;
     
 	@Matroscache(evictAll=true)
-	public void createContext(InfoContext con) throws MatrosServiceException;;
+	public void createContext(InfoContext con) throws MatrosServiceException;
+	
+	@Matroscache(evictAll=true)
+	public void deleteContext(Identifier con) throws MatrosServiceException;
+	
 
 	@Matroscache(evictAll=true)
 	public void appendContainer(File droppedFile,  InfoItem myNewContainer) throws MatrosServiceException;;
@@ -97,13 +101,16 @@ public interface IMatrosServiceService {
 
 	@Matroscache(evictAll=true)
 	public void updateInfoElement(InfoItem infoItem)  throws MatrosServiceException;
+	
+	@Matroscache(evictAll=true)
+	public void deleteInfoElement(Identifier infoItem)  throws MatrosServiceException;
 
 	@Matroscache(evictAll=true)
 	public void moveInfoitems(Identifier target, List<InfoItem> intersection) throws MatrosServiceException;
 	
 	@Matroscache(evictAll=true)
 	public void archivareItem(Identifier identifier) throws MatrosServiceException;
-
+	
 	public List<InfoEvent> loadEventList() throws MatrosServiceException;
 
 	@Matroscache(evictAll=true)

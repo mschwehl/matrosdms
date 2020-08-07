@@ -31,11 +31,13 @@ public class MyEventConstants {
 
 	
 	public static final String TOPIC__REFRESH_CONTEXT_ARCHIV   = "REFRESH/CONTEXT/ARCHIV";
+	public static final String TOPIC__REFRESH_CONTEXT_DELETE   = "REFRESH/CONTEXT/DELETE";
 	public static final String TOPIC__REFRESH_CONTEXT_MODIFIED  = "REFRESH/CONTEXT/MODIFIED";
 	public static final String TOPIC__REFRESH_CONTEXT_STAR      = "REFRESH/CONTEXT/*";
 	
 	public static final String TOPIC__REFRESH_ITEM_ADD 		= "REFRESH/ITEM/ADD";
 	public static final String TOPIC__REFRESH_ITEM_ARCHIV   = "REFRESH/ITEM/ARCHIV";
+	public static final String TOPIC__REFRESH_ITEM_DELETE   = "REFRESH/ITEM/DELETE";
 	public static final String TOPIC__REFRESH_ITEM_MODIFIED	= "REFRESH/ITEM/MODIFIED";
 	public static final String TOPIC__REFRESH_ITEM_STAR     = "REFRESH/ITEM/*";
 	

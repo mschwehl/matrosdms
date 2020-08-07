@@ -197,8 +197,14 @@ public class SearchResultPart {
         		e -> {
         		
         		
+        			String nr = "";
+        			if ( e != null && e.getStoreItemNumber() != null) {
+        				nr =  String.format("%03d", Integer.parseInt( e.getStoreItemNumber()));
+        			}
     				
-    				return  MessageFormat.format("{0}->{1}", e.getStoreIdentifier().getPk(), e.getStoreItemNumber());
+    				return  MessageFormat.format("{0}->{1}"
+    						, e.getStoreIdentifier().getPk()
+    						, nr);
     				
                 	
         		} ).append(10);

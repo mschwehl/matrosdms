@@ -124,7 +124,7 @@ public void setIndexState(int indexState) {
 	}
 
 
-	@OneToMany(mappedBy="item" , orphanRemoval=true)
+	@OneToMany(cascade = CascadeType.ALL, mappedBy="item" , orphanRemoval=true)
 	private List <AbstractDBInfoAttribute> attributeList = new ArrayList<AbstractDBInfoAttribute> ();
 
 	/** number of the document */

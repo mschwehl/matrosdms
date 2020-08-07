@@ -517,6 +517,32 @@ public class MatrosServiceImpl implements IMatrosServiceService {
 		em.persist(dbContext);
 	
 	}
+	
+	
+	@Override
+	public void deleteContext(Identifier con) throws MatrosServiceException {
+		
+		
+		int count = loadInfoContextByIdentifier(con)
+				.getStorableInfoItemContainerListProxy().getCount();
+		
+		if  (count > 0) {
+			throw new MatrosServiceException("Context " + con.getUuid() + " hat noch " + count + " Elemente");
+		}
+		
+		DBContext element = em.createNamedQuery("DBContext.findByUUID", DBContext.class)
+				.setParameter("uuid",con.getUuid()).getSingleResult();
+
+		
+		em.remove(element);
+		
+		// delete cache because of delete
+		 em.getEntityManagerFactory().getCache().evictAll();
+		 
+		
+	}
+	
+	
 
 	
 	/**
@@ -713,6 +739,22 @@ public class MatrosServiceImpl implements IMatrosServiceService {
 		
 	}
 
+	
+	
+	@Override
+	public void deleteInfoElement(Identifier infoItem) throws MatrosServiceException {
+		
+		
+		DBItem dbItem = em.createNamedQuery("DBItem.findByUUID", DBItem.class)
+				.setParameter("uuid",infoItem.getUuid()).getSingleResult();
+
+		// Metadata, Infoattribute will be deleted as well
+		em.remove(dbItem);
+		
+	}
+
+	
+	
 
 	
 	
@@ -1724,7 +1766,11 @@ public class MatrosServiceImpl implements IMatrosServiceService {
 			 return  ! dbResult.isEmpty();
 			
 		}
-		
+
+
+
+
+
 
 
 }
